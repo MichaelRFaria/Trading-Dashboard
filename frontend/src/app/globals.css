@@ -1,0 +1,6 @@
+@import "../../node_modules/tailwindcss";
+
+body {
+  background: black;
+  color: white;
+}
