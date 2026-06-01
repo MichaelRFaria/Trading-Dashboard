@@ -1,6 +1,6 @@
 // function to register a user
 export async function registerAccount(data) {
-    return await fetchUrl("/api/users/register", "POST", data);
+    return await fetchUrl("/users/register", "POST", data);
 }
 
 // helper function to make HTTP calls
