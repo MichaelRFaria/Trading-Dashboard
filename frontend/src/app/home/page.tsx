@@ -13,7 +13,7 @@ export default function Home() {
                     <label htmlFor="password">Password:</label>
                     <input name="password" id="password" type="password"/>
                 </div>
-                <input type="submit" value="Submit"/>
+                <input type="submit" value="Login"/>
             </form>
             <Link className="text-sm" href="/register">If you don't already have an account, you can register
                 here!</Link>
