@@ -4,7 +4,8 @@ export async function registerAccount(data) {
 }
 
 // helper function to make HTTP calls
-async function fetchUrl(url, method = "GET", data) {
+async function fetchUrl(path, method = "GET", data) {
+    const url = "http://localhost:3001" + path
     try {
         const response = await fetch(url, {
             method: method,
