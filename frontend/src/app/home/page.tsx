@@ -1,10 +1,50 @@
+"use client";
+
 import Link from "next/link";
+import {loginAccount} from "@/src/app/_helper/api";
+import {useRouter} from "next/navigation";
+import {useState} from "react";
+
+type LoginRequest = {
+    email: string
+    password: string
+}
+
+type LoginResponse = {
+    success: string,
+    message?: string,
+}
 
 export default function Home() {
+    const router = useRouter()
+
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const handleFormSubmission = async (event: React.SubmitEvent<HTMLFormElement>) => {
+        event.preventDefault(); // prevent page refresh todo does not work
+
+        const formData = new FormData(event.target);
+
+        const request: LoginRequest = {
+            email: formData.get("email") as string,
+            password: formData.get("password") as string,
+        }
+
+        console.log(request.email)
+
+        const response: LoginResponse = await loginAccount(request);
+
+        if (response.success) {
+            router.push("/dashboard")
+        } else if (response.message) {
+            setErrorMessage(response.message);
+        }
+    }
+
     return (
         <div className="flex flex-col min-h-screen justify-center items-center">
             <h1 className="text-xl underline">Login</h1>
-            <form className="flex flex-col items-center">
+            <form className="flex flex-col items-center" onSubmit={handleFormSubmission}>
                 <div className="flex justify-between min-w-full">
                     <label htmlFor="email">E-mail:</label>
                     <input name="email" id="email" type="text"/>
@@ -17,6 +57,7 @@ export default function Home() {
             </form>
             <Link className="text-sm" href="/register">If you don't already have an account, you can register
                 here!</Link>
+            <p className="text-red-600">{errorMessage}</p>
         </div>
     );
 }

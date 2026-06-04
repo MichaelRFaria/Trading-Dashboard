@@ -3,6 +3,10 @@ export async function registerAccount(data) {
     return await fetchUrl("/users/register", "POST", data);
 }
 
+export async function loginAccount(data) {
+    return await fetchUrl("/users/login", "POST", data);
+}
+
 // helper function to make HTTP calls
 async function fetchUrl(path, method = "GET", data) {
     const url = "http://localhost:3001" + path
