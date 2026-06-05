@@ -17,7 +17,10 @@ export class UserService {
         })
 
         if (existingUser) {
-            throw new BadRequestException()
+            return {
+                success: false,
+                message: "A user with this email already exists"
+            }
         }
 
         const hash = await bcrypt.hash(dto.password, 10)
