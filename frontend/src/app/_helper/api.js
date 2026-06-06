@@ -11,6 +11,10 @@ export async function addToWatchlist(data) {
     return await fetchUrl("/watchlist/add", "POST", data);
 }
 
+export async function deleteFromWatchlist(data) {
+    return await fetchUrl("/watchlist/delete", "DELETE", data);
+}
+
 // helper function to make HTTP calls
 async function fetchUrl(path, method = "GET", data) {
     const url = "http://localhost:3001" + path

@@ -19,7 +19,7 @@ export default function Home() {
     const [errorMessage, setErrorMessage] = useState("");
 
     const handleFormSubmission = async (event: React.SubmitEvent<HTMLFormElement>) => {
-        event.preventDefault(); // prevent page refresh todo does not work
+        event.preventDefault(); // prevent page refresh
 
         const formData = new FormData(event.target);
 

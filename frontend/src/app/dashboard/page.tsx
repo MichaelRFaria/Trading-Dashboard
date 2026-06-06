@@ -1,6 +1,6 @@
 "use client";
 
-import {addToWatchlist} from "@/src/app/_helper/api";
+import {addToWatchlist, deleteFromWatchlist} from "@/src/app/_helper/api";
 import {useState} from "react";
 
 type WatchlistRequest = {
@@ -10,7 +10,7 @@ type WatchlistRequest = {
 
 type WatchlistResponse = {
     success: string,
-    message?: string,
+    message: string,
 }
 
 
@@ -19,8 +19,9 @@ export default function Dashboard() {
     const [successMessage, setSuccessMessage] = useState("")
 
     const handleFormSubmission = async (event: React.SubmitEvent<HTMLFormElement>) => {
-        event.preventDefault(); // prevent page refresh todo does not work
+        event.preventDefault(); // prevent page refresh
 
+        console.log("form submit")
         const formData = new FormData(event.target);
 
         const request: WatchlistRequest = {
@@ -28,11 +29,29 @@ export default function Dashboard() {
             user_id: "1" as string, // todo temp, change when sessions are implemented
         }
 
-        const response: WatchlistResponse = await addToWatchlist(request)
+        const action = formData.get("action") as string
+
+        let response: WatchlistResponse;
+        let message: string;
+        console.log(action)
+
+        switch (action) {
+            case "add":
+                response = await addToWatchlist(request)
+                break;
+            case "delete":
+                response = await deleteFromWatchlist(request)
+                break;
+            default:
+                response = {
+                    success: "false",
+                    message: "Request not sent. Something went wrong."
+                }
+        }
 
         if (response.success) {
-            //setSuccessMessage("Successfully added to watchlist")
-            //setErrorMessage("")
+            setSuccessMessage(response.message)
+            setErrorMessage("")
         } else if (response.message) {
             setErrorMessage(response.message)
             setSuccessMessage("")
@@ -48,7 +67,14 @@ export default function Dashboard() {
                     <label htmlFor="stock_symbol">Stock symbol:</label>
                     <input name="stock_symbol" id="stock_symbol" type="text"/>
                 </div>
-                <input type="submit" value="Add"/>
+                <div className="flex justify-between min-w-full">
+                    <label htmlFor="action">Action:</label>
+                    <select name="action" id="action">
+                        <option value="add">Add</option>
+                        <option value="delete">Delete</option>
+                    </select>
+                </div>
+                <input type="submit" value="Execute"/>
             </form>
             <p className="text-green-600">{successMessage}</p>
             <p className="text-red-600">{errorMessage}</p>
