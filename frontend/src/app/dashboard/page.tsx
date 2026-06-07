@@ -9,7 +9,7 @@ type WatchlistRequest = {
 }
 
 type WatchlistResponse = {
-    success: string,
+    success: boolean,
     message: string,
 }
 

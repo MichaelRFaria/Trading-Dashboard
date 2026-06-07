@@ -10,7 +10,7 @@ type RegisterRequest = {
 }
 
 type RegisterResponse = {
-    success: string,
+    success: boolean,
     message?: string,
 }
 

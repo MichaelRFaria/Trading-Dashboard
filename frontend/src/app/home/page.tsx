@@ -11,7 +11,7 @@ type LoginRequest = {
 }
 
 type LoginResponse = {
-    success: string,
+    success: boolean,
     message?: string,
 }
 
