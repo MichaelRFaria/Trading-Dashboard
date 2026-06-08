@@ -15,17 +15,32 @@ export async function deleteFromWatchlist(data) {
     return await fetchUrl("/watchlist/delete", "DELETE", data);
 }
 
+export async function finnhubStockSymbolLookup(data) {
+    const params = new URLSearchParams({
+        stock_symbol: data.stock_symbol,
+    });
+
+    return await fetchUrl(`/finnhub/symbol-lookup?${params.toString()}`, "GET", data);
+}
+
 // helper function to make HTTP calls
 async function fetchUrl(path, method = "GET", data) {
     const url = "http://localhost:3001" + path
+
+    const options = {
+        method: method,
+        headers: {
+            "Content-Type": "application/json"
+        },
+    }
+
+    // if the method is not a GET request and there is data, stringify the data and add it to the options
+    if (method !== "GET" && data) {
+        options.body = JSON.stringify(data)
+    }
+
     try {
-        const response = await fetch(url, {
-            method: method,
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data),
-        });
+        const response = await fetch(url, options);
 
         if (!response.ok) {
             console.error(`Response status: ${response.status}`);
