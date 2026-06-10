@@ -32,6 +32,7 @@ async function fetchUrl(path, method = "GET", data) {
         headers: {
             "Content-Type": "application/json"
         },
+        credentials: "include" // allows cookies
     }
 
     // if the method is not a GET request and there is data, stringify the data and add it to the options
