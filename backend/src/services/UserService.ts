@@ -32,35 +32,4 @@ export class UserService {
             }
         })
     }
-
-    async login(dto: LoginAccountDto) {
-        const existingUser = await this.prisma.user.findUnique({
-            where: {
-                email: dto.email
-            }
-        })
-
-        if (!existingUser) {
-            return {
-                success: false,
-                message: "Invalid email"
-            }
-        }
-
-        const validPassword = await bcrypt.compare(
-            dto.password,
-            existingUser.password,
-        )
-
-        if (validPassword) {
-            return {
-                success: true,
-            }
-        } else {
-            return {
-                success: false,
-                message: "Invalid password"
-            }
-        }
-    }
 }

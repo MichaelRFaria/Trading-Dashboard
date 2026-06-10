@@ -7,10 +7,19 @@ import {WatchlistController} from "./controllers/WatchlistController";
 import {HttpModule} from "@nestjs/axios";
 import {FinnhubController} from "./controllers/FinnhubController";
 import {FinnhubService} from "./services/FinnhubService";
+import {AuthController} from "./controllers/AuthController";
+import {AuthService} from "./services/AuthService";
+import {JwtModule} from "@nestjs/jwt";
+import process from "process";
 
 @Module({
-  imports: [HttpModule],
-  controllers: [UserController, WatchlistController, FinnhubController],
-  providers: [UserService, WatchlistService, FinnhubService, PrismaService],
+  imports: [HttpModule, JwtModule.register({
+    global: true,
+    secret: process.env.JWT_SECRET,
+    signOptions: { expiresIn: '60s'}
+  })
+  ],
+  controllers: [UserController, WatchlistController, FinnhubController, AuthController],
+  providers: [UserService, WatchlistService, FinnhubService, PrismaService, AuthService],
 })
 export class AppModule {}

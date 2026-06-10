@@ -13,6 +13,7 @@ type LoginRequest = {
 type LoginResponse = {
     success: boolean,
     message?: string,
+    access_token?: string,
 }
 
 export default function Home() {
@@ -34,8 +35,10 @@ export default function Home() {
 
         const response: LoginResponse = await loginAccount(request);
 
+        console.log(response)
+
         if (response.success) {
-            router.push("/dashboard")
+            //router.push("/dashboard")
         } else if (response.message) {
             setErrorMessage(response.message);
         }

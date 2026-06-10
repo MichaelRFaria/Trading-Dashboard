@@ -4,7 +4,7 @@ export async function registerAccount(data) {
 }
 
 export async function loginAccount(data) {
-    return await fetchUrl("/users/login", "POST", data);
+    return await fetchUrl("/auth/login", "POST", data);
 }
 
 export async function addToWatchlist(data) {
