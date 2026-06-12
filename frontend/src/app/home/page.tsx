@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import {loginAccount} from "@/src/app/_helper/api";
+import {getCurrentUser, loginAccount} from "@/src/app/_helper/api";
 import {useRouter} from "next/navigation";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 type LoginRequest = {
     email: string
@@ -20,6 +20,14 @@ export default function Home() {
     const router = useRouter()
 
     const [errorMessage, setErrorMessage] = useState("");
+
+    useEffect(() => {
+       getCurrentUser().then(user => {
+            if (user) {
+                router.push("/dashboard")
+            }
+       })
+    }, [])
 
     const handleFormSubmission = async (event: React.SubmitEvent<HTMLFormElement>) => {
         event.preventDefault(); // prevent page refresh
@@ -38,7 +46,7 @@ export default function Home() {
         console.log(response)
 
         if (response.success) {
-            //router.push("/dashboard")
+            router.push("/dashboard")
         } else if (response.message) {
             setErrorMessage(response.message);
         }

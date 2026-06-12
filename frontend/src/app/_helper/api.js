@@ -1,3 +1,8 @@
+// function to get the authenticated user
+export async function getCurrentUser() {
+    return await fetchUrl("/users/me", "GET")
+}
+
 // function to register a user
 export async function registerAccount(data) {
     return await fetchUrl("/users/register", "POST", data);
@@ -24,7 +29,7 @@ export async function finnhubStockSymbolLookup(data) {
 }
 
 // helper function to make HTTP calls
-async function fetchUrl(path, method = "GET", data) {
+async function fetchUrl(path, method = "GET", data = null) {
     const url = "http://localhost:3001" + path
 
     const options = {
