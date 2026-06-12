@@ -1,7 +1,8 @@
 "use client";
 
-import {addToWatchlist, deleteFromWatchlist, finnhubStockSymbolLookup} from "@/src/app/_helper/api";
-import {useState} from "react";
+import {addToWatchlist, deleteFromWatchlist, finnhubStockSymbolLookup, getCurrentUser} from "@/src/app/_helper/api";
+import {useEffect, useState} from "react";
+import {useRouter} from "next/navigation";
 
 type WatchlistRequest = {
     stock_symbol: string,
@@ -30,18 +31,34 @@ type StockSymbolLookupResponseResult = {
 }
 
 export default function Dashboard() {
+    const router = useRouter();
+
+    const [authenticatedUser, setAuthenticatedUser] = useState(null)
+
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
 
+    useEffect(() => {
+        getCurrentUser().then(user => {
+            if (user) {
+                setAuthenticatedUser(user)
+            } else {
+                router.push("/home")
+            }
+        })
+    }, [])
+
     const modifyWatchlistFormSubmission = async (event: React.SubmitEvent<HTMLFormElement>) => {
         event.preventDefault(); // prevent page refresh
+
+        //console.log(authenticatedUser.sub)
 
         //console.log("form submit")
         const formData = new FormData(event.target);
 
         const request: WatchlistRequest = {
             stock_symbol: formData.get("stock_symbol") as string,
-            user_id: "1" as string, // todo temp, change when sessions are implemented
+            user_id: (authenticatedUser.sub).toString() as string,
         }
 
         const action = formData.get("action") as string
@@ -62,6 +79,8 @@ export default function Dashboard() {
                     message: "Request not sent. Something went wrong."
                 }
         }
+
+        //console.log(response)
 
         if (response.success) {
             setSuccessMessage(response.message)
