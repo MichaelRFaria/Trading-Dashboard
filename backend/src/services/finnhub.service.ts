@@ -1,5 +1,5 @@
 import {Injectable} from "@nestjs/common";
-import {FinnhubSymbolLookupDto} from "../dto/FinnhubSymbolLookupDto";
+import {FinnhubSymbolLookupDto} from "../dto/finnhub-symbol-lookup.dto";
 import {HttpService} from "@nestjs/axios";
 import {firstValueFrom} from "rxjs";
 import * as process from "process";

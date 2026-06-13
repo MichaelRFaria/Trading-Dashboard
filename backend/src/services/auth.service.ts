@@ -1,9 +1,9 @@
-import {UserService} from "./UserService";
+import {UserService} from "./user.service";
 import {Injectable} from "@nestjs/common";
 import {JwtService} from "@nestjs/jwt";
-import {LoginAccountDto} from "../dto/LoginAccountDto";
+import {LoginAccountDto} from "../dto/login-account.dto";
 import * as bcrypt from "bcrypt";
-import {PrismaService} from "./PrismaService";
+import {PrismaService} from "./prisma.service";
 
 @Injectable()
 export class AuthService {

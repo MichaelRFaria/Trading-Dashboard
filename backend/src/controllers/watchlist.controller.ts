@@ -1,8 +1,8 @@
 import {Body, Controller, Delete, Post, UseGuards} from "@nestjs/common";
-import {AddToWatchlistDto} from "../dto/AddToWatchlistDto";
-import {WatchlistService} from "../services/WatchlistService";
-import {DeleteFromWatchlistDto} from "../dto/DeleteFromWatchlistDto";
-import {AuthGuard} from "../services/AuthGuard";
+import {AddToWatchlistDto} from "../dto/add-to-watchlist.dto";
+import {WatchlistService} from "../services/watchlist.service";
+import {DeleteFromWatchlistDto} from "../dto/delete-from-watchlist.dto";
+import {AuthGuard} from "../guards/auth.guard";
 
 @Controller("watchlist")
 export class WatchlistController {
