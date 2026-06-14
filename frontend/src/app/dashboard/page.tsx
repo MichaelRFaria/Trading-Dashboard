@@ -103,7 +103,9 @@ export default function Dashboard() {
 
         const response: StockSymbolLookupResponse = await finnhubStockSymbolLookup(request)
 
-        console.log(response)
+        if (response) { // todo add error flow when a stock is not found
+            setSuccessMessage(JSON.stringify(response))
+        }
     }
 
         return (

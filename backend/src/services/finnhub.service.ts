@@ -19,6 +19,10 @@ export class FinnhubService {
             }
         ))
 
-        return data;
+        const stockData = data.result.find(item => item.symbol === dto.stock_symbol)
+
+        console.log(stockData)
+
+        return stockData;
     }
 }
