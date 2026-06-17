@@ -11,6 +11,8 @@ import {AuthController} from "../controllers/auth.controller";
 import {AuthService} from "../services/auth.service";
 import {JwtModule} from "@nestjs/jwt";
 import process from "process";
+import {HoldingController} from "../controllers/holding.controller";
+import {HoldingService} from "../services/holding.service";
 
 @Module({
   imports: [HttpModule, JwtModule.register({
@@ -19,7 +21,7 @@ import process from "process";
     signOptions: { expiresIn: '1h'}
   })
   ],
-  controllers: [UserController, WatchlistController, FinnhubController, AuthController],
-  providers: [UserService, WatchlistService, FinnhubService, PrismaService, AuthService],
+  controllers: [UserController, WatchlistController, FinnhubController, AuthController, HoldingController],
+  providers: [UserService, WatchlistService, FinnhubService, PrismaService, AuthService, HoldingService],
 })
 export class AppModule {}

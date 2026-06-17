@@ -14,13 +14,25 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
+  id       Int       @id @default(autoincrement())
+  email    String    @unique
   password String
+  Holding  Holding[]
 }
 
 model Watchlist {
   id           Int    @id @default(autoincrement())
   stock_symbol String
   user_id      String
+}
+
+model Holding {
+  id           Int     @id @default(autoincrement())
+  stock_symbol String
+  quantity     Decimal @db.Decimal(20, 8)
+  user_id      Int
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, stock_symbol])
 }

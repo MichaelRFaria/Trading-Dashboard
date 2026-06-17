@@ -20,6 +20,14 @@ export async function deleteFromWatchlist(data) {
     return await fetchUrl("/watchlist/delete", "DELETE", data);
 }
 
+export async function buyHolding(data) {
+    return await fetchUrl("/holdings/buy", "POST", data);
+}
+
+export async function sellHolding(data) {
+    return await fetchUrl("/holdings/sell", "POST", data);
+}
+
 export async function finnhubStockSymbolLookup(data) {
     const params = new URLSearchParams({
         stock_symbol: data.stock_symbol,
