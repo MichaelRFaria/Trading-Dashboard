@@ -8,11 +8,13 @@ export class WatchlistService {
     constructor(private prisma: PrismaService) {
     }
 
-    async add(dto: AddToWatchlistDto) {
+    async add(userId: number, dto: AddToWatchlistDto) {
+        //console.log(typeof userId);
+
         const existingEntry = await this.prisma.watchlist.findFirst({
             where: {
                 stock_symbol: dto.stock_symbol,
-                user_id: dto.user_id,
+                user_id: userId
             }
         })
 
@@ -27,7 +29,7 @@ export class WatchlistService {
             await this.prisma.watchlist.create({
                 data: {
                     stock_symbol: dto.stock_symbol,
-                    user_id: dto.user_id,
+                    user_id: userId,
                 }
             })
 
@@ -36,6 +38,7 @@ export class WatchlistService {
                 message: `${dto.stock_symbol} successfully added to watchlist.`
             }
         } catch (error) {
+            //console.error(error)
             return {
                 success: false,
                 message: "An error occurred"
@@ -43,11 +46,11 @@ export class WatchlistService {
         }
     }
 
-    async delete(dto: DeleteFromWatchlistDto) {
+    async delete(userId: number, dto: DeleteFromWatchlistDto) {
         const existingEntry = await this.prisma.watchlist.findFirst({
             where: {
                 stock_symbol: dto.stock_symbol,
-                user_id: dto.user_id,
+                user_id: userId
             }
         })
 
@@ -59,10 +62,12 @@ export class WatchlistService {
         }
 
         try {
-            await this.prisma.watchlist.deleteMany({
+            await this.prisma.watchlist.delete({
                 where: {
-                    stock_symbol: dto.stock_symbol,
-                    user_id: dto.user_id,
+                    user_id_stock_symbol: {
+                        stock_symbol: dto.stock_symbol,
+                        user_id: userId
+                    }
                 }
             })
 

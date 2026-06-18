@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Post, UseGuards} from "@nestjs/common";
+import {Body, Controller, Delete, Post, Req, UseGuards} from "@nestjs/common";
 import {AddToWatchlistDto} from "../dto/add-to-watchlist.dto";
 import {WatchlistService} from "../services/watchlist.service";
 import {DeleteFromWatchlistDto} from "../dto/delete-from-watchlist.dto";
@@ -11,13 +11,17 @@ export class WatchlistController {
 
     @UseGuards(AuthGuard)
     @Post("add")
-    async add(@Body() addToWatchlistDto: AddToWatchlistDto) {
-        return this.watchlistService.add(addToWatchlistDto);
+    async add(@Body() addToWatchlistDto: AddToWatchlistDto, @Req() request) {
+        const userId = request.user.sub;
+
+        return this.watchlistService.add(userId, addToWatchlistDto);
     }
 
     @UseGuards(AuthGuard)
     @Delete("delete")
-    async delete(@Body() deleteFromWatchlistDto: DeleteFromWatchlistDto) {
-        return this.watchlistService.delete(deleteFromWatchlistDto);
+    async delete(@Body() deleteFromWatchlistDto: DeleteFromWatchlistDto, @Req() request) {
+        const userId = request.user.sub;
+
+        return this.watchlistService.delete(userId, deleteFromWatchlistDto);
     }
 }

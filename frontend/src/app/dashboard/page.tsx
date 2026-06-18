@@ -12,7 +12,6 @@ import {useRouter} from "next/navigation";
 
 type WatchlistRequest = {
     stock_symbol: string,
-    user_id: string,
 }
 
 type WatchlistResponse = {
@@ -74,7 +73,6 @@ export default function Dashboard() {
 
         const request: WatchlistRequest = {
             stock_symbol: formData.get("stock_symbol") as string,
-            user_id: (authenticatedUser.sub).toString() as string,
         }
 
         const action = formData.get("action") as string
