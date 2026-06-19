@@ -1,6 +1,6 @@
 "use client";
 
-import {registerAccount} from "@/src/app/_helper/api";
+import {registerAccount} from "@/src/helper/api";
 import {useState} from "react";
 import {useRouter} from "next/navigation";
 

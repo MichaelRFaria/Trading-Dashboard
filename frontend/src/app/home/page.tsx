@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {getCurrentUser, loginAccount} from "@/src/app/_helper/api";
+import {getCurrentUser, loginAccount} from "@/src/helper/api";
 import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 
