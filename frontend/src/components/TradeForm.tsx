@@ -1,5 +1,5 @@
 import {buyHolding, sellHolding} from "@/src/helper/api";
-import {TradeRequest, TradeResponse} from "@/src/types/trade";
+import {TradeRequest, TradeBasicResponse} from "@/src/types/trade";
 
 export default function TradeForm({setMessageType, setMessage}) {
     const tradeStocksFormSubmission = async (event: React.SubmitEvent<HTMLFormElement>) => {
@@ -18,7 +18,7 @@ export default function TradeForm({setMessageType, setMessage}) {
         console.log(request.quantity)
 
         const action = formData.get("action")
-        let response: TradeResponse
+        let response: TradeBasicResponse
 
         switch (action) {
             case "buy":

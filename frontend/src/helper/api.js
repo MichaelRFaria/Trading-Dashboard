@@ -12,12 +12,20 @@ export async function loginAccount(data) {
     return await fetchUrl("/auth/login", "POST", data);
 }
 
+export async function getWatchlistData() {
+    return await fetchUrl("/watchlist/watchlist", "GET")
+}
+
 export async function addToWatchlist(data) {
     return await fetchUrl("/watchlist/add", "POST", data);
 }
 
 export async function deleteFromWatchlist(data) {
     return await fetchUrl("/watchlist/delete", "DELETE", data);
+}
+
+export async function getHoldingsData() {
+    return await fetchUrl("/holdings/holdings", "GET")
 }
 
 export async function buyHolding(data) {

@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Post, Req, UseGuards} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Post, Req, UseGuards} from "@nestjs/common";
 import {AddToWatchlistDto} from "../dto/add-to-watchlist.dto";
 import {WatchlistService} from "../services/watchlist.service";
 import {DeleteFromWatchlistDto} from "../dto/delete-from-watchlist.dto";
@@ -7,6 +7,14 @@ import {AuthGuard} from "../guards/auth.guard";
 @Controller("watchlist")
 export class WatchlistController {
     constructor(private watchlistService: WatchlistService) {
+    }
+
+    @UseGuards(AuthGuard)
+    @Get("watchlist")
+    async getWatchlist(@Req() request) {
+        const userId = request.user.sub;
+
+        return this.watchlistService.getWatchlist(userId)
     }
 
     @UseGuards(AuthGuard)

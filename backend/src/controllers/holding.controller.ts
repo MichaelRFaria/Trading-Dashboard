@@ -1,4 +1,4 @@
-import {Body, Controller, Post, Req, UseGuards} from "@nestjs/common";
+import {Body, Controller, Get, Post, Req, UseGuards} from "@nestjs/common";
 import {SellHoldingDto} from "../dto/sell-holding.dto";
 import {HoldingService} from "../services/holding.service";
 import {BuyHoldingDto} from "../dto/buy-holding.dto";
@@ -7,6 +7,14 @@ import {AuthGuard} from "../guards/auth.guard";
 @Controller("holdings")
 export class HoldingController {
     constructor(private readonly holdingService: HoldingService) {
+    }
+
+    @UseGuards(AuthGuard)
+    @Get("holdings")
+    async getHoldings(@Req() request) {
+        const userId = request.user.sub;
+
+        return this.holdingService.getHoldings(userId)
     }
 
     @UseGuards(AuthGuard)

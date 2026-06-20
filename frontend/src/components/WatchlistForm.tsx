@@ -1,5 +1,5 @@
 import {addToWatchlist, deleteFromWatchlist} from "@/src/helper/api";
-import {WatchlistRequest, WatchlistResponse} from "@/src/types/watchlist";
+import {WatchlistRequest, WatchlistBasicResponse} from "@/src/types/watchlist";
 
 export default function WatchlistForm({setMessageType, setMessage}) {
     const modifyWatchlistFormSubmission = async (event: React.SubmitEvent<HTMLFormElement>) => {
@@ -17,7 +17,7 @@ export default function WatchlistForm({setMessageType, setMessage}) {
         const action = formData.get("action") as string
         //console.log(action)
 
-        let response: WatchlistResponse;
+        let response: WatchlistBasicResponse;
 
         switch (action) {
             case "add":

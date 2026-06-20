@@ -8,6 +8,24 @@ export class WatchlistService {
     constructor(private prisma: PrismaService) {
     }
 
+    async getWatchlist(userId: number) {
+        const data = await this.prisma.watchlist.findMany({
+            where: {
+                user_id: userId
+            }
+        })
+
+        if (data) {
+            console.log(data)
+            return data
+        } else {
+            return {
+                success: false,
+                message: "No watchlist items found"
+            }
+        }
+    }
+
     async add(userId: number, dto: AddToWatchlistDto) {
         //console.log(typeof userId);
 
