@@ -1,7 +1,7 @@
 import {addToWatchlist, deleteFromWatchlist} from "@/src/helper/api";
 import {WatchlistRequest, WatchlistBasicResponse} from "@/src/types/watchlist";
 
-export default function WatchlistForm({setMessageType, setMessage}) {
+export default function WatchlistForm({getWatchlistDataAsync, setMessageType, setMessage}) {
     const modifyWatchlistFormSubmission = async (event: React.SubmitEvent<HTMLFormElement>) => {
         event.preventDefault(); // prevent page refresh
 
@@ -38,6 +38,8 @@ export default function WatchlistForm({setMessageType, setMessage}) {
         (response.success) ? setMessageType("success") : setMessageType("error")
 
         if (response.message) {setMessage(response.message)}
+
+        getWatchlistDataAsync()
     }
 
     return (

@@ -72,11 +72,11 @@ export default function Dashboard() {
         <div className="flex flex-col min-h-screen justify-center items-center">
             <p className="text-xl underline">Dashboard</p>
 
-            <WatchlistForm setMessageType={setMessageType} setMessage={setMessage}/>
+            <WatchlistForm getWatchlistDataAsync={getWatchlistDataAsync} setMessageType={setMessageType} setMessage={setMessage}/>
             <WatchlistList watchlistData={watchlistData}/>
             <FinnhubLookupForm setMessageType={setMessageType} setMessage={setMessage}/>
+            <TradeForm getHoldingsDataAsync={getHoldingsDataAsync} setMessageType={setMessageType} setMessage={setMessage}/>
             <HoldingsList holdingsData={holdingsData}/>
-            <TradeForm setMessageType={setMessageType} setMessage={setMessage}/>
 
             <Message type={messageType} message={message}/>
         </div>
