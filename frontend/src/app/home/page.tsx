@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import {getCurrentUser, loginAccount} from "@/src/helper/api";
-import {useRouter} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
+import Message from "@/src/components/Message";
 
 type LoginRequest = {
     email: string
@@ -18,8 +19,10 @@ type LoginResponse = {
 
 export default function Home() {
     const router = useRouter()
+    const searchParams = useSearchParams()
 
-    const [errorMessage, setErrorMessage] = useState("");
+    const [messageType, setMessageType] = useState("success")
+    const [message, setMessage] = useState("")
 
     useEffect(() => {
        getCurrentUser().then(user => {
@@ -27,6 +30,11 @@ export default function Home() {
                 router.push("/dashboard")
             }
        })
+
+        if (searchParams.get("status") === "registration-successful") {
+            setMessageType("success")
+            setMessage("Successfully registered an account")
+        }
     }, [])
 
     const handleFormSubmission = async (event: React.SubmitEvent<HTMLFormElement>) => {
@@ -48,7 +56,8 @@ export default function Home() {
         if (response.success) {
             router.push("/dashboard")
         } else if (response.message) {
-            setErrorMessage(response.message);
+            setMessageType("error")
+            setMessage(response.message);
         }
     }
 
@@ -68,7 +77,7 @@ export default function Home() {
             </form>
             <Link className="text-sm" href="/register">If you don't already have an account, you can register
                 here!</Link>
-            <p className="text-red-600">{errorMessage}</p>
+            <Message type={messageType} message={message}/>
         </div>
     );
 }

@@ -25,11 +25,23 @@ export class UserService {
 
         const hash = await bcrypt.hash(dto.password, 10)
 
-        return this.prisma.user.create({
-            data: {
-                email: dto.email,
-                password: hash
+        try {
+            this.prisma.user.create({
+                data: {
+                    email: dto.email,
+                    password: hash
+                }
+            })
+
+            return {
+                success: true,
+                message: "Successfully registered an account"
             }
-        })
+        } catch (error) {
+            return {
+                success: false,
+                message: "Account did not register, please try again."
+            }
+        }
     }
 }

@@ -31,8 +31,12 @@ export default function Home() {
         const response: RegisterResponse = await registerAccount(request);
 
         if (response.success) {
-            //router.push("/dashboard")
+            //console.log("account successfully registered")
+            const params = new URLSearchParams()
+            params.set("status","registration-successful")
+            router.push(`/home/?${params.toString()}`)
         } else if (response.message) {
+            //console.log("error on account registration")
             setErrorMessage(response.message);
         }
     }
