@@ -29,11 +29,11 @@ export async function getHoldingsData() {
 }
 
 export async function buyHolding(data) {
-    return await fetchUrl("/holdings/buy", "POST", data);
+    return await fetchUrl("/trade/buy", "POST", data);
 }
 
 export async function sellHolding(data) {
-    return await fetchUrl("/holdings/sell", "POST", data);
+    return await fetchUrl("/trade/sell", "POST", data);
 }
 
 export async function finnhubStockSymbolLookup(data) {

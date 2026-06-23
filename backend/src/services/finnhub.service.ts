@@ -25,4 +25,21 @@ export class FinnhubService {
 
         return stockData;
     }
+
+    async getPrice(dto: FinnhubSymbolLookupDto) {
+        const { data } = await firstValueFrom(
+            this.httpService.get("https://finnhub.io/api/v1/quote", {
+                    params: {
+                        symbol: dto.stock_symbol,
+                        token: process.env.FINNHUB_API_KEY,
+                    }
+                }
+            ))
+
+        //console.log(data)
+        const price = data.c;
+        //console.log(price)
+
+        return price
+    }
 }

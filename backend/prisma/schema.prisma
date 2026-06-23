@@ -19,6 +19,7 @@ model User {
   password  String
   Holding   Holding[]
   Watchlist Watchlist[]
+  Trade     Trade[]
 }
 
 model Watchlist {
@@ -40,4 +41,16 @@ model Holding {
   user User @relation(fields: [user_id], references: [id])
 
   @@unique([user_id, stock_symbol])
+}
+
+model Trade {
+  id           Int      @id @default(autoincrement())
+  stock_symbol String
+  quantity     Decimal  @db.Decimal(20, 8)
+  price        Decimal  @db.Decimal(12, 2)
+  type         String
+  user_id      Int
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
 }
