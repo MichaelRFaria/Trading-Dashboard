@@ -1,9 +1,8 @@
-import {BadRequestException, Injectable} from "@nestjs/common";
-import {RegisterAccountDto} from "../dto/register-account.dto";
+import {Injectable} from "@nestjs/common";
+import {RegisterAccountDto} from "../dto/account.dto";
 import {PrismaService} from "./prisma.service";
 
 import * as bcrypt from "bcrypt";
-import {LoginAccountDto} from "../dto/login-account.dto";
 
 @Injectable()
 export class UserService {

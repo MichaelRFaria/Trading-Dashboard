@@ -1,7 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {PrismaService} from "./prisma.service";
-import {AddToWatchlistDto} from "../dto/add-to-watchlist.dto";
-import {DeleteFromWatchlistDto} from "../dto/delete-from-watchlist.dto";
+import {AddToWatchlistDto, DeleteFromWatchlistDto} from "../dto/watchlist.dto";
 
 @Injectable()
 export class WatchlistService {

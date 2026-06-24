@@ -3,7 +3,7 @@ import {PrismaService} from "./prisma.service";
 import {TradeHolding} from "../dto/holdings.dto";
 import {Prisma} from "@prisma/client";
 import {FinnhubService} from "./finnhub.service";
-import {FinnhubSymbolLookupDto} from "../dto/finnhub-symbol-lookup.dto"
+import {FinnhubSymbolLookupDto} from "../dto/finnhub.dto"
 
 @Injectable()
 export class TradeService {

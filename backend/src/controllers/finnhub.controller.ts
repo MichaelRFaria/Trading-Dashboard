@@ -1,5 +1,5 @@
 import {Controller, Get, Query, UseGuards} from "@nestjs/common";
-import {FinnhubSymbolLookupDto} from "../dto/finnhub-symbol-lookup.dto";
+import {FinnhubSymbolLookupDto} from "../dto/finnhub.dto";
 import {FinnhubService} from "../services/finnhub.service";
 import {AuthGuard} from "../guards/auth.guard";
 

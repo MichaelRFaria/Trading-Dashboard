@@ -1,7 +1,6 @@
 import {Body, Controller, Get, Post, UseGuards, Request} from "@nestjs/common";
-import {RegisterAccountDto} from "../dto/register-account.dto";
+import {RegisterAccountDto} from "../dto/account.dto";
 import {UserService} from "../services/user.service";
-import {LoginAccountDto} from "../dto/login-account.dto";
 import {AuthGuard} from "../guards/auth.guard";
 
 @Controller('users')
