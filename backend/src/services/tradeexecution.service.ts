@@ -13,17 +13,18 @@ export class TradeExecutionService {
 
     async buy(userId: number, dto: BuyHoldingDto) {
         try {
-            await this.prisma.$transaction(async (tx) => {
+            const trade = await this.prisma.$transaction(async (tx) => {
                 await this.holdingService.buy(tx, userId, dto)
-                await this.tradeService.recordTrade(tx, userId, dto, "buy")
+                return await this.tradeService.recordTrade(tx, userId, dto, "buy")
             })
 
             return {
                 success: true,
-                message: `Successfully bought ${dto.quantity} of ${dto.stock_symbol}`
+                message: `Successfully bought ${dto.quantity} shares of ${dto.stock_symbol} at $${trade.price} per share`
             }
 
         } catch (error) {
+            console.log(error)
             return {
                 success: false,
                 message: "An error occurred, the trade was not executed"
@@ -34,18 +35,18 @@ export class TradeExecutionService {
 
     async sell(userId: number, dto: SellHoldingDto) {
         try {
-            await this.prisma.$transaction(async (tx) => {
+            const trade = await this.prisma.$transaction(async (tx) => {
                 await this.holdingService.sell(tx, userId, dto)
-                await this.tradeService.recordTrade(tx, userId, dto, "sell")
-
+                return await this.tradeService.recordTrade(tx, userId, dto, "sell")
             })
 
             return {
                 success: true,
-                message: `Successfully sold ${dto.quantity} of ${dto.stock_symbol}`
+                message: `Successfully sold ${dto.quantity} shares of ${dto.stock_symbol} at $${trade.price} per share`
             }
             
         } catch (error) {
+            console.log(error)
             return {
                 success: false,
                 message: "An error occurred, the trade was not executed"
