@@ -1,5 +1,6 @@
 import {buyHolding, sellHolding} from "@/src/helper/api";
 import {TradeRequest, TradeBasicResponse} from "@/src/types/trade";
+import React from "react";
 
 export default function TradeForm({getHoldingsDataAsync, setMessageType, setMessage}) {
     const tradeStocksFormSubmission = async (event: React.SubmitEvent<HTMLFormElement>) => {
@@ -38,7 +39,9 @@ export default function TradeForm({getHoldingsDataAsync, setMessageType, setMess
 
         (response.success) ? setMessageType("success") : setMessageType("error")
 
-        if (response.message) {setMessage(response.message)}
+        if (response.message) {
+            setMessage(response.message)
+        }
 
         getHoldingsDataAsync()
     }

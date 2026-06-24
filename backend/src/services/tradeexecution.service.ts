@@ -44,7 +44,7 @@ export class TradeExecutionService {
                 success: true,
                 message: `Successfully sold ${dto.quantity} shares of ${dto.stock_symbol} at $${trade.price} per share`
             }
-            
+
         } catch (error) {
             console.log(error)
             return {

@@ -7,6 +7,7 @@ import {AuthGuard} from "../guards/auth.guard";
 export class UserController {
     constructor(private userService: UserService) {
     }
+
     @Post("register")
     async register(@Body() registerAccountDto: RegisterAccountDto) {
         return this.userService.register(registerAccountDto)

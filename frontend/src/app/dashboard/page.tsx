@@ -1,11 +1,7 @@
 "use client";
 
 import {
-    addToWatchlist,
-    buyHolding,
-    deleteFromWatchlist,
-    finnhubStockSymbolLookup,
-    getCurrentUser, getHoldingsData, getWatchlistData, sellHolding
+    getCurrentUser, getHoldingsData, getWatchlistData
 } from "@/src/helper/api";
 import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
@@ -14,7 +10,7 @@ import FinnhubLookupForm from "@/src/components/FinnhubLookupForm";
 import WatchlistForm from "@/src/components/WatchlistForm";
 import Message from "@/src/components/Message";
 import WatchlistList from "@/src/components/WatchlistList";
-import {WatchlistBasicResponse, WatchlistResponse} from "@/src/types/watchlist";
+import {WatchlistResponse} from "@/src/types/watchlist";
 import {TradeResponse} from "@/src/types/trade";
 import HoldingsList from "@/src/components/HoldingsList";
 
@@ -72,10 +68,12 @@ export default function Dashboard() {
         <div className="flex flex-col min-h-screen justify-center items-center">
             <p className="text-xl underline">Dashboard</p>
 
-            <WatchlistForm getWatchlistDataAsync={getWatchlistDataAsync} setMessageType={setMessageType} setMessage={setMessage}/>
+            <WatchlistForm getWatchlistDataAsync={getWatchlistDataAsync} setMessageType={setMessageType}
+                           setMessage={setMessage}/>
             <WatchlistList watchlistData={watchlistData}/>
             <FinnhubLookupForm setMessageType={setMessageType} setMessage={setMessage}/>
-            <TradeForm getHoldingsDataAsync={getHoldingsDataAsync} setMessageType={setMessageType} setMessage={setMessage}/>
+            <TradeForm getHoldingsDataAsync={getHoldingsDataAsync} setMessageType={setMessageType}
+                       setMessage={setMessage}/>
             <HoldingsList holdingsData={holdingsData}/>
 
             <Message type={messageType} message={message}/>

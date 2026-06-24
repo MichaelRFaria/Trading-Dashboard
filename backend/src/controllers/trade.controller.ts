@@ -1,11 +1,10 @@
 import {Body, Controller, Post, Req, UseGuards} from "@nestjs/common";
-import {TradeService} from "../services/trade.service";
 import {AuthGuard} from "../guards/auth.guard";
 import {BuyHoldingDto, SellHoldingDto} from "../dto/holdings.dto";
 import {TradeExecutionService} from "../services/tradeexecution.service";
 
 @Controller("trade")
-export class TradeController{
+export class TradeController {
     constructor(private readonly tradeExecutionService: TradeExecutionService) {
     }
 

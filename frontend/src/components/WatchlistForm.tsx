@@ -1,5 +1,6 @@
 import {addToWatchlist, deleteFromWatchlist} from "@/src/helper/api";
 import {WatchlistRequest, WatchlistBasicResponse} from "@/src/types/watchlist";
+import React from "react";
 
 export default function WatchlistForm({getWatchlistDataAsync, setMessageType, setMessage}) {
     const modifyWatchlistFormSubmission = async (event: React.SubmitEvent<HTMLFormElement>) => {
@@ -37,7 +38,9 @@ export default function WatchlistForm({getWatchlistDataAsync, setMessageType, se
 
         (response.success) ? setMessageType("success") : setMessageType("error")
 
-        if (response.message) {setMessage(response.message)}
+        if (response.message) {
+            setMessage(response.message)
+        }
 
         getWatchlistDataAsync()
     }

@@ -3,6 +3,8 @@ export class AccountDto {
     password: string;
 }
 
-export class RegisterAccountDto extends AccountDto {}
+export class RegisterAccountDto extends AccountDto {
+}
 
-export class LoginAccountDto extends AccountDto {}
+export class LoginAccountDto extends AccountDto {
+}

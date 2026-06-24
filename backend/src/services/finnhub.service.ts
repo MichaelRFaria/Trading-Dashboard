@@ -10,14 +10,14 @@ export class FinnhubService {
     }
 
     async symbolLookup(dto: FinnhubSymbolLookupDto) {
-        const { data } = await firstValueFrom(
+        const {data} = await firstValueFrom(
             this.httpService.get("https://finnhub.io/api/v1/search", {
-                params: {
-                    q: dto.stock_symbol,
-                    token: process.env.FINNHUB_API_KEY,
+                    params: {
+                        q: dto.stock_symbol,
+                        token: process.env.FINNHUB_API_KEY,
+                    }
                 }
-            }
-        ))
+            ))
 
         const stockData = data.result.find(item => item.symbol === dto.stock_symbol)
 
@@ -27,7 +27,7 @@ export class FinnhubService {
     }
 
     async getPrice(dto: FinnhubSymbolLookupDto) {
-        const { data } = await firstValueFrom(
+        const {data} = await firstValueFrom(
             this.httpService.get("https://finnhub.io/api/v1/quote", {
                     params: {
                         symbol: dto.stock_symbol,
@@ -36,10 +36,6 @@ export class FinnhubService {
                 }
             ))
 
-        //console.log(data)
-        const price = data.c;
-        //console.log(price)
-
-        return price
+        return data.c // current price. see https://finnhub.io/docs/api/quote for other prices that can be retrieved
     }
 }

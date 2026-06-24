@@ -3,7 +3,7 @@
 import Link from "next/link";
 import {getCurrentUser, loginAccount} from "@/src/helper/api";
 import {useRouter, useSearchParams} from "next/navigation";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Message from "@/src/components/Message";
 
 type LoginRequest = {
@@ -31,11 +31,11 @@ export default function Home() {
     const [message, setMessage] = useState("")
 
     useEffect(() => {
-       getCurrentUser().then(user => {
+        getCurrentUser().then(user => {
             if (user) {
                 router.push("/dashboard")
             }
-       })
+        })
 
         if (searchParams.get("status") === "registration-successful") {
             setMessageType("success")

@@ -1,5 +1,6 @@
 import {finnhubStockSymbolLookup} from "@/src/helper/api";
 import {StockSymbolLookupRequest, StockSymbolLookupResponse} from "@/src/types/stock";
+import React from "react";
 
 export default function FinnhubLookupForm({setMessageType, setMessage}) {
     const finnhubLookupFormSubmission = async (event: React.SubmitEvent<HTMLFormElement>) => {

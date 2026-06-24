@@ -1,8 +1,6 @@
-import {Body, Controller, Get, Post, Req, UseGuards} from "@nestjs/common";
+import {Controller, Get, Req, UseGuards} from "@nestjs/common";
 import {HoldingService} from "../services/holding.service";
-import {BuyHoldingDto, SellHoldingDto} from "../dto/holdings.dto";
 import {AuthGuard} from "../guards/auth.guard";
-import {TradeExecutionService} from "../services/tradeexecution.service";
 
 @Controller("holdings")
 export class HoldingController {
