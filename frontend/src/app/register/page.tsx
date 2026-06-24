@@ -11,7 +11,7 @@ type RegisterRequest = {
 
 type RegisterResponse = {
     success: boolean,
-    message?: string,
+    message: string,
 }
 
 export default function Home() {

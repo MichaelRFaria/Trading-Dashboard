@@ -11,10 +11,16 @@ type LoginRequest = {
     password: string
 }
 
-type LoginResponse = {
-    success: boolean,
-    message?: string,
-    access_token?: string,
+type LoginResponse = LoginSuccess | LoginFailure
+
+type LoginSuccess = {
+    success: true,
+    access_token: string
+}
+
+type LoginFailure = {
+    success: false,
+    message: string
 }
 
 export default function Home() {
