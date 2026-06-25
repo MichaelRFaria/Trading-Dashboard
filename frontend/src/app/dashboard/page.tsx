@@ -13,6 +13,7 @@ import WatchlistList from "@/src/components/WatchlistList";
 import {WatchlistResponse} from "@/src/types/watchlist";
 import {TradeResponse} from "@/src/types/trade";
 import HoldingsList from "@/src/components/HoldingsList";
+import Metrics from "@/src/components/Metrics";
 
 export default function Dashboard() {
     const router = useRouter();
@@ -21,7 +22,6 @@ export default function Dashboard() {
 
     const [watchlistData, setWatchlistData] = useState([])
     const [holdingsData, setHoldingsData] = useState([])
-
 
     const [messageType, setMessageType] = useState("success")
     const [message, setMessage] = useState("")
@@ -75,6 +75,7 @@ export default function Dashboard() {
             <TradeForm getHoldingsDataAsync={getHoldingsDataAsync} setMessageType={setMessageType}
                        setMessage={setMessage}/>
             <HoldingsList holdingsData={holdingsData}/>
+            <Metrics holdingsData={holdingsData}/>
 
             <Message type={messageType} message={message}/>
         </div>
