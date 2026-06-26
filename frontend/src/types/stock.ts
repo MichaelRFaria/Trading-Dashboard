@@ -13,3 +13,5 @@ export type StockSymbolLookupResponseResult = {
     symbol: string,
     type: string,
 }
+
+export type HoldingsPrice = Record<string, number>

@@ -44,6 +44,14 @@ export async function finnhubStockSymbolLookup(data) {
     return await fetchUrl(`/finnhub/symbol-lookup?${params.toString()}`, "GET", data);
 }
 
+export async function finnhubPriceQuote(data) {
+    const params = new URLSearchParams({
+        stock_symbol: data.stock_symbol,
+    });
+
+    return await fetchUrl(`/finnhub/price?${params.toString()}`, "GET", data);
+}
+
 // helper function to make HTTP calls
 async function fetchUrl(path, method = "GET", data = null) {
     const url = "http://localhost:3001" + path

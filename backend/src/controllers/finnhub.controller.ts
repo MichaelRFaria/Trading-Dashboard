@@ -13,4 +13,10 @@ export class FinnhubController {
     async symbolLookup(@Query() finnHubSymbolLookupDto: FinnhubSymbolLookupDto) {
         return this.finnHubService.symbolLookup(finnHubSymbolLookupDto);
     }
+
+    @UseGuards(AuthGuard)
+    @Get("price")
+    async getPrice(@Query() finnHubSymbolLookupDto: FinnhubSymbolLookupDto) {
+        return this.finnHubService.getPrice(finnHubSymbolLookupDto)
+    }
 }
