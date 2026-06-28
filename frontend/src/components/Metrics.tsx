@@ -1,16 +1,23 @@
 import {useEffect, useState} from "react";
 import {HoldingsPrice, StockSymbolLookupRequest} from "@/src/types/stock";
-import {finnhubPriceQuote} from "@/src/helper/api";
+import {finnhubPriceQuote, getRealisedGains} from "@/src/helper/api";
 
 
 export default function Metrics({holdingsData}) {
     const [holdingsPrice, setHoldingsPrice] = useState<HoldingsPrice>({})
+    const [realisedGains, setRealisedGains] = useState(0)
 
     useEffect(() => {
         if (holdingsData.length > 0) {
             getPriceOfAllHoldings()
         }
     }, [holdingsData]);
+
+    useEffect(() => {
+        getRealisedGains().then((r) => {
+            setRealisedGains(r)
+        })
+    }, []);
 
     const getPriceOfAllHoldings = async () => {
         console.log("getting price of holdings")
@@ -55,10 +62,13 @@ export default function Metrics({holdingsData}) {
 
     return (
         <>
+            {/*todo use table for these*/}
             <div className="flex flex-col items-center">
                 <p>Portfolio Value: {totalPortfolioValue}</p>
                 <p>Today's Gain/Loss:</p>
-                <p>Total Gain/Loss:</p>
+                <p>Total Gain/Loss (realised): {realisedGains}</p>
+                <p>Total Gain/Loss (unrealised):</p>
+                <p>Total Gain/Loss (combined):</p>
                 <p>Largest Position: {largestPosition.value} of {largestPosition.stock_symbol}</p>
                 <p>Number of Holdings: {holdingsData.length}</p>
             </div>
