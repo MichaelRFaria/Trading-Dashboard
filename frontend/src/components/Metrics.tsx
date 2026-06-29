@@ -8,16 +8,11 @@ export default function Metrics({holdingsData}) {
     const [realisedGains, setRealisedGains] = useState(0)
 
     useEffect(() => {
-        if (holdingsData.length > 0) {
-            getPriceOfAllHoldings()
-        }
-    }, [holdingsData]);
-
-    useEffect(() => {
         getRealisedGains().then((r) => {
             setRealisedGains(r)
         })
-    }, []);
+        getPriceOfAllHoldings()
+    }, [holdingsData]);
 
     const getPriceOfAllHoldings = async () => {
         console.log("getting price of holdings")
@@ -59,6 +54,10 @@ export default function Metrics({holdingsData}) {
         stock_symbol: null,
         value: 0
     })
+
+    if (holdingsData.length === 0) {
+        return <p>Loading...</p>
+    }
 
     return (
         <>

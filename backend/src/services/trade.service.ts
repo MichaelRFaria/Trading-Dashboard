@@ -80,7 +80,7 @@ export class TradeService {
                     quantity = trade.quantity.toNumber()
                 }
             } else { // sell
-                realisedGain += (trade.price.toNumber() - averagePrice) * quantity
+                realisedGain += (trade.price.toNumber() - averagePrice) * trade.quantity.toNumber()
                 quantity -= trade.quantity.toNumber()
             }
         }
