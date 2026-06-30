@@ -1,15 +1,23 @@
 import {useEffect, useState} from "react";
 import {HoldingsPrice, StockSymbolLookupRequest} from "@/src/types/stock";
-import {finnhubPriceQuote, getRealisedGains} from "@/src/helper/api";
+import {finnhubPriceQuote, getGains} from "@/src/helper/api";
 
 
 export default function Metrics({holdingsData}) {
     const [holdingsPrice, setHoldingsPrice] = useState<HoldingsPrice>({})
-    const [realisedGains, setRealisedGains] = useState(0)
+    const [gains, setGains] = useState({
+        realised_gains: 0,
+        unrealised_gains: 0
+    })
 
     useEffect(() => {
-        getRealisedGains().then((r) => {
-            setRealisedGains(r)
+        getGains().then((r) => {
+            console.log(r)
+            setGains({
+                realised_gains: r.realised_gains,
+                unrealised_gains: r.unrealised_gains
+            })
+            console.log(gains)
         })
         getPriceOfAllHoldings()
     }, [holdingsData]);
@@ -55,6 +63,8 @@ export default function Metrics({holdingsData}) {
         value: 0
     })
 
+    const totalCombinedGains = gains.unrealised_gains + gains.realised_gains
+
     if (holdingsData.length === 0) {
         return <p>Loading...</p>
     }
@@ -65,9 +75,9 @@ export default function Metrics({holdingsData}) {
             <div className="flex flex-col items-center">
                 <p>Portfolio Value: {totalPortfolioValue}</p>
                 <p>Today's Gain/Loss:</p>
-                <p>Total Gain/Loss (realised): {realisedGains}</p>
-                <p>Total Gain/Loss (unrealised):</p>
-                <p>Total Gain/Loss (combined):</p>
+                <p>Total Gain/Loss (realised): {gains.realised_gains}</p>
+                <p>Total Gain/Loss (unrealised): {gains.unrealised_gains}</p>
+                <p>Total Gain/Loss (combined): {totalCombinedGains}</p>
                 <p>Largest Position: {largestPosition.value} of {largestPosition.stock_symbol}</p>
                 <p>Number of Holdings: {holdingsData.length}</p>
             </div>

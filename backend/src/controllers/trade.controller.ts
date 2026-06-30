@@ -27,10 +27,10 @@ export class TradeController {
     }
 
     @UseGuards(AuthGuard)
-    @Get("realised-gains")
-    async getRealisedGains(@Req() request) {
+    @Get("gains")
+    async getGains(@Req() request) {
         const userId = request.user.sub;
 
-        return this.tradeService.getRealisedGains(userId)
+        return this.tradeService.getGains(userId)
     }
 }

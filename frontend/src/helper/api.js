@@ -36,8 +36,8 @@ export async function sellHolding(data) {
     return await fetchUrl("/trade/sell", "POST", data);
 }
 
-export async function getRealisedGains() {
-    return await fetchUrl("/trade/realised-gains","GET")
+export async function getGains() {
+    return await fetchUrl("/trade/gains","GET")
 }
 
 export async function finnhubStockSymbolLookup(data) {
