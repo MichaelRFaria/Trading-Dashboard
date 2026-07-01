@@ -3,16 +3,7 @@
 import {registerAccount} from "@/src/helper/api";
 import React, {useState} from "react";
 import {useRouter} from "next/navigation";
-
-type RegisterRequest = {
-    email: string
-    password: string
-}
-
-type RegisterResponse = {
-    success: boolean,
-    message: string,
-}
+import {RegisterRequest, RegisterResponse} from "@/src/types/account";
 
 export default function Home() {
     const router = useRouter()

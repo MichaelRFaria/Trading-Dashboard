@@ -5,23 +5,7 @@ import {getCurrentUser, loginAccount} from "@/src/helper/api";
 import {useRouter, useSearchParams} from "next/navigation";
 import React, {useEffect, useState} from "react";
 import Message from "@/src/components/Message";
-
-type LoginRequest = {
-    email: string
-    password: string
-}
-
-type LoginResponse = LoginSuccess | LoginFailure
-
-type LoginSuccess = {
-    success: true,
-    access_token: string
-}
-
-type LoginFailure = {
-    success: false,
-    message: string
-}
+import {LoginRequest, LoginResponse} from "@/src/types/account";
 
 export default function Home() {
     const router = useRouter()
