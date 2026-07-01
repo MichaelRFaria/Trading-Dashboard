@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {HoldingsPrice, StockSymbolLookupRequest} from "@/src/types/stock";
 import {finnhubPriceQuote, getGains} from "@/src/helper/api";
+import {parseNumberToDollars} from "@/src/helper/format";
 
 
 export default function Metrics({holdingsData}) {
@@ -73,12 +74,12 @@ export default function Metrics({holdingsData}) {
         <>
             {/*todo use table for these*/}
             <div className="flex flex-col items-center">
-                <p>Portfolio Value: {totalPortfolioValue}</p>
+                <p>Portfolio Value: {parseNumberToDollars(totalPortfolioValue)}</p>
                 <p>Today's Gain/Loss:</p>
-                <p>Total Gain/Loss (realised): {gains.realised_gains}</p>
-                <p>Total Gain/Loss (unrealised): {gains.unrealised_gains}</p>
-                <p>Total Gain/Loss (combined): {totalCombinedGains}</p>
-                <p>Largest Position: {largestPosition.value} of {largestPosition.stock_symbol}</p>
+                <p>Total Gain/Loss (realised): {parseNumberToDollars(gains.realised_gains)}</p>
+                <p>Total Gain/Loss (unrealised): {parseNumberToDollars(gains.unrealised_gains)}</p>
+                <p>Total Gain/Loss (combined): {parseNumberToDollars(totalCombinedGains)}</p>
+                <p>Largest Position: {parseNumberToDollars(largestPosition.value)} of {largestPosition.stock_symbol}</p>
                 <p>Number of Holdings: {holdingsData.length}</p>
             </div>
         </>
