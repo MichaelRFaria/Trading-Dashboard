@@ -4,5 +4,5 @@ export function parseNumberToDollars(num: number) {
 
     // return the formatted number with a dollar sign
     // if the number was negative we remove the negative sign and place it at the start of the string
-    return (num >= 0) ? `$${localeNum}` : `-$${localeNum.slice(1)}`
+    return (num >= 0) ? `+$${localeNum}` : `-$${localeNum.slice(1)}`
 }

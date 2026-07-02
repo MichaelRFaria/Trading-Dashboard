@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {HoldingsPrice, StockSymbolLookupRequest} from "@/src/types/stock";
 import {finnhubPriceQuote, getGains} from "@/src/helper/api";
 import {parseNumberToDollars} from "@/src/helper/format";
+import MetricStat from "@/src/components/MetricStat";
 
 
 export default function Metrics({holdingsData}) {
@@ -76,9 +77,9 @@ export default function Metrics({holdingsData}) {
             <div className="flex flex-col items-center">
                 <p>Portfolio Value: {parseNumberToDollars(totalPortfolioValue)}</p>
                 <p>Today's Gain/Loss:</p>
-                <p>Total Gain/Loss (realised): {parseNumberToDollars(gains.realised_gains)}</p>
-                <p>Total Gain/Loss (unrealised): {parseNumberToDollars(gains.unrealised_gains)}</p>
-                <p>Total Gain/Loss (combined): {parseNumberToDollars(totalCombinedGains)}</p>
+                <MetricStat text={"Total Gain/Loss (realised): "} stat={gains.realised_gains}/>
+                <MetricStat text={"Total Gain/Loss (unrealised): "} stat={gains.unrealised_gains}/>
+                <MetricStat text={"Total Gain/Loss (combined): "} stat={totalCombinedGains}/>
                 <p>Largest Position: {parseNumberToDollars(largestPosition.value)} of {largestPosition.stock_symbol}</p>
                 <p>Number of Holdings: {holdingsData.length}</p>
             </div>
