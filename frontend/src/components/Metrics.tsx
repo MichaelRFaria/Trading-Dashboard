@@ -77,9 +77,9 @@ export default function Metrics({holdingsData}) {
             <div className="flex flex-col items-center">
                 <p>Portfolio Value: {parseNumberToDollars(totalPortfolioValue)}</p>
                 <p>Today's Gain/Loss:</p>
-                <MetricStat text={"Total Gain/Loss (realised): "} stat={gains.realised_gains}/>
-                <MetricStat text={"Total Gain/Loss (unrealised): "} stat={gains.unrealised_gains}/>
-                <MetricStat text={"Total Gain/Loss (combined): "} stat={totalCombinedGains}/>
+                <MetricStat text={"Total Gain/Loss (realised): "} stat={gains.realised_gains} portfolioValue={totalPortfolioValue}/>
+                <MetricStat text={"Total Gain/Loss (unrealised): "} stat={gains.unrealised_gains} portfolioValue={totalPortfolioValue}/>
+                <MetricStat text={"Total Gain/Loss (combined): "} stat={totalCombinedGains} portfolioValue={totalPortfolioValue}/>
                 <p>Largest Position: {parseNumberToDollars(largestPosition.value)} of {largestPosition.stock_symbol}</p>
                 <p>Number of Holdings: {holdingsData.length}</p>
             </div>
