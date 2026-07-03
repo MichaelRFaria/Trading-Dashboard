@@ -2,7 +2,11 @@ import {buyHolding, sellHolding} from "@/src/helper/api";
 import {TradeRequest, TradeBasicResponse} from "@/src/types/trade";
 import React from "react";
 
-export default function TradeForm({getHoldingsDataAsync, setMessageType, setMessage}) {
+export default function TradeForm({getHoldingsDataAsync, setMessageType, setMessage}: {
+    getHoldingsDataAsync: () => Promise<void>,
+    setMessageType: React.Dispatch<React.SetStateAction<string>>,
+    setMessage: React.Dispatch<React.SetStateAction<string>>
+}) {
     const tradeStocksFormSubmission = async (event: React.SubmitEvent<HTMLFormElement>) => {
         event.preventDefault(); // prevent page refresh
 
@@ -19,7 +23,7 @@ export default function TradeForm({getHoldingsDataAsync, setMessageType, setMess
         console.log(request.quantity)
 
         const action = formData.get("action")
-        let response: TradeBasicResponse
+        let response: TradeBasicResponse | null
 
         switch (action) {
             case "buy":
@@ -29,13 +33,16 @@ export default function TradeForm({getHoldingsDataAsync, setMessageType, setMess
                 response = await sellHolding(request)
                 break;
             default:
-                response = {
-                    success: false,
-                    message: "Request not sent. Something went wrong."
-                }
+                console.error("trade form's action value was unexpected, something went wrong")
+                return
         }
 
         //console.log(response)
+
+        if (response === null) {
+            console.error("holdings trade response is null, something went wrong")
+            return
+        }
 
         (response.success) ? setMessageType("success") : setMessageType("error")
 
