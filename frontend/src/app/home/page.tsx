@@ -39,7 +39,12 @@ export default function Home() {
 
         console.log(request.email)
 
-        const response: LoginResponse = await loginAccount(request);
+        const response: LoginResponse | null = await loginAccount(request);
+
+        if (response === null) {
+            console.error("login response is null, something went wrong")
+            return
+        }
 
         console.log(response)
 
