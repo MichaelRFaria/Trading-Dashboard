@@ -2,7 +2,11 @@ import {addToWatchlist, deleteFromWatchlist} from "@/src/helper/api";
 import {WatchlistRequest, WatchlistBasicResponse} from "@/src/types/watchlist";
 import React from "react";
 
-export default function WatchlistForm({getWatchlistDataAsync, setMessageType, setMessage}) {
+export default function WatchlistForm({getWatchlistDataAsync, setMessageType, setMessage}: {
+    getWatchlistDataAsync: () => Promise<void>,
+    setMessageType: React.Dispatch<React.SetStateAction<string>>,
+    setMessage: React.Dispatch<React.SetStateAction<string>>
+}) {
     const modifyWatchlistFormSubmission = async (event: React.SubmitEvent<HTMLFormElement>) => {
         event.preventDefault(); // prevent page refresh
 
@@ -18,7 +22,7 @@ export default function WatchlistForm({getWatchlistDataAsync, setMessageType, se
         const action = formData.get("action") as string
         //console.log(action)
 
-        let response: WatchlistBasicResponse;
+        let response: WatchlistBasicResponse | null;
 
         switch (action) {
             case "add":
@@ -28,13 +32,16 @@ export default function WatchlistForm({getWatchlistDataAsync, setMessageType, se
                 response = await deleteFromWatchlist(request)
                 break;
             default:
-                response = {
-                    success: false,
-                    message: "Request not sent. Something went wrong."
-                }
+                console.error("watchlist form's action value was unexpected, something went wrong")
+                return
         }
 
-        //console.log(response)
+        //console.log
+
+        if (response === null) {
+            console.error("watchlist modification response is null, something went wrong")
+            return
+        }
 
         (response.success) ? setMessageType("success") : setMessageType("error")
 
