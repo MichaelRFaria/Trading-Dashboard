@@ -16,6 +16,11 @@ export type StockSymbolLookupResponseResult = {
 
 export type HoldingsPrice = Record<string, number>
 
+export type HoldingValue = {
+    stock_symbol: string,
+    value: number
+}
+
 export type GainsResponse = {
     realised_gains: number,
     unrealised_gains: number
