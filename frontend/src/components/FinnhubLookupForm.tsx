@@ -2,7 +2,10 @@ import {finnhubStockSymbolLookup} from "@/src/helper/api";
 import {StockSymbolLookupRequest, StockSymbolLookupResponse} from "@/src/types/stock";
 import React from "react";
 
-export default function FinnhubLookupForm({setMessageType, setMessage}) {
+export default function FinnhubLookupForm({setMessageType, setMessage}: {
+    setMessageType: React.Dispatch<React.SetStateAction<string>>,
+    setMessage: React.Dispatch<React.SetStateAction<string>>
+}) {
     const finnhubLookupFormSubmission = async (event: React.SubmitEvent<HTMLFormElement>) => {
         event.preventDefault(); // prevent page refresh
 
@@ -13,11 +16,14 @@ export default function FinnhubLookupForm({setMessageType, setMessage}) {
             stock_symbol: formData.get("stock_symbol") as string,
         }
 
-        const response: StockSymbolLookupResponse = await finnhubStockSymbolLookup(request)
+        const response: StockSymbolLookupResponse | null = await finnhubStockSymbolLookup(request)
 
         if (response) { // todo add error flow when a stock is not found
             setMessageType("success")
             setMessage(JSON.stringify(response))
+        } else {
+            console.error("finnhub lookup response is null, something went wrong")
+            return
         }
     }
 
