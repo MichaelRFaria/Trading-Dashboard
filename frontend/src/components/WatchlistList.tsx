@@ -1,4 +1,6 @@
-export default function WatchlistList({watchlistData}) {
+import {WatchlistDataItem} from "@/src/types/watchlist";
+
+export default function WatchlistList({watchlistData}: {watchlistData: WatchlistDataItem[]}) {
     if (watchlistData.length <= 0) {
         //console.log(watchlistData)
         return <p>Add some items to your watchlist to view them</p>
@@ -16,7 +18,7 @@ export default function WatchlistList({watchlistData}) {
                 </thead>
 
                 <tbody>
-                {watchlistData.map((item, index) =>
+                {watchlistData.map((item: WatchlistDataItem, index: number) =>
                     <tr>
                         <td>{index + 1}</td>
                         <td>{item.stock_symbol}</td>
