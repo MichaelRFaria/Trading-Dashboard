@@ -19,7 +19,12 @@ export default function Home() {
             password: formData.get("password") as string,
         }
 
-        const response: RegisterResponse = await registerAccount(request);
+        const response: RegisterResponse | null = await registerAccount(request);
+
+        if (response === null) {
+            console.error("registration response is null, something went wrong")
+            return
+        }
 
         if (response.success) {
             //console.log("account successfully registered")
