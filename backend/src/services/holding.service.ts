@@ -18,7 +18,9 @@ export class HoldingService {
 
         if (data) {
             console.log(data)
-            return data
+            return {
+                data: data
+            }
         } else {
             return {
                 success: false,

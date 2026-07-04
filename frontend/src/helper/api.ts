@@ -1,10 +1,10 @@
 // function to get the authenticated user
 import {GainsResponse, StockSymbolLookupRequest, StockSymbolLookupResponse} from "@/src/types/stock";
-import {LoginRequest, LoginResponse, RegisterRequest, RegisterResponse} from "@/src/types/account";
-import {WatchlistBasicResponse, WatchlistData, WatchlistRequest, WatchlistResponse} from "@/src/types/watchlist";
+import {AuthenticatedUser, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse} from "@/src/types/account";
+import {WatchlistBasicResponse, WatchlistRequest, WatchlistResponse} from "@/src/types/watchlist";
 import {TradeBasicResponse, TradeRequest, TradeResponse} from "@/src/types/trade";
 
-export async function getCurrentUser() {
+export async function getCurrentUser(): Promise<AuthenticatedUser | null> {
     return await fetchUrl("/users/me", "GET")
 }
 

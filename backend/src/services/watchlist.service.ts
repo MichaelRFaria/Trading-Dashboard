@@ -16,7 +16,9 @@ export class WatchlistService {
 
         if (data) {
             console.log(data)
-            return data
+            return {
+                data: data
+            }
         } else {
             return {
                 success: false,

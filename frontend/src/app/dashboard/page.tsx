@@ -10,18 +10,24 @@ import FinnhubLookupForm from "@/src/components/FinnhubLookupForm";
 import WatchlistForm from "@/src/components/WatchlistForm";
 import Message from "@/src/components/Message";
 import WatchlistList from "@/src/components/WatchlistList";
-import {WatchlistResponse} from "@/src/types/watchlist";
-import {TradeResponse} from "@/src/types/trade";
+import {WatchlistDataItem, WatchlistResponse} from "@/src/types/watchlist";
+import {HoldingsDataItem, TradeResponse} from "@/src/types/trade";
 import HoldingsList from "@/src/components/HoldingsList";
 import Metrics from "@/src/components/Metrics";
+import {AuthenticatedUser} from "@/src/types/account";
 
 export default function Dashboard() {
     const router = useRouter();
 
-    const [authenticatedUser, setAuthenticatedUser] = useState(null)
+    const [authenticatedUser, setAuthenticatedUser] = useState<AuthenticatedUser>({
+        sub: 0,
+        email: "",
+        exp: 0,
+        iat: 0
+    })
 
-    const [watchlistData, setWatchlistData] = useState([])
-    const [holdingsData, setHoldingsData] = useState([])
+    const [watchlistData, setWatchlistData] = useState<WatchlistDataItem[]>([])
+    const [holdingsData, setHoldingsData] = useState<HoldingsDataItem[]>([])
 
     const [messageType, setMessageType] = useState("success")
     const [message, setMessage] = useState("")
@@ -29,6 +35,8 @@ export default function Dashboard() {
     useEffect(() => {
         getCurrentUser().then(user => {
             if (user) {
+                // console.log("user response below")
+                //console.log(user)
                 setAuthenticatedUser(user)
             } else {
                 router.push("/home")
@@ -37,24 +45,39 @@ export default function Dashboard() {
     }, [])
 
     const getWatchlistDataAsync = async () => {
-        const watchlist: WatchlistResponse = await getWatchlistData()
-        //console.log(watchlistData)
+        const watchlist: WatchlistResponse | null = await getWatchlistData()
 
-        if (Array.isArray(watchlist)) {
-            setWatchlistData(watchlist)
+        if (watchlist === null) {
+            console.error("retrieved watchlist is null, something went wrong")
+            return
+        }
+
+        // console.log(watchlist)
+
+        if ("data" in watchlist) {
+            setWatchlistData(watchlist.data)
         } else {
-            setMessageType(watchlist.success)
+            setMessageType(watchlist?.success?.toString() || "false") // todo probably better way to do this
             setMessage(watchlist.message)
         }
     }
 
     const getHoldingsDataAsync = async () => {
-        const holdings: TradeResponse = await getHoldingsData()
+        const holdings: TradeResponse | null = await getHoldingsData()
 
-        if (Array.isArray(holdings)) {
-            setHoldingsData(holdings)
+        if (holdings === null) {
+            console.error("retrieved holdings is null, something went wrong")
+            return
+        }
+
+        // console.log(holdings)
+        // console.log(holdings.data)
+
+        if ("data" in holdings) {
+            setHoldingsData(holdings.data)
+            // console.log(holdingsData)
         } else {
-            setMessageType(holdings.success)
+            setMessageType(holdings?.success?.toString() || "false") // todo probably better way to do this
             setMessage(holdings.message)
         }
     }

@@ -24,3 +24,10 @@ export type LoginFailure = {
     success: false,
     message: string
 }
+
+export type AuthenticatedUser = {
+    sub: number,
+    email: string,
+    exp: number,
+    iat: number
+}
