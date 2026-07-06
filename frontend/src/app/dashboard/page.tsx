@@ -95,7 +95,8 @@ export default function Dashboard() {
                            setMessage={setMessage}/>
             <WatchlistList watchlistData={watchlistData}/>
             <FinnhubLookupForm setMessageType={setMessageType} setMessage={setMessage}/>
-            <TradeForm getHoldingsDataAsync={getHoldingsDataAsync} setMessageType={setMessageType}
+            <TradeForm getHoldingsDataAsync={getHoldingsDataAsync} holdingsData={holdingsData}
+                       setMessageType={setMessageType}
                        setMessage={setMessage}/>
             <HoldingsList holdingsData={holdingsData}/>
             <Metrics holdingsData={holdingsData}/>
