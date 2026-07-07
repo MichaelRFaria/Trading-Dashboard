@@ -91,7 +91,7 @@ export default function Dashboard() {
         <div className="flex flex-col min-h-screen justify-center items-center">
             <p className="text-xl underline">Dashboard</p>
 
-            <WatchlistForm getWatchlistDataAsync={getWatchlistDataAsync} setMessageType={setMessageType}
+            <WatchlistForm getWatchlistDataAsync={getWatchlistDataAsync} watchlistData={watchlistData} setMessageType={setMessageType}
                            setMessage={setMessage}/>
             <WatchlistList watchlistData={watchlistData}/>
             <FinnhubLookupForm setMessageType={setMessageType} setMessage={setMessage}/>
