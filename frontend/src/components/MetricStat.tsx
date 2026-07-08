@@ -1,10 +1,19 @@
 import {parseNumberToDollars} from "@/src/helper/format";
 import {calculatePortfolioReturnPercentage} from "@/src/helper/helper";
 
-export default function MetricStat({text, stat, portfolioValue}: {text: string, stat: number, portfolioValue: number}) {
+export default function MetricStat({text, stat, portfolioValue, percentage}: {
+    text: string,
+    stat: number,
+    portfolioValue: number,
+    percentage: boolean
+}) {
     if (stat > 0) {
-        return <p>{text}<span className="text-green-600">+{parseNumberToDollars(stat)} ({calculatePortfolioReturnPercentage(stat, portfolioValue)}%)</span></p>
+        return <p>{text}<span
+            className="text-green-600">+{parseNumberToDollars(stat)} {percentage && <>({calculatePortfolioReturnPercentage(stat, portfolioValue)}%)</>}</span>
+        </p>
     } else {
-        return <p>{text}<span className="text-red-600">-{parseNumberToDollars(stat)} ({calculatePortfolioReturnPercentage(stat, portfolioValue)}%)</span></p>
+        return <p>{text}<span
+            className="text-red-600">-{parseNumberToDollars(stat)} ({calculatePortfolioReturnPercentage(stat, portfolioValue)}%)</span>
+        </p>
     }
 }
