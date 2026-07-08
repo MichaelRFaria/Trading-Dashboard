@@ -102,7 +102,7 @@ export class TradeService {
         if (quantity > 0) {
             const currPrice = await this.finnhubService.getPrice({stock_symbol: stockSymbol})
 
-            unrealisedGain = quantity * currPrice
+            unrealisedGain = quantity * (currPrice - averagePrice)
             console.log("stock: " + stockSymbol)
             console.log("quantity: " + quantity)
             console.log("unrealised gain: " + unrealisedGain)
