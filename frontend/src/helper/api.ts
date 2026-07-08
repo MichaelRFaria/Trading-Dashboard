@@ -71,6 +71,7 @@ async function fetchUrl<T>(path: string, method: "GET" | "POST" | "PUT" | "DELET
             "Content-Type": "application/json"
         },
         credentials: "include", // allows cookies
+        cache: "no-store",
     }
 
     // if the method is not a GET request and there is data, stringify the data and add it to the options
