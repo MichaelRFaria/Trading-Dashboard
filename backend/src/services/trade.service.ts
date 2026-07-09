@@ -3,7 +3,7 @@ import {PrismaService} from "./prisma.service";
 import {GainsDto, TradeHolding} from "../dto/holdings.dto";
 import {Prisma, Trade} from "@prisma/client";
 import {FinnhubService} from "./finnhub.service";
-import {FinnhubSymbolLookupDto} from "../dto/finnhub.dto"
+import {FinnhubPriceLookupDto, FinnhubSymbolLookupDto} from "../dto/finnhub.dto"
 
 @Injectable()
 export class TradeService {
@@ -12,8 +12,9 @@ export class TradeService {
     }
 
     async recordTrade(tx: Prisma.TransactionClient, userId: number, dto: TradeHolding, type: string) {
-        const stockSymbolLookup: FinnhubSymbolLookupDto = {
-            stock_symbol: dto.stock_symbol
+        const stockSymbolLookup: FinnhubPriceLookupDto = {
+            stock_symbol: dto.stock_symbol,
+            type: "current"
         }
 
         const price = await this.finnhubService.getPrice(stockSymbolLookup)
@@ -100,7 +101,7 @@ export class TradeService {
         }
 
         if (quantity > 0) {
-            const currPrice = await this.finnhubService.getPrice({stock_symbol: stockSymbol})
+            const currPrice = await this.finnhubService.getPrice({stock_symbol: stockSymbol, type: "current"})
 
             unrealisedGain = quantity * (currPrice - averagePrice)
             console.log("stock: " + stockSymbol)

@@ -3,10 +3,13 @@ import {Injectable} from "@nestjs/common";
 import {BuyHoldingDto} from "../dto/holdings.dto";
 import {SellHoldingDto} from "../dto/holdings.dto";
 import {Prisma} from "@prisma/client";
+import {FinnhubService} from "./finnhub.service";
+import {FinnhubPriceChangeDataItemDto, FinnhubPriceChangeDto} from "../dto/finnhub.dto";
 
 @Injectable()
 export class HoldingService {
-    constructor(private readonly prisma: PrismaService) {
+    constructor(private readonly prisma: PrismaService,
+                private readonly finnhubService: FinnhubService) {
     }
 
     async getHoldings(userId: number) {
@@ -78,5 +81,26 @@ export class HoldingService {
         }
 
         return holding
+    }
+
+    // gets todays price changes by iterating through each of the user's holdings and making requests to Finnhub's API
+    async getHoldingsPriceChanges(userId: number) {
+        const holdings = await this.prisma.holding.findMany({
+            where: {
+                user_id: userId
+            },
+        })
+
+        const priceChanges = [] as FinnhubPriceChangeDataItemDto[]
+
+        for (const holding of holdings) {
+            const priceChange = await this.finnhubService.getPrice({stock_symbol: holding.stock_symbol, type: "change"})
+
+            priceChanges.push({stock_symbol: holding.stock_symbol, price_change: priceChange})
+        }
+
+        const payload = new FinnhubPriceChangeDto()
+        payload.data = priceChanges
+        return payload
     }
 }

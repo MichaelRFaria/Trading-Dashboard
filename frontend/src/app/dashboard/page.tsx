@@ -1,7 +1,7 @@
 "use client";
 
 import {
-    getCurrentUser, getHoldingsData, getWatchlistData
+    getCurrentUser, getHoldingsData, getPriceChanges, getWatchlistData
 } from "@/src/helper/api";
 import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
@@ -15,6 +15,7 @@ import {HoldingsDataItem, TradeResponse} from "@/src/types/trade";
 import HoldingsList from "@/src/components/HoldingsList";
 import Metrics from "@/src/components/Metrics";
 import {AuthenticatedUser} from "@/src/types/account";
+import {FinnhubPriceChangesDataItem, FinnhubPriceChangesResponse} from "@/src/types/stock";
 
 export default function Dashboard() {
     const router = useRouter();
@@ -28,6 +29,7 @@ export default function Dashboard() {
 
     const [watchlistData, setWatchlistData] = useState<WatchlistDataItem[]>([])
     const [holdingsData, setHoldingsData] = useState<HoldingsDataItem[]>([])
+    const [priceChangesData, setPriceChangesData] = useState<FinnhubPriceChangesDataItem[]>([])
 
     const [messageType, setMessageType] = useState("success")
     const [message, setMessage] = useState("")
@@ -82,9 +84,26 @@ export default function Dashboard() {
         }
     }
 
+    const getPriceChangesDataAsync = async () => {
+        const priceChanges: FinnhubPriceChangesResponse | null = await getPriceChanges()
+
+        if (priceChanges === null) {
+            console.error("retrieved price changes are null, something went wrong")
+            return
+        }
+
+        console.log(priceChanges)
+        console.log(priceChanges.data)
+
+        if ("data" in priceChanges) {
+            setPriceChangesData(priceChanges.data)
+        }
+    }
+
     useEffect(() => {
         getWatchlistDataAsync()
         getHoldingsDataAsync()
+        getPriceChangesDataAsync()
     }, [authenticatedUser]);
 
     return (

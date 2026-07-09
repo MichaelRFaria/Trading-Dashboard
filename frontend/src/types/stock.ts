@@ -25,3 +25,13 @@ export type GainsResponse = {
     realised_gains: number,
     unrealised_gains: number
 }
+
+export type FinnhubPriceChangesResponse = {
+    data: FinnhubPriceChangesDataItem[];
+}
+
+export type FinnhubPriceChangesDataItem = {
+    stock_symbol: string;
+    price_change: number;
+}
+

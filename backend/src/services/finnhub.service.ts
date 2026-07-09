@@ -1,5 +1,5 @@
 import {Injectable} from "@nestjs/common";
-import {FinnhubSymbolLookupDto} from "../dto/finnhub.dto";
+import {FinnhubPriceLookupDto, FinnhubSymbolLookupDto} from "../dto/finnhub.dto";
 import {HttpService} from "@nestjs/axios";
 import {firstValueFrom} from "rxjs";
 import * as process from "process";
@@ -26,7 +26,7 @@ export class FinnhubService {
         return stockData;
     }
 
-    async getPrice(dto: FinnhubSymbolLookupDto) {
+    async getPrice(dto: FinnhubPriceLookupDto) {
         const {data} = await firstValueFrom(
             this.httpService.get("https://finnhub.io/api/v1/quote", {
                     params: {
@@ -36,6 +36,14 @@ export class FinnhubService {
                 }
             ))
 
-        return data.c // current price. see https://finnhub.io/docs/api/quote for other prices that can be retrieved
+        // see https://finnhub.io/docs/api/quote for other prices that can be retrieved
+        switch (dto.type) {
+            case "current":
+                return data.c
+            case "change":
+                return data.d
+        }
+
+        return null; // todo only alternate accepted return type for now
     }
 }

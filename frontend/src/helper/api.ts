@@ -1,5 +1,10 @@
 // function to get the authenticated user
-import {GainsResponse, StockSymbolLookupRequest, StockSymbolLookupResponse} from "@/src/types/stock";
+import {
+    FinnhubPriceChangesResponse,
+    GainsResponse,
+    StockSymbolLookupRequest,
+    StockSymbolLookupResponse
+} from "@/src/types/stock";
 import {AuthenticatedUser, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse} from "@/src/types/account";
 import {WatchlistBasicResponse, WatchlistRequest, WatchlistResponse} from "@/src/types/watchlist";
 import {TradeBasicResponse, TradeRequest, TradeResponse} from "@/src/types/trade";
@@ -42,7 +47,11 @@ export async function sellHolding(data: TradeRequest): Promise<TradeBasicRespons
 }
 
 export async function getGains(): Promise<GainsResponse | null> {
-    return await fetchUrl<GainsResponse>("/trade/gains","GET")
+    return await fetchUrl<GainsResponse>("/trade/gains", "GET")
+}
+
+export async function getPriceChanges(): Promise<FinnhubPriceChangesResponse | null> {
+    return await fetchUrl<FinnhubPriceChangesResponse>("/holdings/price-changes", "GET")
 }
 
 export async function finnhubStockSymbolLookup(data: StockSymbolLookupRequest): Promise<StockSymbolLookupResponse | null> {

@@ -14,4 +14,12 @@ export class HoldingController {
 
         return this.holdingService.getHoldings(userId)
     }
+
+    @UseGuards(AuthGuard)
+    @Get("price-changes")
+    async getHoldingsPriceChanges(@Req() request) {
+        const userId = request.user.sub;
+
+        return this.holdingService.getHoldingsPriceChanges(userId)
+    }
 }

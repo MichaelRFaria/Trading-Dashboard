@@ -1,5 +1,5 @@
 import {Controller, Get, Query, UseGuards} from "@nestjs/common";
-import {FinnhubSymbolLookupDto} from "../dto/finnhub.dto";
+import {FinnhubPriceChangeDto, FinnhubPriceLookupDto, FinnhubSymbolLookupDto} from "../dto/finnhub.dto";
 import {FinnhubService} from "../services/finnhub.service";
 import {AuthGuard} from "../guards/auth.guard";
 
@@ -16,7 +16,7 @@ export class FinnhubController {
 
     @UseGuards(AuthGuard)
     @Get("price")
-    async getPrice(@Query() finnHubSymbolLookupDto: FinnhubSymbolLookupDto) {
-        return this.finnHubService.getPrice(finnHubSymbolLookupDto)
+    async getPrice(@Query() finnhubPriceLookupDto: FinnhubPriceLookupDto) {
+        return this.finnHubService.getPrice(finnhubPriceLookupDto)
     }
 }
