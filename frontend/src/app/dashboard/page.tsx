@@ -118,7 +118,7 @@ export default function Dashboard() {
                        setMessageType={setMessageType}
                        setMessage={setMessage}/>
             <HoldingsList holdingsData={holdingsData}/>
-            <Metrics holdingsData={holdingsData}/>
+            <Metrics holdingsData={holdingsData} priceChangesData={priceChangesData}/>
 
             <Message type={messageType} message={message}/>
         </div>

@@ -26,6 +26,11 @@ export type GainsResponse = {
     unrealised_gains: number
 }
 
+export type FinnhubPriceLookupRequest = {
+    stock_symbol: string,
+    type: "current" | "change",
+}
+
 export type FinnhubPriceChangesResponse = {
     data: FinnhubPriceChangesDataItem[];
 }

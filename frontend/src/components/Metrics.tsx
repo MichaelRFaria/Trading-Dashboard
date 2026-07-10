@@ -1,13 +1,20 @@
 import {useEffect, useState} from "react";
-import {GainsResponse, HoldingsPrice, HoldingValue, StockSymbolLookupRequest} from "@/src/types/stock";
+import {
+    FinnhubPriceChangesDataItem,
+    FinnhubPriceLookupRequest,
+    GainsResponse,
+    HoldingsPrice,
+    HoldingValue
+} from "@/src/types/stock";
 import {finnhubPriceQuote, getGains} from "@/src/helper/api";
 import {parseNumberToDollars} from "@/src/helper/format";
 import MetricStat from "@/src/components/MetricStat";
 import {HoldingsDataItem} from "@/src/types/trade";
 
 
-export default function Metrics({holdingsData}: {
-    holdingsData: HoldingsDataItem[]
+export default function Metrics({holdingsData, priceChangesData}: {
+    holdingsData: HoldingsDataItem[],
+    priceChangesData: FinnhubPriceChangesDataItem[],
 }) {
     const [holdingsPrice, setHoldingsPrice] = useState<HoldingsPrice>({})
     const [gains, setGains] = useState<GainsResponse>({
@@ -35,8 +42,9 @@ export default function Metrics({holdingsData}: {
         console.log("getting price of holdings")
         const prices = await Promise.all(
             holdingsData.map(async (holding: HoldingsDataItem) => {
-                const request: StockSymbolLookupRequest = {
-                    stock_symbol: holding.stock_symbol
+                const request: FinnhubPriceLookupRequest = {
+                    stock_symbol: holding.stock_symbol,
+                    type: "current"
                 }
 
                 let price = await finnhubPriceQuote(request)
@@ -60,6 +68,15 @@ export default function Metrics({holdingsData}: {
         const price = holdingsPrice[holding.stock_symbol] ?? 0
 
         return sum + holding.quantity * price;
+    }, 0);
+
+    // calculates today's gains by iterating through the user's holdings and multiplying the quantity of each stock by its change in price
+    const todaysGains = holdingsData.reduce((sum: number, holding: HoldingsDataItem) => {
+        const priceChange = priceChangesData.find(stock => stock.stock_symbol === holding.stock_symbol)?.price_change ?? 0
+
+        const gain = priceChange * holding.quantity
+
+        return sum + gain
     }, 0);
 
     const largestPosition = holdingsData.reduce<HoldingValue>((largest: HoldingValue, holding: HoldingsDataItem) => {
@@ -89,7 +106,8 @@ export default function Metrics({holdingsData}: {
             {/*todo use table for these*/}
             <div className="flex flex-col items-center">
                 <p>Portfolio Value: {parseNumberToDollars(totalPortfolioValue)}</p>
-                <p>Today's Gain/Loss:</p>
+                <MetricStat text={"Today's Gain/Loss: "} stat={todaysGains}
+                            portfolioValue={totalPortfolioValue} percentage={false}/>
                 <MetricStat text={"Total Gain/Loss (realised): "} stat={gains.realised_gains}
                             portfolioValue={totalPortfolioValue} percentage={false}/>
                 <MetricStat text={"Total Gain/Loss (unrealised): "} stat={gains.unrealised_gains}
