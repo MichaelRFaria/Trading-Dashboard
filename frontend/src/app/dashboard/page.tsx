@@ -1,8 +1,6 @@
 "use client";
 
-import {
-    getCurrentUser, getHoldingsData, getPriceChanges, getWatchlistData
-} from "@/src/helper/api";
+import {getCurrentUser, getHoldingsData, getPriceChanges, getWatchlistData} from "@/src/helper/api";
 import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import TradeForm from "@/src/components/TradeForm";
@@ -110,7 +108,8 @@ export default function Dashboard() {
         <div className="flex flex-col min-h-screen justify-center items-center">
             <p className="text-xl underline">Dashboard</p>
 
-            <WatchlistForm getWatchlistDataAsync={getWatchlistDataAsync} watchlistData={watchlistData} setMessageType={setMessageType}
+            <WatchlistForm getWatchlistDataAsync={getWatchlistDataAsync} watchlistData={watchlistData}
+                           setMessageType={setMessageType}
                            setMessage={setMessage}/>
             <WatchlistList watchlistData={watchlistData}/>
             <FinnhubLookupForm setMessageType={setMessageType} setMessage={setMessage}/>

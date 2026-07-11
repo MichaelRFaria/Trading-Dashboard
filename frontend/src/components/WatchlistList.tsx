@@ -1,6 +1,6 @@
 import {WatchlistDataItem} from "@/src/types/watchlist";
 
-export default function WatchlistList({watchlistData}: {watchlistData: WatchlistDataItem[]}) {
+export default function WatchlistList({watchlistData}: { watchlistData: WatchlistDataItem[] }) {
     if (watchlistData.length <= 0) {
         //console.log(watchlistData)
         return <p>Add some items to your watchlist to view them</p>

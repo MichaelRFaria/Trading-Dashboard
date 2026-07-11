@@ -1,4 +1,4 @@
-export default function Message({type, message}: {type: string, message: string}) {
+export default function Message({type, message}: { type: string, message: string }) {
 
     if (type === "success")
         return <p className="text-green-600">{message}</p>

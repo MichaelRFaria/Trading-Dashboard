@@ -1,5 +1,5 @@
 import {buyHolding, sellHolding} from "@/src/helper/api";
-import {TradeRequest, TradeBasicResponse, HoldingsDataItem} from "@/src/types/trade";
+import {HoldingsDataItem, TradeBasicResponse, TradeRequest} from "@/src/types/trade";
 import React, {useEffect, useState} from "react";
 
 export default function TradeForm({getHoldingsDataAsync, holdingsData, setMessageType, setMessage}: {

@@ -1,6 +1,6 @@
 import {HoldingsDataItem} from "@/src/types/trade";
 
-export default function HoldingsList({holdingsData}: {holdingsData: HoldingsDataItem[]}) {
+export default function HoldingsList({holdingsData}: { holdingsData: HoldingsDataItem[] }) {
     if (holdingsData.length <= 0) {
         return <p>Add some items to your holdings to view them</p>
     }
