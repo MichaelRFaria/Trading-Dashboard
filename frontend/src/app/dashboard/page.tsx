@@ -14,6 +14,8 @@ import HoldingsList from "@/src/components/HoldingsList";
 import Metrics from "@/src/components/Metrics";
 import {AuthenticatedUser} from "@/src/types/account";
 import {FinnhubPriceChangesDataItem, FinnhubPriceChangesResponse} from "@/src/types/stock";
+import Navbar from "@/src/components/Navbar";
+import {NavbarLink} from "@/src/types/misc";
 
 export default function Dashboard() {
     const router = useRouter();
@@ -24,6 +26,11 @@ export default function Dashboard() {
         exp: 0,
         iat: 0
     })
+
+    const [navbarLinks, setNavbarLinks] = useState<NavbarLink[]>([{text: "test", location: "/register"}, {
+        text: "test",
+        location: "/register"
+    }, {text: "test", location: "/register"}])
 
     const [watchlistData, setWatchlistData] = useState<WatchlistDataItem[]>([])
     const [holdingsData, setHoldingsData] = useState<HoldingsDataItem[]>([])
@@ -106,6 +113,7 @@ export default function Dashboard() {
 
     return (
         <div className="flex flex-col min-h-screen justify-center items-center">
+            <Navbar navbarLinks={navbarLinks}/>
             <p className="text-xl underline">Dashboard</p>
 
             <WatchlistForm getWatchlistDataAsync={getWatchlistDataAsync} watchlistData={watchlistData}
