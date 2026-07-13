@@ -63,8 +63,8 @@ export default function Dashboard() {
 
         if ("data" in watchlist) {
             setWatchlistData(watchlist.data)
-        } else {
-            setMessageType(watchlist?.success?.toString() || "false") // todo probably better way to do this
+        } else if ("success" in watchlist && "message" in watchlist) {
+            (watchlist.success) ? setMessageType("success") : setMessageType("error")
             setMessage(watchlist.message)
         }
     }
@@ -83,8 +83,8 @@ export default function Dashboard() {
         if ("data" in holdings) {
             setHoldingsData(holdings.data)
             // console.log(holdingsData)
-        } else {
-            setMessageType(holdings?.success?.toString() || "false") // todo probably better way to do this
+        } else if ("success" in holdings && "message" in holdings) {
+            (holdings.success) ? setMessageType("success") : setMessageType("error")
             setMessage(holdings.message)
         }
     }
