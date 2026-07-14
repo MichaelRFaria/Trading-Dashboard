@@ -8,12 +8,18 @@ export default function MetricStat({text, stat, portfolioValue, percentage}: {
     percentage: boolean
 }) {
     if (stat > 0) {
-        return <p>{text}<span
-            className="text-green-600">+{parseNumberToDollars(stat)} {percentage && <>({calculatePortfolioReturnPercentage(stat, portfolioValue)}%)</>}</span>
-        </p>
+        return <>
+            <td>{text}</td>
+            <td
+                className="text-green-600">+{parseNumberToDollars(stat)} {percentage && <>({calculatePortfolioReturnPercentage(stat, portfolioValue)}%)</>}
+            </td>
+        </>
     } else {
-        return <p>{text}<span
-            className="text-red-600">-{parseNumberToDollars(stat)} ({calculatePortfolioReturnPercentage(stat, portfolioValue)}%)</span>
-        </p>
+        return <>
+            <td>{text}</td>
+            <td
+                className="text-red-600">-{parseNumberToDollars(stat)} ({calculatePortfolioReturnPercentage(stat, portfolioValue)}%)
+            </td>
+        </>
     }
 }

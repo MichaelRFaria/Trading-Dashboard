@@ -102,21 +102,37 @@ export default function Metrics({holdingsData, priceChangesData}: {
     }
 
     return (
-        <>
-            {/*todo use table for these*/}
-            <div className="flex flex-col items-center">
-                <p>Portfolio Value: {parseNumberToDollars(totalPortfolioValue)}</p>
+        <table>
+            <tbody>
+            <tr>
+                <td>Portfolio Value:</td>
+                <td>{parseNumberToDollars(totalPortfolioValue)}</td>
+            </tr>
+            <tr>
                 <MetricStat text={"Today's Gain/Loss: "} stat={todaysGains}
                             portfolioValue={totalPortfolioValue} percentage={false}/>
+            </tr>
+            <tr>
                 <MetricStat text={"Total Gain/Loss (realised): "} stat={gains.realised_gains}
                             portfolioValue={totalPortfolioValue} percentage={false}/>
+            </tr>
+            <tr>
                 <MetricStat text={"Total Gain/Loss (unrealised): "} stat={gains.unrealised_gains}
                             portfolioValue={totalPortfolioValue} percentage={true}/>
+            </tr>
+            <tr>
                 <MetricStat text={"Total Gain/Loss (combined): "} stat={totalCombinedGains}
                             portfolioValue={totalPortfolioValue} percentage={false}/>
-                <p>Largest Position: {parseNumberToDollars(largestPosition.value)} of {largestPosition.stock_symbol}</p>
-                <p>Number of Holdings: {holdingsData.length}</p>
-            </div>
-        </>
+            </tr>
+            <tr>
+                <td>Largest Position:</td>
+                <td>{parseNumberToDollars(largestPosition.value)} of {largestPosition.stock_symbol}</td>
+            </tr>
+            <tr>
+                <td>Number of Holdings:</td>
+                <td>{holdingsData.length}</td>
+            </tr>
+            </tbody>
+        </table>
     )
 }
