@@ -3,11 +3,6 @@ export type StockSymbolLookupRequest = {
 }
 
 export type StockSymbolLookupResponse = {
-    count: number,
-    result: StockSymbolLookupResponseResult[],
-}
-
-export type StockSymbolLookupResponseResult = {
     description: string,
     displaySymbol: string,
     symbol: string,

@@ -18,12 +18,12 @@ export default function FinnhubLookupForm({setMessageType, setMessage}: {
 
         const response: StockSymbolLookupResponse | null = await finnhubStockSymbolLookup(request)
 
-        if (response) { // todo add error flow when a stock is not found
+        if (response) {
             setMessageType("success")
             setMessage(JSON.stringify(response))
         } else {
-            console.error("finnhub lookup response is null, something went wrong")
-            return
+            setMessageType("error")
+            setMessage(request.stock_symbol + " does not exist.")
         }
     }
 
