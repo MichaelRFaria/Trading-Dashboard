@@ -1,5 +1,5 @@
 import {Injectable} from "@nestjs/common";
-import {BuyHoldingDto, SellHoldingDto} from "../dto/holdings.dto";
+import {BuyHoldingDto, BuyHoldingResultDto, SellHoldingDto, SellHoldingResultDto} from "../dto/holdings.dto";
 import {PrismaService} from "./prisma.service";
 import {HoldingService} from "./holding.service";
 import {TradeService} from "./trade.service";
@@ -18,17 +18,16 @@ export class TradeExecutionService {
                 return await this.tradeService.recordTrade(tx, userId, dto, "buy")
             })
 
-            return {
-                success: true,
-                message: `Successfully bought ${dto.quantity} shares of ${dto.stock_symbol} at $${trade.price} per share`
-            }
-
+            const payload = new BuyHoldingResultDto()
+            payload.success = true
+            payload.message = `Successfully bought ${dto.quantity} shares of ${dto.stock_symbol} at $${trade.price} per share`
+            return payload
         } catch (error) {
             console.log(error)
-            return {
-                success: false,
-                message: "An error occurred, the trade was not executed"
-            }
+            const payload = new BuyHoldingResultDto()
+            payload.success = false
+            payload.message = "An error occurred, the trade was not executed"
+            return payload
         }
     }
 
@@ -40,17 +39,16 @@ export class TradeExecutionService {
                 return await this.tradeService.recordTrade(tx, userId, dto, "sell")
             })
 
-            return {
-                success: true,
-                message: `Successfully sold ${dto.quantity} shares of ${dto.stock_symbol} at $${trade.price} per share`
-            }
-
+            const payload = new SellHoldingResultDto()
+            payload.success = true
+            payload.message = `Successfully sold ${dto.quantity} shares of ${dto.stock_symbol} at $${trade.price} per share`
+            return payload
         } catch (error) {
             console.log(error)
-            return {
-                success: false,
-                message: "An error occurred, the trade was not executed"
-            }
+            const payload = new SellHoldingResultDto()
+            payload.success = false
+            payload.message = "An error occurred, the trade was not executed"
+            return payload
         }
     }
 }

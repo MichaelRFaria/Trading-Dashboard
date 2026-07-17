@@ -1,7 +1,7 @@
 // function to get the authenticated user
 import {
     FinnhubPriceChangesResponse,
-    FinnhubPriceLookupRequest,
+    FinnhubPriceLookupRequest, FinnhubPriceLookupResponse,
     GainsResponse,
     StockSymbolLookupRequest,
     StockSymbolLookupResponse
@@ -63,13 +63,13 @@ export async function finnhubStockSymbolLookup(data: StockSymbolLookupRequest): 
     return await fetchUrl<StockSymbolLookupResponse>(`/finnhub/symbol-lookup?${params.toString()}`, "GET", data);
 }
 
-export async function finnhubPriceQuote(data: FinnhubPriceLookupRequest): Promise<number | null> {
+export async function finnhubPriceQuote(data: FinnhubPriceLookupRequest): Promise<FinnhubPriceLookupResponse | null> {
     const params = new URLSearchParams({
         stock_symbol: data.stock_symbol,
         type: data.type
     });
 
-    return await fetchUrl<number>(`/finnhub/price?${params.toString()}`, "GET", data);
+    return await fetchUrl<FinnhubPriceLookupResponse>(`/finnhub/price?${params.toString()}`, "GET", data);
 }
 
 // helper function to make HTTP calls

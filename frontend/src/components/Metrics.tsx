@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {
     FinnhubPriceChangesDataItem,
-    FinnhubPriceLookupRequest,
+    FinnhubPriceLookupRequest, FinnhubPriceLookupResponse,
     GainsResponse,
     HoldingsPrice,
     HoldingValue
@@ -47,9 +47,11 @@ export default function Metrics({holdingsData, priceChangesData}: {
                     type: "current"
                 }
 
-                let price = await finnhubPriceQuote(request)
+                const response: FinnhubPriceLookupResponse | null = await finnhubPriceQuote(request)
 
-                if (price === null) {
+                let price = response?.price
+
+                if (price === undefined) {
                     console.error("something went wrong when getting the price in getPriceOfAllHoldings, response (price) is null, price has been set to 0 to prevent further errors")
                     price = 0
                 }

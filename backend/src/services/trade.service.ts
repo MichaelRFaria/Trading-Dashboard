@@ -17,7 +17,7 @@ export class TradeService {
             type: "current"
         }
 
-        const price = await this.finnhubService.getPrice(stockSymbolLookup)
+        const price = (await this.finnhubService.getPrice(stockSymbolLookup)).price
 
         return tx.trade.create({
             data: {
@@ -67,11 +67,10 @@ export class TradeService {
             totalUnrealisedGains += gains.unrealised_gains
         }
 
-
-        return {
-            realised_gains: totalRealisedGains,
-            unrealised_gains: totalUnrealisedGains
-        }
+        const payload = new GainsDto()
+        payload.realised_gains = totalRealisedGains
+        payload.unrealised_gains = totalUnrealisedGains
+        return payload
     }
 
     // calculate realised gains for each stock using an average cost basis system (could look into FIFO/LIFO cost basis systems in the future)
@@ -101,7 +100,10 @@ export class TradeService {
         }
 
         if (quantity > 0) {
-            const currPrice = await this.finnhubService.getPrice({stock_symbol: stockSymbol, type: "current"})
+            const currPrice = (await this.finnhubService.getPrice({
+                stock_symbol: stockSymbol,
+                type: "current"
+            })).price
 
             unrealisedGain = quantity * (currPrice - averagePrice)
             console.log("stock: " + stockSymbol)
@@ -110,9 +112,9 @@ export class TradeService {
 
         }
 
-        return {
-            realised_gains: realisedGain,
-            unrealised_gains: unrealisedGain,
-        }
+        const payload = new GainsDto()
+        payload.realised_gains = realisedGain
+        payload.unrealised_gains = unrealisedGain
+        return payload
     }
 }

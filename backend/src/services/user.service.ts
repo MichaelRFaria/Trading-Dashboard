@@ -1,5 +1,5 @@
 import {Injectable} from "@nestjs/common";
-import {RegisterAccountDto} from "../dto/account.dto";
+import {RegisterAccountDto, RegisterFailureDto, RegisterSuccessDto} from "../dto/account.dto";
 import {PrismaService} from "./prisma.service";
 
 import * as bcrypt from "bcrypt";
@@ -17,10 +17,9 @@ export class UserService {
         })
 
         if (existingUser) {
-            return {
-                success: false,
-                message: "A user with this email already exists"
-            }
+            const payload = new RegisterFailureDto()
+            payload.message = "A user with this email already exists"
+            return payload
         }
 
         const hash = await bcrypt.hash(dto.password, 10)
@@ -33,15 +32,14 @@ export class UserService {
                 }
             })
 
-            return {
-                success: true,
-                message: "Successfully registered an account"
-            }
+            const payload = new RegisterSuccessDto()
+            payload.message = "Successfully registered an account"
+            return payload
         } catch (error) {
-            return {
-                success: false,
-                message: "Account did not register, please try again."
-            }
+            console.error(error)
+            const payload = new RegisterFailureDto()
+            payload.message = "Account did not register, please try again."
+            return payload
         }
     }
 }

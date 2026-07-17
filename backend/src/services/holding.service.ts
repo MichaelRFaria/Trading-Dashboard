@@ -1,7 +1,6 @@
 import {PrismaService} from "./prisma.service";
 import {Injectable} from "@nestjs/common";
-import {BuyHoldingDto} from "../dto/holdings.dto";
-import {SellHoldingDto} from "../dto/holdings.dto";
+import {BuyHoldingDto, HoldingsFetchFailureDto, HoldingsFetchSuccessDto, SellHoldingDto} from "../dto/holdings.dto";
 import {Prisma} from "@prisma/client";
 import {FinnhubService} from "./finnhub.service";
 import {FinnhubPriceChangeDataItemDto, FinnhubPriceChangeDto} from "../dto/finnhub.dto";
@@ -20,15 +19,14 @@ export class HoldingService {
         })
 
         if (data) {
-            console.log(data)
-            return {
-                data: data
-            }
+            //console.log(data)
+            const payload = new HoldingsFetchSuccessDto()
+            payload.data = data
+            return payload
         } else {
-            return {
-                success: false,
-                message: "No watchlist items found"
-            }
+            const payload = new HoldingsFetchFailureDto()
+            payload.message = "No holdings items found"
+            return payload
         }
     }
 
@@ -94,7 +92,10 @@ export class HoldingService {
         const priceChanges = [] as FinnhubPriceChangeDataItemDto[]
 
         for (const holding of holdings) {
-            const priceChange = await this.finnhubService.getPrice({stock_symbol: holding.stock_symbol, type: "change"})
+            const priceChange = (await this.finnhubService.getPrice({
+                stock_symbol: holding.stock_symbol,
+                type: "change"
+            })).price
 
             priceChanges.push({stock_symbol: holding.stock_symbol, price_change: priceChange})
         }

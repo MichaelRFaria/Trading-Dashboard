@@ -2,7 +2,7 @@ import {Injectable} from "@nestjs/common";
 import {JwtService} from "@nestjs/jwt";
 import {UserService} from "./user.service";
 import {PrismaService} from "./prisma.service";
-import {LoginAccountDto} from "../dto/account.dto";
+import {LoginAccountDto, LoginFailureDto, LoginSuccessDto} from "../dto/account.dto";
 import * as bcrypt from "bcrypt";
 
 @Injectable()
@@ -22,10 +22,9 @@ export class AuthService {
         })
 
         if (!existingUser) {
-            return {
-                success: false,
-                message: "Invalid email"
-            }
+            const payload = new LoginFailureDto()
+            payload.message = "Invalid email"
+            return payload
         }
 
         const validPassword = await bcrypt.compare(
@@ -34,17 +33,15 @@ export class AuthService {
         )
 
         if (validPassword) {
-            const payload = {sub: existingUser.id, email: existingUser.email} // sub holding the user id keeps to JWT standards
+            const jwtPayload = {sub: existingUser.id, email: existingUser.email} // sub holding the user id keeps to JWT standards
 
-            return {
-                success: true,
-                access_token: await this.jwtService.signAsync(payload)
-            }
+            const payload = new LoginSuccessDto()
+            payload.access_token = await this.jwtService.signAsync(jwtPayload)
+            return payload
         } else {
-            return {
-                success: false,
-                message: "Invalid password"
-            }
+            const payload = new LoginFailureDto()
+            payload.message = "Invalid password"
+            return payload
         }
     }
 }

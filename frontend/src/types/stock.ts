@@ -4,8 +4,7 @@ export type StockSymbolLookupRequest = {
 
 export type StockSymbolLookupResponse = {
     description: string,
-    displaySymbol: string,
-    symbol: string,
+    stock_symbol: string,
     type: string,
 }
 
@@ -24,6 +23,10 @@ export type GainsResponse = {
 export type FinnhubPriceLookupRequest = {
     stock_symbol: string,
     type: "current" | "change",
+}
+
+export type FinnhubPriceLookupResponse = {
+    price: number
 }
 
 export type FinnhubPriceChangesResponse = {
