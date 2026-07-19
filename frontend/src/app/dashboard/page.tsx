@@ -1,6 +1,13 @@
 "use client";
 
-import {getCurrentUser, getHoldingsData, getPriceChanges, getWatchlistData} from "@/src/helper/api";
+import {
+    finnhubPriceQuote,
+    getCurrentUser,
+    getGains,
+    getHoldingsData,
+    getPriceChanges,
+    getWatchlistData
+} from "@/src/helper/api";
 import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import TradeForm from "@/src/components/TradeForm";
@@ -13,7 +20,12 @@ import {HoldingsDataItem, TradeResponse} from "@/src/types/trade";
 import HoldingsList from "@/src/components/HoldingsList";
 import Metrics from "@/src/components/Metrics";
 import {AuthenticatedUser} from "@/src/types/account";
-import {FinnhubPriceChangesDataItem, FinnhubPriceChangesResponse} from "@/src/types/stock";
+import {
+    FinnhubPriceChangesDataItem,
+    FinnhubPriceChangesResponse,
+    FinnhubPriceLookupRequest,
+    FinnhubPriceLookupResponse, GainsResponse, HoldingsPrice
+} from "@/src/types/stock";
 import Navbar from "@/src/components/Navbar";
 import {NavbarLink} from "@/src/types/misc";
 
@@ -35,6 +47,11 @@ export default function Dashboard() {
     const [watchlistData, setWatchlistData] = useState<WatchlistDataItem[]>([])
     const [holdingsData, setHoldingsData] = useState<HoldingsDataItem[]>([])
     const [priceChangesData, setPriceChangesData] = useState<FinnhubPriceChangesDataItem[]>([])
+    const [holdingsPriceData, setHoldingsPriceData] = useState<HoldingsPrice>({})
+    const [gains, setGains] = useState<GainsResponse>({
+        realised_gains: 0,
+        unrealised_gains: 0
+    })
 
     const [messageType, setMessageType] = useState("success")
     const [message, setMessage] = useState("")
@@ -50,6 +67,22 @@ export default function Dashboard() {
             }
         })
     }, [])
+
+    useEffect(() => {
+        getGains().then((r) => {
+            //console.log(r)
+            if (r) {
+                setGains({
+                    realised_gains: r.realised_gains,
+                    unrealised_gains: r.unrealised_gains
+                })
+            } else {
+                console.error("getGains() response was null, something went wrong")
+            }
+            //console.log(gains)
+        })
+        getHoldingsPricesAsync()
+    }, [holdingsData]);
 
     const getWatchlistDataAsync = async () => {
         const watchlist: WatchlistResponse | null = await getWatchlistData()
@@ -105,10 +138,39 @@ export default function Dashboard() {
         }
     }
 
+    const getHoldingsPricesAsync = async () => {
+        console.log("getting price of holdings")
+        const prices = await Promise.all(
+            holdingsData.map(async (holding: HoldingsDataItem) => {
+                const request: FinnhubPriceLookupRequest = {
+                    stock_symbol: holding.stock_symbol,
+                    type: "current"
+                }
+
+                const response: FinnhubPriceLookupResponse | null = await finnhubPriceQuote(request)
+
+                let price = response?.price
+
+                if (price === undefined) {
+                    console.error("something went wrong when getting the price in getPriceOfAllHoldings, response (price) is null, price has been set to 0 to prevent further errors")
+                    price = 0
+                }
+
+                //console.log("holding data: " + holding)
+                //console.log("price: " + price)
+
+                return [holding.stock_symbol!, price] as const
+            })
+        )
+
+        setHoldingsPriceData(Object.fromEntries(prices))
+    }
+
     useEffect(() => {
         getWatchlistDataAsync()
         getHoldingsDataAsync()
         getPriceChangesDataAsync()
+        getHoldingsPricesAsync()
     }, [authenticatedUser]);
 
     return (
@@ -125,7 +187,7 @@ export default function Dashboard() {
                        setMessageType={setMessageType}
                        setMessage={setMessage}/>
             <HoldingsList holdingsData={holdingsData}/>
-            <Metrics holdingsData={holdingsData} priceChangesData={priceChangesData}/>
+            <Metrics holdingsData={holdingsData} holdingsPriceData={holdingsPriceData} priceChangesData={priceChangesData} gains={gains}/>
 
             <Message type={messageType} message={message}/>
         </div>
