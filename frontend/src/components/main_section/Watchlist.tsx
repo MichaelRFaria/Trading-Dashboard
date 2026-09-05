@@ -1,6 +1,6 @@
-import WatchlistForm from "@/src/components/WatchlistForm";
-import WatchlistList from "@/src/components/WatchlistList";
-import Message from "@/src/components/Message";
+import WatchlistForm from "@/src/components/watchlist/WatchlistForm";
+import WatchlistList from "@/src/components/watchlist/WatchlistList";
+import Message from "@/src/components/common/Message";
 import {useState} from "react";
 
 export default function Watchlist({watchlistData, getWatchlistDataAsync}) {

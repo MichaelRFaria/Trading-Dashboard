@@ -4,7 +4,7 @@ import Link from "next/link";
 import {getCurrentUser, loginAccount} from "@/src/helper/api";
 import {useRouter, useSearchParams} from "next/navigation";
 import React, {useEffect, useState} from "react";
-import Message from "@/src/components/Message";
+import Message from "@/src/components/common/Message";
 import {LoginRequest, LoginResponse} from "@/src/types/account";
 
 export default function Home() {

@@ -1,6 +1,6 @@
 import {FinnhubPriceChangesDataItem, GainsResponse, HoldingsPrice, HoldingValue} from "@/src/types/stock";
 import {parseNumberToDollars} from "@/src/helper/format";
-import MetricStat from "@/src/components/MetricStat";
+import MetricStat from "@/src/components/portfolio/MetricStat";
 import {HoldingsDataItem} from "@/src/types/trade";
 
 

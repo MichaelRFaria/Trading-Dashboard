@@ -1,4 +1,4 @@
-import HoldingsList from "@/src/components/HoldingsList";
+import HoldingsList from "@/src/components/portfolio/HoldingsList";
 
 export default function Portfolio({holdingsData}) {
     return (

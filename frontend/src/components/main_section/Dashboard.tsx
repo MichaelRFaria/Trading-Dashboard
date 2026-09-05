@@ -1,6 +1,6 @@
 "use client";
 
-import Metrics from "@/src/components/Metrics";
+import Metrics from "@/src/components/portfolio/Metrics";
 
 export default function Dashboard({holdingsData, holdingsPriceData, priceChangesData, gains}) {
     return (

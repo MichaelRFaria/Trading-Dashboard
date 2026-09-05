@@ -1,7 +1,7 @@
-import FinnhubLookupForm from "@/src/components/FinnhubLookupForm";
-import TradeForm from "@/src/components/TradeForm";
+import FinnhubLookupForm from "@/src/components/trade/FinnhubLookupForm";
+import TradeForm from "@/src/components/trade/TradeForm";
 import {useState} from "react";
-import Message from "@/src/components/Message";
+import Message from "@/src/components/common/Message";
 
 export default function Trade({holdingsData, getHoldingsDataAsync}) {
     const [messageType, setMessageType] = useState("success")
