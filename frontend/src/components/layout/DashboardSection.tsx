@@ -120,7 +120,8 @@ export default function DashboardSection({activeSection}) {
             return <Dashboard holdingsData={holdingsData} holdingsPriceData={holdingsPriceData}
                               priceChangesData={priceChangesData} gains={gains}/>
         case "portfolio":
-            return <Portfolio holdingsData={holdingsData}/>
+            return <Portfolio holdingsData={holdingsData} holdingsPriceData={holdingsPriceData}
+                              priceChangesData={priceChangesData}/>
         case "watchlist":
             return <Watchlist watchlistData={watchlistData} getWatchlistDataAsync={fetchDashboardData}/>
         case "trade":
