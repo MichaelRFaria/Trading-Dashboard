@@ -100,8 +100,8 @@ export default function DashboardSection({activeSection}) {
                     const response: FinnhubPriceLookupResponse | null = await finnhubPriceQuote(request)
                     const price = response?.price ?? 0
 
-                    //console.log("holding data: " + holding)
-                    //console.log("price: " + price)
+                    // console.log("holding data: " + holding)
+                    // console.log("price: " + price)
 
                     return [holding.stock_symbol!, price] as const
                 })
@@ -111,7 +111,7 @@ export default function DashboardSection({activeSection}) {
         }
 
         getHoldingsPricesAsync()
-    }, []);
+    }, [holdingsData]);
 
     if (isLoading) return <p>Loading...</p>
 
