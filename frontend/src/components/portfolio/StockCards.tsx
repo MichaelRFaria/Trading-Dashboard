@@ -8,7 +8,7 @@ export default function StockCards({holdingsData, holdingsPriceData, priceChange
         console.log("priceChangesData: ", priceChangesData)
     }, []);
     return (
-        <>
+        <div className="grid grid-cols-2 gap-4 h-screen">
             {holdingsData.map((holding) => {
                 const symbol = holding.stock_symbol
                 const quantity = holding.quantity
@@ -23,6 +23,6 @@ export default function StockCards({holdingsData, holdingsPriceData, priceChange
                                   priceChange={priceChange} totalValue={totalValue}
                                   percentageChange={percentageChange}/>
             })}
-        </>
+        </div>
     )
 }
