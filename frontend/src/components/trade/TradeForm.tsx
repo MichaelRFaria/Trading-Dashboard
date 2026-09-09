@@ -1,11 +1,12 @@
 import {buyHolding, sellHolding} from "@/src/helper/api";
 import {HoldingsDataItem, TradeBasicResponse, TradeRequest} from "@/src/types/trade";
 import React, {useEffect, useState} from "react";
+import {DashboardActiveSection, MessageType} from "@/src/types/misc";
 
 export default function TradeForm({getHoldingsDataAsync, holdingsData, setMessageType, setMessage}: {
     getHoldingsDataAsync: () => Promise<void>,
     holdingsData: HoldingsDataItem[],
-    setMessageType: React.Dispatch<React.SetStateAction<string>>,
+    setMessageType: React.Dispatch<React.SetStateAction<MessageType>>,
     setMessage: React.Dispatch<React.SetStateAction<string>>
 }) {
     const [tradeType, setTradeType] = useState("buy")

@@ -1,8 +1,10 @@
 "use client"
 
 import React from "react";
+import {DashboardActiveSection} from "@/src/types/misc";
 
-export default function Sidebar({setActiveSection}) {
+export default function Sidebar({setActiveSection}: {setActiveSection: React.Dispatch<React.SetStateAction<DashboardActiveSection>>
+}) {
 
     const logout = () => {
         //window.location.href = "http://localhost:8080/logout";

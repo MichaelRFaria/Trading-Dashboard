@@ -1,4 +1,11 @@
-export default function StockCard({symbol, quantity, currentPrice, priceChange, totalValue, percentageChange}) {
+export default function StockCard({symbol, quantity, currentPrice, priceChange, totalValue, percentageChange}: {
+    symbol: string,
+    quantity: number,
+    currentPrice: number,
+    priceChange: number,
+    totalValue: number,
+    percentageChange: number
+}) {
     return (
         <div className="grid grid-cols-2 gap-2 rounded-xl bg-[#23272d] p-5 text-white shadow-md">
             <p className="text-xl font-bold">{symbol}</p>

@@ -23,8 +23,9 @@ import {
     getPriceChanges,
     getWatchlistData
 } from "@/src/helper/api";
+import {DashboardActiveSection, MessageType} from "@/src/types/misc";
 
-export default function DashboardSection({activeSection}) {
+export default function DashboardSection({activeSection}: { activeSection: DashboardActiveSection }) {
     const router = useRouter();
 
     const [authenticatedUser, setAuthenticatedUser] = useState<AuthenticatedUser>({
@@ -45,7 +46,7 @@ export default function DashboardSection({activeSection}) {
 
     // todo: message unused right now. message should become notification component probably
     const [message, setMessage] = useState<string>("")
-    const [messageType, setMessageType] = useState<"success" | "error" | "">("success")
+    const [messageType, setMessageType] = useState<MessageType>("success")
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     // check if the user is authenticated
@@ -128,5 +129,8 @@ export default function DashboardSection({activeSection}) {
             return <Trade holdingsData={holdingsData} getHoldingsDataAsync={fetchDashboardData}/>
         case "history":
             return <History/>
+        default:
+            return <Dashboard holdingsData={holdingsData} holdingsPriceData={holdingsPriceData}
+                              priceChangesData={priceChangesData} gains={gains}/>
     }
 }

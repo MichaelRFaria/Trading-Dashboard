@@ -1,12 +1,19 @@
 import {useEffect} from "react";
 import StockCard from "@/src/components/portfolio/StockCard";
+import {HoldingsDataItem} from "@/src/types/trade";
+import {FinnhubPriceChangesDataItem, HoldingsPrice} from "@/src/types/stock";
 
-export default function StockCards({holdingsData, holdingsPriceData, priceChangesData}) {
-    useEffect(() => {
-        console.log("holdingsData: ", holdingsData)
-        console.log("holdingsPriceData: ", holdingsPriceData)
-        console.log("priceChangesData: ", priceChangesData)
-    }, []);
+export default function StockCards({holdingsData, holdingsPriceData, priceChangesData}: {
+    holdingsData: HoldingsDataItem[],
+    holdingsPriceData: HoldingsPrice,
+    priceChangesData: FinnhubPriceChangesDataItem[]
+}) {
+    // useEffect(() => {
+    //     console.log("holdingsData: ", holdingsData)
+    //     console.log("holdingsPriceData: ", holdingsPriceData)
+    //     console.log("priceChangesData: ", priceChangesData)
+    // }, []);
+
     return (
         <div className="grid grid-cols-2 gap-4 h-screen">
             {holdingsData.map((holding) => {

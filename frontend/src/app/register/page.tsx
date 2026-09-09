@@ -5,7 +5,7 @@ import React, {useState} from "react";
 import {useRouter} from "next/navigation";
 import {RegisterRequest, RegisterResponse} from "@/src/types/account";
 
-export default function Home() {
+export default function RegistrationPage() {
     const router = useRouter()
     const [errorMessage, setErrorMessage] = useState("");
 

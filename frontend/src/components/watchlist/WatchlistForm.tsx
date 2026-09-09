@@ -1,11 +1,12 @@
 import {addToWatchlist, deleteFromWatchlist} from "@/src/helper/api";
 import {WatchlistBasicResponse, WatchlistDataItem, WatchlistRequest} from "@/src/types/watchlist";
 import React, {useEffect, useState} from "react";
+import {DashboardActiveSection, MessageType} from "@/src/types/misc";
 
 export default function WatchlistForm({getWatchlistDataAsync, watchlistData, setMessageType, setMessage}: {
     getWatchlistDataAsync: () => Promise<void>,
     watchlistData: WatchlistDataItem[],
-    setMessageType: React.Dispatch<React.SetStateAction<string>>,
+    setMessageType: React.Dispatch<React.SetStateAction<MessageType>>,
     setMessage: React.Dispatch<React.SetStateAction<string>>
 }) {
     const [actionType, setActionType] = useState("add")

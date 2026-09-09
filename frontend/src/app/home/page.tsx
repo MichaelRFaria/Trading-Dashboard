@@ -6,12 +6,13 @@ import {useRouter, useSearchParams} from "next/navigation";
 import React, {useEffect, useState} from "react";
 import Message from "@/src/components/common/Message";
 import {LoginRequest, LoginResponse} from "@/src/types/account";
+import {MessageType} from "@/src/types/misc";
 
-export default function Home() {
+export default function HomePage() {
     const router = useRouter()
     const searchParams = useSearchParams()
 
-    const [messageType, setMessageType] = useState("success")
+    const [messageType, setMessageType] = useState<MessageType>("success")
     const [message, setMessage] = useState("")
 
     useEffect(() => {

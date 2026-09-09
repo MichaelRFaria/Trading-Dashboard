@@ -4,9 +4,10 @@ import Sidebar from "@/src/components/layout/Sidebar";
 import Header from "@/src/components/layout/Header";
 import DashboardSection from "@/src/components/layout/DashboardSection";
 import {act, useEffect, useState} from "react";
+import {DashboardActiveSection} from "@/src/types/misc";
 
-export default function Dashboard() {
-    const [activeSection, setActiveSection] = useState("dashboard")
+export default function DashboardPage() {
+    const [activeSection, setActiveSection] = useState<DashboardActiveSection>("dashboard")
 
     useEffect(() => {
         console.log("active section changed to: " + activeSection)
