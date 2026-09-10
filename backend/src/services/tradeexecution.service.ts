@@ -1,8 +1,8 @@
 import {Injectable} from "@nestjs/common";
-import {BuyHoldingDto, BuyHoldingResultDto, SellHoldingDto, SellHoldingResultDto} from "../dto/holdings.dto";
 import {PrismaService} from "./prisma.service";
 import {HoldingService} from "./holding.service";
 import {TradeService} from "./trade.service";
+import {BuyHoldingDto, BuyHoldingResultDto, SellHoldingDto, SellHoldingResultDto} from "../dto/trade.dto";
 
 @Injectable()
 export class TradeExecutionService {

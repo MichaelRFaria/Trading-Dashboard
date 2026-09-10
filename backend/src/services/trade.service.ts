@@ -1,9 +1,9 @@
 import {Injectable} from "@nestjs/common";
 import {PrismaService} from "./prisma.service";
-import {GainsDto, TradeHolding} from "../dto/holdings.dto";
 import {Prisma, Trade} from "@prisma/client";
 import {FinnhubService} from "./finnhub.service";
 import {FinnhubPriceLookupDto} from "../dto/finnhub.dto"
+import {GainsDto, HistoryLookupDto, TradeHolding} from "../dto/trade.dto";
 
 @Injectable()
 export class TradeService {
@@ -116,5 +116,96 @@ export class TradeService {
         payload.realised_gains = realisedGain
         payload.unrealised_gains = unrealisedGain
         return payload
+    }
+
+    async getHistory(userId: number, dto: HistoryLookupDto) {
+        const where: Prisma.TradeWhereInput = {
+            user_id: userId,
+        };
+
+        if (dto.stock_symbol !== undefined) {
+            where.stock_symbol = dto.stock_symbol;
+        }
+
+        if (dto.quantity_from !== undefined || dto.quantity_to !== undefined) {
+            where.quantity = {
+                ...(dto.quantity_from !== undefined && {
+                    gte: dto.quantity_from,
+                }),
+                ...(dto.quantity_to !== undefined && {
+                    lte: dto.quantity_to,
+                }),
+            };
+        }
+
+        if (dto.price_from !== undefined || dto.price_to !== undefined) {
+            where.price = {
+                ...(dto.price_from !== undefined && {
+                    gte: dto.price_from,
+                }),
+                ...(dto.price_to !== undefined && {
+                    lte: dto.price_to,
+                }),
+            };
+        }
+
+        if (dto.type !== undefined) {
+            where.type = dto.type;
+        }
+
+        if (dto.date_from !== undefined || dto.date_to !== undefined) {
+            where.createdAt = {
+                ...(dto.date_from !== undefined && {
+                    gte: new Date(dto.date_from),
+                }),
+                ...(dto.date_to !== undefined && {
+                    lte: new Date(dto.date_to),
+                }),
+            };
+        }
+
+        const data = await this.prisma.trade.findMany({
+            where,
+            orderBy: {
+                createdAt: "desc",
+            },
+        });
+
+        // todo: should probably make service methods return by defining response shape like below, instead of DTOs like current implementations + commented function below
+        return {
+            data: data.map((trade) => ({
+                ...trade,
+                createdAt: trade.createdAt.toISOString(),
+            })),
+        };
+
+        // const payload = new HistoryResultDto();
+        //
+        // payload.data = data.map((trade) => ({
+        //     id: trade.id,
+        //     user_id: trade.user_id,
+        //     stock_symbol: trade.stock_symbol,
+        //     quantity: trade.quantity,
+        //     price: trade.price,
+        //     type: trade.type,
+        //     createdAt: trade.createdAt.toISOString(),
+        // }));
+        //
+        // return payload;
+
+        // // trade.dto.ts
+        // export class HistoryResultDto {
+        //     data: HistoryDataItem[]
+        // }
+        //
+        // export class HistoryDataItem {
+        //     id: number;
+        //     user_id: number;
+        //     stock_symbol: string;
+        //     quantity: number;
+        //     price: number;
+        //     type: "buy" | "sell";
+        //     createdAt: string;
+        // }
     }
 }

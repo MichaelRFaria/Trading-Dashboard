@@ -18,12 +18,13 @@ import {
 import {
     finnhubPriceQuote,
     getCurrentUser,
-    getGains,
+    getGains, getHistory,
     getHoldingsData,
     getPriceChanges,
     getWatchlistData
 } from "@/src/helper/api";
 import {DashboardActiveSection, MessageType} from "@/src/types/misc";
+import {HistoryDataItem} from "@/src/types/history";
 
 export default function DashboardSection({activeSection}: { activeSection: DashboardActiveSection }) {
     const router = useRouter();
@@ -39,6 +40,7 @@ export default function DashboardSection({activeSection}: { activeSection: Dashb
     const [holdingsData, setHoldingsData] = useState<HoldingsDataItem[]>([])
     const [priceChangesData, setPriceChangesData] = useState<FinnhubPriceChangesDataItem[]>([])
     const [holdingsPriceData, setHoldingsPriceData] = useState<HoldingsPrice>({})
+    const [historyData, setHistoryData] = useState<HistoryDataItem[]>([])
     const [gains, setGains] = useState<GainsResponse>({
         realised_gains: 0,
         unrealised_gains: 0
@@ -65,11 +67,12 @@ export default function DashboardSection({activeSection}: { activeSection: Dashb
     const fetchDashboardData = useCallback(async () => {
         setIsLoading(true);
         try {
-            const [watchlist, holdings, priceChanges, gainsData] = await Promise.all([getWatchlistData(), getHoldingsData(), getPriceChanges(), getGains()])
+            const [watchlist, holdings, priceChanges, history, gainsData] = await Promise.all([getWatchlistData(), getHoldingsData(), getPriceChanges(), getHistory({}), getGains()])
 
             if (watchlist && "data" in watchlist) setWatchlistData(watchlist.data);
             if (holdings && "data" in holdings) setHoldingsData(holdings.data);
             if (priceChanges && "data" in priceChanges) setPriceChangesData(priceChanges.data);
+            if (history && "data" in history) setHistoryData(history.data)
             if (gainsData) setGains(gainsData);
         } catch (error) {
             console.error("Error when fetching dashboard data", error)
@@ -128,7 +131,7 @@ export default function DashboardSection({activeSection}: { activeSection: Dashb
         case "trade":
             return <Trade holdingsData={holdingsData} getHoldingsDataAsync={fetchDashboardData}/>
         case "history":
-            return <History/>
+            return <History historyData={historyData}/>
         default:
             return <Dashboard holdingsData={holdingsData} holdingsPriceData={holdingsPriceData}
                               priceChangesData={priceChangesData} gains={gains}/>

@@ -1,7 +1,8 @@
 // function to get the authenticated user
 import {
     FinnhubPriceChangesResponse,
-    FinnhubPriceLookupRequest, FinnhubPriceLookupResponse,
+    FinnhubPriceLookupRequest,
+    FinnhubPriceLookupResponse,
     GainsResponse,
     StockSymbolLookupRequest,
     StockSymbolLookupResponse
@@ -9,6 +10,7 @@ import {
 import {AuthenticatedUser, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse} from "@/src/types/account";
 import {WatchlistBasicResponse, WatchlistRequest, WatchlistResponse} from "@/src/types/watchlist";
 import {TradeBasicResponse, TradeRequest, TradeResponse} from "@/src/types/trade";
+import {HistoryRequest, HistoryResponse} from "@/src/types/history";
 
 export async function getCurrentUser(): Promise<AuthenticatedUser | null> {
     return await fetchUrl("/users/me", "GET")
@@ -47,6 +49,50 @@ export async function sellHolding(data: TradeRequest): Promise<TradeBasicRespons
     return await fetchUrl<TradeBasicResponse>("/trade/sell", "POST", data);
 }
 
+export async function getHistory(
+    data: HistoryRequest
+): Promise<HistoryResponse | null> {
+    const params = new URLSearchParams();
+
+    // all properties are optional so check if each proporty is not undefined
+    if (data.stock_symbol !== undefined) {
+        params.set("stock_symbol", data.stock_symbol);
+    }
+
+    if (data.quantity_from !== undefined) {
+        params.set("quantity_from", data.quantity_from.toString());
+    }
+
+    if (data.quantity_to !== undefined) {
+        params.set("quantity_to", data.quantity_to.toString());
+    }
+
+    if (data.price_from !== undefined) {
+        params.set("price_from", data.price_from.toString());
+    }
+
+    if (data.price_to !== undefined) {
+        params.set("price_to", data.price_to.toString());
+    }
+
+    if (data.type !== undefined) {
+        params.set("type", data.type);
+    }
+
+    if (data.date_from !== undefined) {
+        params.set("date_from", data.date_from);
+    }
+
+    if (data.date_to !== undefined) {
+        params.set("date_to", data.date_to);
+    }
+
+    return await fetchUrl<HistoryResponse>(
+        `/trade/history?${params.toString()}`,
+        "GET"
+    );
+}
+
 export async function getGains(): Promise<GainsResponse | null> {
     return await fetchUrl<GainsResponse>("/trade/gains", "GET")
 }
@@ -60,7 +106,7 @@ export async function finnhubStockSymbolLookup(data: StockSymbolLookupRequest): 
         stock_symbol: data.stock_symbol,
     });
 
-    return await fetchUrl<StockSymbolLookupResponse>(`/finnhub/symbol-lookup?${params.toString()}`, "GET", data);
+    return await fetchUrl<StockSymbolLookupResponse>(`/finnhub/symbol-lookup?${params.toString()}`, "GET");
 }
 
 export async function finnhubPriceQuote(data: FinnhubPriceLookupRequest): Promise<FinnhubPriceLookupResponse | null> {

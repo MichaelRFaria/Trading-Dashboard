@@ -1,9 +1,10 @@
 import {PrismaService} from "./prisma.service";
 import {Injectable} from "@nestjs/common";
-import {BuyHoldingDto, HoldingsFetchFailureDto, HoldingsFetchSuccessDto, SellHoldingDto} from "../dto/holdings.dto";
+import {HoldingsFetchFailureDto, HoldingsFetchSuccessDto} from "../dto/holdings.dto";
 import {Prisma} from "@prisma/client";
 import {FinnhubService} from "./finnhub.service";
 import {FinnhubPriceChangeDataItemDto, FinnhubPriceChangeDto} from "../dto/finnhub.dto";
+import {BuyHoldingDto, SellHoldingDto} from "../dto/trade.dto";
 
 @Injectable()
 export class HoldingService {
