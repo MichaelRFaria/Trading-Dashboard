@@ -1,6 +1,19 @@
 import {HistoryDataItem} from "@/src/types/history";
+import {useState} from "react";
+
+const ITEMS_PER_PAGE = 10;
 
 export default function HistoryList({historyData}: { historyData: HistoryDataItem[] }) {
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const totalPages = Math.ceil(historyData.length / ITEMS_PER_PAGE);
+
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+
+    const slicedHistory = historyData.slice(startIndex, endIndex);
+
+
     if (historyData.length <= 0) {
         return <p>Make some trades to see your trade history or change the filters!</p>
     }
@@ -22,8 +35,8 @@ export default function HistoryList({historyData}: { historyData: HistoryDataIte
                 </thead>
 
                 <tbody>
-                {historyData.map((item: HistoryDataItem, index: number) =>
-                    <tr>
+                {slicedHistory.map((item: HistoryDataItem, index: number) =>
+                    <tr key={item.id}>
                         <td>{index + 1}</td>
                         <td>{item.id}</td>
                         <td>{item.stock_symbol}</td>
@@ -35,6 +48,26 @@ export default function HistoryList({historyData}: { historyData: HistoryDataIte
                 )}
                 </tbody>
             </table>
+
+            <div>
+                <button
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                >
+                    Previous
+                </button>
+
+                <span>
+                    Page {currentPage} of {totalPages}
+                </span>
+
+                <button
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                >
+                    Next
+                </button>
+            </div>
         </>
     )
 }
