@@ -18,13 +18,14 @@ import {
 import {
     finnhubPriceQuote,
     getCurrentUser,
-    getGains, getHistory,
+    getGains,
+    getHistory,
     getHoldingsData,
     getPriceChanges,
     getWatchlistData
 } from "@/src/helper/api";
 import {DashboardActiveSection, MessageType} from "@/src/types/misc";
-import {HistoryDataItem} from "@/src/types/history";
+import {HistoryDataItem, HistoryRequest} from "@/src/types/history";
 
 export default function DashboardSection({activeSection}: { activeSection: DashboardActiveSection }) {
     const router = useRouter();
@@ -81,6 +82,14 @@ export default function DashboardSection({activeSection}: { activeSection: Dashb
         }
     }, [])
 
+    const fetchHistory = useCallback(async (request: HistoryRequest) => {
+        const history = await getHistory(request)
+
+        console.log("history: ",history)
+
+        if (history && "data" in history) setHistoryData(history.data)
+    }, [])
+
     // once user has been authenticated, fetch dashboard data
     useEffect(() => {
         if (authenticatedUser.sub !== 0) {
@@ -131,7 +140,7 @@ export default function DashboardSection({activeSection}: { activeSection: Dashb
         case "trade":
             return <Trade holdingsData={holdingsData} getHoldingsDataAsync={fetchDashboardData}/>
         case "history":
-            return <History historyData={historyData}/>
+            return <History historyData={historyData} fetchHistory={fetchHistory}/>
         default:
             return <Dashboard holdingsData={holdingsData} holdingsPriceData={holdingsPriceData}
                               priceChangesData={priceChangesData} gains={gains}/>

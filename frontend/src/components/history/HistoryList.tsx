@@ -2,7 +2,7 @@ import {HistoryDataItem} from "@/src/types/history";
 
 export default function HistoryList({historyData}: { historyData: HistoryDataItem[] }) {
     if (historyData.length <= 0) {
-        return <p>Make some trades to see your trade history!</p>
+        return <p>Make some trades to see your trade history or change the filters!</p>
     }
 
     return (

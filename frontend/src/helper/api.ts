@@ -54,7 +54,7 @@ export async function getHistory(
 ): Promise<HistoryResponse | null> {
     const params = new URLSearchParams();
 
-    // all properties are optional so check if each proporty is not undefined
+    // all properties are optional so check if each property is not undefined
     if (data.stock_symbol !== undefined) {
         params.set("stock_symbol", data.stock_symbol);
     }
