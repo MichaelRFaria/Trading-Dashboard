@@ -1,5 +1,6 @@
 import {HistoryDataItem} from "@/src/types/history";
 import {useEffect, useState} from "react";
+import {parseISOStringToDate} from "@/src/helper/format";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -31,7 +32,7 @@ export default function HistoryList({historyData}: { historyData: HistoryDataIte
             setSortDirection(
                 sortDirection === "desc" ? "asc" : "desc"
             );
-        // otherwise the sorting field has changed, so we need to update the field, and reset the sorting direction
+            // otherwise the sorting field has changed, so we need to update the field, and reset the sorting direction
         } else {
             setSortBy(field);
 
@@ -83,75 +84,77 @@ export default function HistoryList({historyData}: { historyData: HistoryDataIte
 
     return (
         <>
-            <div className="flex flex-row flex-wrap gap-4">
-                <button onClick={() => handleSort("stock_symbol")}>
-                    Stock Symbol
-                </button>
+            <div className="flex flex-col items-center">
+                <div className="flex gap-4">
+                    <button onClick={() => handleSort("stock_symbol")}>
+                        Stock Symbol
+                    </button>
 
-                <button onClick={() => handleSort("quantity")}>
-                    Quantity
-                </button>
+                    <button onClick={() => handleSort("quantity")}>
+                        Quantity
+                    </button>
 
-                <button onClick={() => handleSort("price")}>
-                    Price
-                </button>
+                    <button onClick={() => handleSort("price")}>
+                        Price
+                    </button>
 
-                <button onClick={() => handleSort("createdAt")}>
-                    Date
-                </button>
+                    <button onClick={() => handleSort("createdAt")}>
+                        Date
+                    </button>
+                </div>
+
+                <p>
+                    Sorted by {sortBy} ({sortDirection})
+                </p>
             </div>
 
-            <p>
-                Sorted by {sortBy} ({sortDirection})
-            </p>
-
-            <p>History:</p>
-            <table>
-                <thead>
-                <tr>
-                    <th>Index</th>
-                    <th>ID</th>
-                    <th>Stock Symbol</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Type</th>
-                    <th>Date</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                {slicedHistory.map((item: HistoryDataItem, index: number) =>
-                    <tr key={item.id}>
-                        <td>{index + 1}</td>
-                        <td>{item.id}</td>
-                        <td>{item.stock_symbol}</td>
-                        <td>{item.quantity}</td>
-                        <td>{item.price}</td>
-                        <td>{item.type}</td>
-                        <td>{item.createdAt}</td>
+            <div className="flex flex-col items-center">
+                <p>History:</p>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Trade ID</th>
+                        <th>Stock Symbol</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Type</th>
+                        <th>Date</th>
                     </tr>
-                )}
-                </tbody>
-            </table>
+                    </thead>
 
-            <div>
-                <button
-                    onClick={() => setCurrentPage(currentPage - 1)}
-                    disabled={currentPage === 1}
-                >
-                    Previous
-                </button>
+                    <tbody>
+                    {slicedHistory.map((item: HistoryDataItem, index: number) =>
+                        <tr key={item.id}>
+                            <td>{item.id}</td>
+                            <td>{item.stock_symbol}</td>
+                            <td>{item.quantity}</td>
+                            <td>${item.price}</td>
+                            <td>{item.type}</td>
+                            <td>{parseISOStringToDate(item.createdAt)}</td>
+                        </tr>
+                    )}
+                    </tbody>
+                </table>
 
-                <span>
+                <div>
+                    <button
+                        onClick={() => setCurrentPage(currentPage - 1)}
+                        disabled={currentPage === 1}
+                    >
+                        Previous
+                    </button>
+
+                    <span>
                     Page {currentPage} of {totalPages}
                 </span>
 
-                <button
-                    onClick={() => setCurrentPage(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                >
-                    Next
-                </button>
+                    <button
+                        onClick={() => setCurrentPage(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                    >
+                        Next
+                    </button>
+                </div>
             </div>
         </>
     )

@@ -5,3 +5,8 @@ export function parseNumberToDollars(num: number): string {
 
     return `$${localeNum}`
 }
+
+// convert ISO String date to JavaScript Date object
+export function parseISOStringToDate(date: string): string {
+    return new Date(date).toLocaleString()
+}
