@@ -175,6 +175,7 @@ export class TradeService {
         return {
             data: data.map((trade) => ({
                 ...trade,
+                total_value: trade.price.mul(trade.quantity),
                 createdAt: trade.createdAt.toISOString(),
             })),
         };

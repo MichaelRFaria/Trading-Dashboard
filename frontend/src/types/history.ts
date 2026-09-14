@@ -21,8 +21,11 @@ export type HistoryDataItem = {
     stock_symbol: string;
     quantity: number;
     price: number;
+    total_value: number,
     type: "buy" | "sell";
     createdAt: string;
 };
 
-export type HistoryResponse = HistoryDataItem[];
+export type HistoryResponse = {
+    data: HistoryDataItem[];
+}

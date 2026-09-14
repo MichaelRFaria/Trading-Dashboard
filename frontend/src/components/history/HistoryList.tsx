@@ -115,20 +115,22 @@ export default function HistoryList({historyData}: { historyData: HistoryDataIte
                     <tr>
                         <th>Trade ID</th>
                         <th>Stock Symbol</th>
-                        <th>Quantity</th>
                         <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total Value</th>
                         <th>Type</th>
                         <th>Date</th>
                     </tr>
                     </thead>
 
                     <tbody>
-                    {slicedHistory.map((item: HistoryDataItem, index: number) =>
+                    {slicedHistory.map((item: HistoryDataItem) =>
                         <tr key={item.id}>
                             <td>{item.id}</td>
                             <td>{item.stock_symbol}</td>
-                            <td>{item.quantity}</td>
                             <td>${item.price}</td>
+                            <td>{item.quantity}</td>
+                            <td>${item.total_value}</td>
                             <td>{item.type}</td>
                             <td>{parseISOStringToDate(item.createdAt)}</td>
                         </tr>
