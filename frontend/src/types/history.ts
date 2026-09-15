@@ -23,7 +23,7 @@ export type HistoryDataItem = {
     price: number;
     total_value: number,
     type: "buy" | "sell";
-    createdAt: string;
+    created_at: string;
 };
 
 export type HistoryResponse = {

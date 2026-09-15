@@ -38,7 +38,7 @@ export class TradeService {
                 user_id: userId
             },
             orderBy: {
-                createdAt: "asc"
+                created_at: "asc"
             }
         })
 
@@ -154,7 +154,7 @@ export class TradeService {
         }
 
         if (dto.date_from !== undefined || dto.date_to !== undefined) {
-            where.createdAt = {
+            where.created_at = {
                 ...(dto.date_from !== undefined && {
                     gte: new Date(dto.date_from),
                 }),
@@ -167,7 +167,7 @@ export class TradeService {
         const data = await this.prisma.trade.findMany({
             where,
             orderBy: {
-                createdAt: "desc",
+                created_at: "desc",
             },
         });
 
@@ -176,7 +176,7 @@ export class TradeService {
             data: data.map((trade) => ({
                 ...trade,
                 total_value: trade.price.mul(trade.quantity),
-                createdAt: trade.createdAt.toISOString(),
+                created_at: trade.created_at.toISOString(),
             })),
         };
 

@@ -5,13 +5,13 @@ import {parseISOStringToDate} from "@/src/helper/format";
 const ITEMS_PER_PAGE = 10;
 
 // todo: could potentially move TS types only used by one component, out of /types/ and into the component that uses it
-type SortField = "stock_symbol" | "quantity" | "price" | "createdAt";
+type SortField = "stock_symbol" | "quantity" | "price" | "created_at";
 type SortDirection = "asc" | "desc";
 
 export default function HistoryList({historyData}: { historyData: HistoryDataItem[] }) {
     const [currentPage, setCurrentPage] = useState(1);
 
-    const [sortBy, setSortBy] = useState<SortField>("createdAt");
+    const [sortBy, setSortBy] = useState<SortField>("created_at");
     const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
 
     useEffect(() => {
@@ -59,10 +59,10 @@ export default function HistoryList({historyData}: { historyData: HistoryDataIte
                 comparison = Number(a.price) - Number(b.price);
                 break;
 
-            case "createdAt":
+            case "created_at":
                 comparison =
-                    new Date(a.createdAt).getTime() -
-                    new Date(b.createdAt).getTime();
+                    new Date(a.created_at).getTime() -
+                    new Date(b.created_at).getTime();
                 break;
         }
 
@@ -98,7 +98,7 @@ export default function HistoryList({historyData}: { historyData: HistoryDataIte
                         Price
                     </button>
 
-                    <button onClick={() => handleSort("createdAt")}>
+                    <button onClick={() => handleSort("created_at")}>
                         Date
                     </button>
                 </div>
@@ -132,7 +132,7 @@ export default function HistoryList({historyData}: { historyData: HistoryDataIte
                             <td>{item.quantity}</td>
                             <td>${item.total_value}</td>
                             <td>{item.type}</td>
-                            <td>{parseISOStringToDate(item.createdAt)}</td>
+                            <td>{parseISOStringToDate(item.created_at)}</td>
                         </tr>
                     )}
                     </tbody>
