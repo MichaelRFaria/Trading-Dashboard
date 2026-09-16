@@ -1,12 +1,11 @@
 import {finnhubStockSymbolLookup} from "@/src/helper/api";
 import {StockSymbolLookupRequest, StockSymbolLookupResponse} from "@/src/types/stock";
 import React from "react";
-import {MessageType} from "@/src/types/misc";
+import {useNotification} from "@/src/components/common/NotificationProvider";
 
-export default function FinnhubLookupForm({setMessageType, setMessage}: {
-    setMessageType: React.Dispatch<React.SetStateAction<MessageType>>,
-    setMessage: React.Dispatch<React.SetStateAction<string>>
-}) {
+export default function FinnhubLookupForm() {
+    const {showNotification} = useNotification()
+
     const finnhubLookupFormSubmission = async (event: React.SubmitEvent<HTMLFormElement>) => {
         event.preventDefault(); // prevent page refresh
 
@@ -20,11 +19,9 @@ export default function FinnhubLookupForm({setMessageType, setMessage}: {
         const response: StockSymbolLookupResponse | null = await finnhubStockSymbolLookup(request)
 
         if (response) {
-            setMessageType("success")
-            setMessage(JSON.stringify(response))
+            showNotification(JSON.stringify(response))
         } else {
-            setMessageType("error")
-            setMessage(request.stock_symbol + " does not exist.")
+            showNotification(request.stock_symbol + " does not exist.")
         }
     }
 

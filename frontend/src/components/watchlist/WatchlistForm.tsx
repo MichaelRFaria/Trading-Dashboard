@@ -1,14 +1,14 @@
 import {addToWatchlist, deleteFromWatchlist} from "@/src/helper/api";
 import {WatchlistBasicResponse, WatchlistDataItem, WatchlistRequest} from "@/src/types/watchlist";
 import React, {useEffect, useState} from "react";
-import {DashboardActiveSection, MessageType} from "@/src/types/misc";
+import {useNotification} from "@/src/components/common/NotificationProvider";
 
-export default function WatchlistForm({getWatchlistDataAsync, watchlistData, setMessageType, setMessage}: {
+export default function WatchlistForm({getWatchlistDataAsync, watchlistData}: {
     getWatchlistDataAsync: () => Promise<void>,
-    watchlistData: WatchlistDataItem[],
-    setMessageType: React.Dispatch<React.SetStateAction<MessageType>>,
-    setMessage: React.Dispatch<React.SetStateAction<string>>
+    watchlistData: WatchlistDataItem[]
 }) {
+    const {showNotification} = useNotification()
+
     const [actionType, setActionType] = useState("add")
     const [selectedStock, setSelectedStock] = useState("")
 
@@ -44,8 +44,7 @@ export default function WatchlistForm({getWatchlistDataAsync, watchlistData, set
         let response: WatchlistBasicResponse | null;
 
         if (request.stock_symbol === "" || !request.stock_symbol || !action) {
-            setMessageType("error")
-            setMessage("Invalid form inputs, please try again.")
+            showNotification("Invalid form inputs, please try again.", 3000, true)
             return
         }
 
@@ -68,10 +67,8 @@ export default function WatchlistForm({getWatchlistDataAsync, watchlistData, set
             return
         }
 
-        (response.success) ? setMessageType("success") : setMessageType("error")
-
         if (response.message) {
-            setMessage(response.message)
+            showNotification(response.message)
         }
 
         getWatchlistDataAsync()

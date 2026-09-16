@@ -3,17 +3,15 @@
 import Link from "next/link";
 import {getCurrentUser, loginAccount} from "@/src/helper/api";
 import {useRouter, useSearchParams} from "next/navigation";
-import React, {useEffect, useState} from "react";
-import Message from "@/src/components/common/Message";
+import React, {useEffect} from "react";
 import {LoginRequest, LoginResponse} from "@/src/types/account";
-import {MessageType} from "@/src/types/misc";
+import {useNotification} from "@/src/components/common/NotificationProvider";
 
 export default function HomePage() {
     const router = useRouter()
     const searchParams = useSearchParams()
 
-    const [messageType, setMessageType] = useState<MessageType>("success")
-    const [message, setMessage] = useState("")
+    const {showNotification} = useNotification()
 
     useEffect(() => {
         getCurrentUser().then(user => {
@@ -23,8 +21,7 @@ export default function HomePage() {
         })
 
         if (searchParams.get("status") === "registration-successful") {
-            setMessageType("success")
-            setMessage("Successfully registered an account")
+            showNotification("Successfully registered an account")
         }
     }, [])
 
@@ -52,8 +49,7 @@ export default function HomePage() {
         if (response.success) {
             router.push("/dashboard")
         } else if (response.message) {
-            setMessageType("error")
-            setMessage(response.message);
+            showNotification(response.message)
         }
     }
 
@@ -73,7 +69,6 @@ export default function HomePage() {
             </form>
             <Link className="text-sm" href="/register">If you don't already have an account, you can register
                 here!</Link>
-            <Message type={messageType} message={message}/>
         </div>
     );
 }

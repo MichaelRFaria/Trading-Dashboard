@@ -1,14 +1,14 @@
 import {buyHolding, sellHolding} from "@/src/helper/api";
 import {HoldingsDataItem, TradeBasicResponse, TradeRequest} from "@/src/types/trade";
 import React, {useEffect, useState} from "react";
-import {DashboardActiveSection, MessageType} from "@/src/types/misc";
+import {useNotification} from "@/src/components/common/NotificationProvider";
 
-export default function TradeForm({getHoldingsDataAsync, holdingsData, setMessageType, setMessage}: {
+export default function TradeForm({getHoldingsDataAsync, holdingsData}: {
     getHoldingsDataAsync: () => Promise<void>,
-    holdingsData: HoldingsDataItem[],
-    setMessageType: React.Dispatch<React.SetStateAction<MessageType>>,
-    setMessage: React.Dispatch<React.SetStateAction<string>>
+    holdingsData: HoldingsDataItem[]
 }) {
+    const {showNotification} = useNotification()
+
     const [tradeType, setTradeType] = useState("buy")
     const [selectedStock, setSelectedStock] = useState("")
 
@@ -50,8 +50,7 @@ export default function TradeForm({getHoldingsDataAsync, holdingsData, setMessag
         let response: TradeBasicResponse | null
 
         if (request.quantity > selectedStockMaxQuantity && tradeType === "sell") {
-            setMessageType("error")
-            setMessage("You cannot sell more shares than you own.")
+            showNotification("You cannot sell more shares than you own.")
             return;
         }
 
@@ -75,10 +74,8 @@ export default function TradeForm({getHoldingsDataAsync, holdingsData, setMessag
             return
         }
 
-        (response.success) ? setMessageType("success") : setMessageType("error")
-
         if (response.message) {
-            setMessage(response.message)
+            showNotification(response.message)
         }
 
         getHoldingsDataAsync()
