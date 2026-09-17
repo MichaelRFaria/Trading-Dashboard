@@ -1,13 +1,15 @@
 "use client";
 
 import {registerAccount} from "@/src/helper/api";
-import React, {useState} from "react";
+import React from "react";
 import {useRouter} from "next/navigation";
 import {RegisterRequest, RegisterResponse} from "@/src/types/account";
+import {useNotification} from "@/src/components/common/NotificationProvider";
+import FormInput from "@/src/components/common/FormInput";
 
 export default function RegistrationPage() {
     const router = useRouter()
-    const [errorMessage, setErrorMessage] = useState("");
+    const {showNotification} = useNotification()
 
     const handleFormSubmission = async (event: React.SubmitEvent<HTMLFormElement>) => {
         event.preventDefault(); // prevent page refresh
@@ -33,25 +35,23 @@ export default function RegistrationPage() {
             router.push(`/home/?${params.toString()}`)
         } else if (response.message) {
             //console.log("error on account registration")
-            setErrorMessage(response.message);
+            showNotification(response.message)
         }
     }
 
     return (
-        <div className="flex flex-col min-h-screen justify-center items-center">
+        <div className="flex min-h-screen flex-col items-center justify-center">
             <h1 className="text-xl underline">Register</h1>
-            <form className="flex flex-col items-center" onSubmit={handleFormSubmission}>
-                <div className="flex justify-between min-w-full">
-                    <label htmlFor="email">E-mail:</label>
-                    <input name="email" id="email" type="text"/>
-                </div>
-                <div className="flex justify-between min-w-full">
-                    <label htmlFor="password">Password:</label>
-                    <input name="password" id="password" type="password"/>
-                </div>
-                <input type="submit" value="Register"/>
+
+            <form
+                className="flex flex-col items-center gap-3"
+                onSubmit={handleFormSubmission}
+            >
+                <FormInput label="E-mail" id="email" name="email" type="email"/>
+                <FormInput label="Password" id="password" name="password" type="password"/>
+
+                <button type="submit">Register</button>
             </form>
-            <p className="text-red-600">{errorMessage}</p>
         </div>
     );
 }

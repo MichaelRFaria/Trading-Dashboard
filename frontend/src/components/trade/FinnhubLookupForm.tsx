@@ -2,6 +2,7 @@ import {finnhubStockSymbolLookup} from "@/src/helper/api";
 import {StockSymbolLookupRequest, StockSymbolLookupResponse} from "@/src/types/stock";
 import React from "react";
 import {useNotification} from "@/src/components/common/NotificationProvider";
+import FormInput from "@/src/components/common/FormInput";
 
 export default function FinnhubLookupForm() {
     const {showNotification} = useNotification()
@@ -28,18 +29,14 @@ export default function FinnhubLookupForm() {
     return (
         <>
             <p className="text-bg underline">Finnhub Lookup:</p>
-            <form className="flex flex-col items-center" onSubmit={finnhubLookupFormSubmission}>
-                <div className="flex justify-between min-w-full">
-                    <label htmlFor="stock_symbol">Stock symbol:</label>
-                    <input name="stock_symbol" id="stock_symbol" type="text"/>
-                </div>
-                <div className="flex justify-between min-w-full">
-                    <label htmlFor="action">Action:</label>
-                    <select name="action" id="action">
-                        <option value="search">Search</option>
-                    </select>
-                </div>
-                <input type="submit" value="Execute"/>
+
+            <form
+                className="flex flex-col items-center gap-3"
+                onSubmit={finnhubLookupFormSubmission}
+            >
+                <FormInput label="Stock symbol" id="stock_symbol" name="stock_symbol" type="text"/>
+
+                <button type="submit">Search</button>
             </form>
         </>
     )

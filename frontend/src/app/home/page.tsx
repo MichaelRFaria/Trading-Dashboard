@@ -6,6 +6,7 @@ import {useRouter, useSearchParams} from "next/navigation";
 import React, {useEffect} from "react";
 import {LoginRequest, LoginResponse} from "@/src/types/account";
 import {useNotification} from "@/src/components/common/NotificationProvider";
+import FormInput from "@/src/components/common/FormInput";
 
 export default function HomePage() {
     const router = useRouter()
@@ -56,16 +57,14 @@ export default function HomePage() {
     return (
         <div className="flex flex-col min-h-screen justify-center items-center">
             <h1 className="text-xl underline">Login</h1>
-            <form className="flex flex-col items-center" onSubmit={handleFormSubmission}>
-                <div className="flex justify-between min-w-full">
-                    <label htmlFor="email">E-mail:</label>
-                    <input name="email" id="email" type="text"/>
-                </div>
-                <div className="flex justify-between min-w-full">
-                    <label htmlFor="password">Password:</label>
-                    <input name="password" id="password" type="password"/>
-                </div>
-                <input type="submit" value="Login"/>
+            <form
+                className="flex flex-col items-center gap-3"
+                onSubmit={handleFormSubmission}
+            >
+                <FormInput label="E-mail" id="email" name="email" type="email"/>
+                <FormInput label="Password" id="password" name="password" type="password"/>
+
+                <button type="submit">Login</button>
             </form>
             <Link className="text-sm" href="/register">If you don't already have an account, you can register
                 here!</Link>

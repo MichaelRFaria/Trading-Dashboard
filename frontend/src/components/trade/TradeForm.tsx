@@ -2,6 +2,8 @@ import {buyHolding, sellHolding} from "@/src/helper/api";
 import {HoldingsDataItem, TradeBasicResponse, TradeRequest} from "@/src/types/trade";
 import React, {useEffect, useState} from "react";
 import {useNotification} from "@/src/components/common/NotificationProvider";
+import FormInput from "@/src/components/common/FormInput";
+import FormSelect from "@/src/components/common/FormSelect";
 
 export default function TradeForm({getHoldingsDataAsync, holdingsData}: {
     getHoldingsDataAsync: () => Promise<void>,
@@ -84,41 +86,37 @@ export default function TradeForm({getHoldingsDataAsync, holdingsData}: {
     return (
         <>
             <p className="text-bg underline">Trade stocks:</p>
-            <form className="flex flex-col items-center" onSubmit={tradeStocksFormSubmission}>
-                <div className="flex justify-between min-w-full">
-                    <label htmlFor="stock_symbol">Stock symbol:</label>
-                    {tradeType === "buy" ? (
-                        <>
-                            <input name="stock_symbol" id="stock_symbol" type="text"/>
-                            <label htmlFor="quantity">Quantity:</label>
-                            <input name="quantity" id="quantity" type="number" min="0.00000001"
-                                   step="0.00000001"/>
-                        </>) : (
-                        <>
-                            <select name="stock_symbol" id="stock_symbol"
-                                    onChange={e => setSelectedStock(e.target.value)}>
-                                {holdingsData.map((item: HoldingsDataItem) =>
-                                    <option value={item.stock_symbol}>{item.stock_symbol}</option>
-                                )}
-                            </select>
-                            <label htmlFor="quantity">Quantity:</label>
-                            <input name="quantity" id="quantity" type="number" min="0.00000001"
-                                   step="0.00000001"/>
-                        </>)}
-                </div>
-                <div className="flex justify-between min-w-full">
-                    <label htmlFor="action">Action:</label>
-                    <select name="action" id="action" onChange={e => {
-                        setTradeType(e.target.value)
-                    }}>
-                        <option value="buy">Buy</option>
-                        {(holdingsData.length > 0) &&
-                            (<option value="sell">Sell</option>)
 
-                        }
-                    </select>
-                </div>
-                <input type="submit" value="Execute"/>
+            <form
+                className="flex flex-col items-center gap-3"
+                onSubmit={tradeStocksFormSubmission}
+            >
+                {tradeType === "buy" ? (
+                    <FormInput label="Stock symbol" id="stock_symbol" name="stock_symbol" type="text"/>
+                ) : (
+                    <FormSelect label="Stock symbol" id="stock_symbol" name="stock_symbol"
+                        onChange={e => setSelectedStock(e.target.value)}
+                    >
+                        {holdingsData.map((item: HoldingsDataItem) => (
+                            <option key={item.stock_symbol} value={item.stock_symbol}>
+                                {item.stock_symbol}
+                            </option>
+                        ))}
+                    </FormSelect>
+                )}
+
+                <FormInput label="Quantity" id="quantity" name="quantity" type="number" min="0.00000001" step="0.00000001"/>
+
+                <FormSelect label="Action" id="action" name="action" value={tradeType}
+                    onChange={e => setTradeType(e.target.value)}
+                >
+                    <option value="buy">Buy</option>
+                    {holdingsData.length > 0 && (
+                        <option value="sell">Sell</option>
+                    )}
+                </FormSelect>
+
+                <button type="submit">Execute</button>
             </form>
         </>
     )

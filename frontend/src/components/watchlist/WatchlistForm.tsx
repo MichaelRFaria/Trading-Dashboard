@@ -2,6 +2,8 @@ import {addToWatchlist, deleteFromWatchlist} from "@/src/helper/api";
 import {WatchlistBasicResponse, WatchlistDataItem, WatchlistRequest} from "@/src/types/watchlist";
 import React, {useEffect, useState} from "react";
 import {useNotification} from "@/src/components/common/NotificationProvider";
+import FormInput from "@/src/components/common/FormInput";
+import FormSelect from "@/src/components/common/FormSelect";
 
 export default function WatchlistForm({getWatchlistDataAsync, watchlistData}: {
     getWatchlistDataAsync: () => Promise<void>,
@@ -77,34 +79,35 @@ export default function WatchlistForm({getWatchlistDataAsync, watchlistData}: {
     return (
         <>
             <p className="text-bg underline">Add to Watchlist:</p>
-            <form className="flex flex-col items-center" onSubmit={modifyWatchlistFormSubmission}>
-                <div className="flex justify-between min-w-full">
-                    {actionType === "add" ? (<>
-                            <label htmlFor="stock_symbol">Stock symbol:</label>
-                            <input name="stock_symbol" id="stock_symbol" type="text"/></>)
-                        :
-                        (<>
-                            <select name="stock_symbol" id="stock_symbol"
-                                    onChange={e => setSelectedStock(e.target.value)}>
-                                {watchlistData.map((item: WatchlistDataItem) =>
-                                    <option value={item.stock_symbol}>{item.stock_symbol}</option>
-                                )}
-                            </select>
-                        </>)
-                    }
-                </div>
-                <div className="flex justify-between min-w-full">
-                    <label htmlFor="action">Action:</label>
-                    <select name="action" id="action" onChange={e => {
-                        setActionType(e.target.value)
-                    }}>
-                        <option value="add">Add</option>
-                        {(watchlistData.length > 0) &&
-                            <option value="delete">Delete</option>
-                        }
-                    </select>
-                </div>
-                <input type="submit" value="Execute"/>
+
+            <form
+                className="flex flex-col items-center gap-3"
+                onSubmit={modifyWatchlistFormSubmission}
+            >
+                {actionType === "add" ? (
+                    <FormInput label="Stock symbol" id="stock_symbol" name="stock_symbol" type="text"/>
+                ) : (
+                    <FormSelect label="Stock symbol" id="stock_symbol" name="stock_symbol"
+                        onChange={e => setSelectedStock(e.target.value)}
+                    >
+                        {watchlistData.map((item: WatchlistDataItem) => (
+                            <option key={item.stock_symbol} value={item.stock_symbol}>
+                                {item.stock_symbol}
+                            </option>
+                        ))}
+                    </FormSelect>
+                )}
+
+                <FormSelect label="Action" id="action" name="action" value={actionType}
+                    onChange={e => setActionType(e.target.value)}
+                >
+                    <option value="add">Add</option>
+                    {watchlistData.length > 0 && (
+                        <option value="delete">Delete</option>
+                    )}
+                </FormSelect>
+
+                <button type="submit">Execute</button>
             </form>
         </>
     )
