@@ -10,6 +10,9 @@ export default function Metrics({holdingsData, holdingsPriceData, priceChangesDa
     priceChangesData: FinnhubPriceChangesDataItem[],
     gains: GainsResponse
 }) {
+    if (holdingsData.length === 0) {
+        return <p>Add some holdings to your portfolio to view your metrics!</p>
+    }
 
     const totalPortfolioValue = holdingsData.reduce((sum: number, holding: HoldingsDataItem) => {
         const price = holdingsPriceData[holding.stock_symbol] ?? 0
@@ -43,10 +46,6 @@ export default function Metrics({holdingsData, holdingsPriceData, priceChangesDa
     })
 
     const totalCombinedGains = gains.unrealised_gains + gains.realised_gains
-
-    if (holdingsData.length === 0) {
-        return <p>Loading...</p>
-    }
 
     return (
         <table>
