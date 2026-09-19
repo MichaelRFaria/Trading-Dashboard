@@ -7,7 +7,7 @@ type NotificationProps = {
     message: string;
     isVisible: boolean;
     progressIsRendered?: boolean;
-    time?: number;
+    time: number;
 };
 
 // component adapted from: https://github.com/MichaelRFaria/CommitQuest/blob/main/frontend/src/components/sub/Notification.jsx

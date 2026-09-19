@@ -24,7 +24,7 @@ export default function RegistrationPage() {
         const response: RegisterResponse | null = await registerAccount(request);
 
         if (response === null) {
-            console.error("registration response is null, something went wrong")
+            showNotification("Error encountered during registration, please try again.")
             return
         }
 

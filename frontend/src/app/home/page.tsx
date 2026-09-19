@@ -41,7 +41,7 @@ export default function HomePage() {
         const response: LoginResponse | null = await loginAccount(request);
 
         if (response === null) {
-            console.error("login response is null, something went wrong")
+            showNotification("Error encountered during login, please try again.")
             return
         }
 

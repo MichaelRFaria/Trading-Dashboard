@@ -72,7 +72,7 @@ export default function TradeForm({getHoldingsDataAsync, holdingsData}: {
         // console.log("trade form test")
 
         if (response === null) {
-            console.error("holdings trade response is null, something went wrong")
+            showNotification("Error encountered while executing trade, please try again.")
             return
         }
 
