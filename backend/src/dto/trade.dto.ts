@@ -1,38 +1,36 @@
-export type TradeHolding = BuyHoldingDto | SellHoldingDto
+export type TradeHolding = BuyHoldingDto | SellHoldingDto;
 
 export class BuyHoldingDto {
-    stock_symbol: string;
-    quantity: number;
+  stock_symbol: string;
+  quantity: number;
 }
 
 export class SellHoldingDto {
-    stock_symbol: string;
-    quantity: number;
+  stock_symbol: string;
+  quantity: number;
 }
 
 export class TradeHoldingResultDto {
-    success: boolean;
-    message: string;
+  success: boolean;
+  message: string;
 }
 
-export class BuyHoldingResultDto extends TradeHoldingResultDto {
-}
+export class BuyHoldingResultDto extends TradeHoldingResultDto {}
 
-export class SellHoldingResultDto extends TradeHoldingResultDto {
-}
+export class SellHoldingResultDto extends TradeHoldingResultDto {}
 
 export class GainsDto {
-    realised_gains: number
-    unrealised_gains: number;
+  realised_gains: number;
+  unrealised_gains: number;
 }
 
 export class HistoryLookupDto {
-    stock_symbol?: string;
-    quantity_from?: number;
-    quantity_to?: number;
-    price_from?: number;
-    price_to?: number;
-    type?: "buy" | "sell";
-    date_from?: string;
-    date_to?: string;
+  stock_symbol?: string;
+  quantity_from?: number;
+  quantity_to?: number;
+  price_from?: number;
+  price_to?: number;
+  type?: 'buy' | 'sell';
+  date_from?: string;
+  date_to?: string;
 }

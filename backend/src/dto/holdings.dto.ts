@@ -1,15 +1,14 @@
 export class HoldingsFetchFailureDto {
-    success = false;
-    message: string;
+  success = false;
+  message: string;
 }
 
 export class HoldingsFetchSuccessDto {
-    data: HoldingsDataItem[];
+  data: HoldingsDataItem[];
 }
 
 export class HoldingsDataItem {
-    id: number;
-    stock_symbol: string;
-    user_id: number;
+  id: number;
+  stock_symbol: string;
+  user_id: number;
 }
-

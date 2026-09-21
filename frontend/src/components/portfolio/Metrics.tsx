@@ -1,67 +1,118 @@
-import {FinnhubPriceChangesDataItem, GainsResponse, HoldingsPrice, HoldingValue} from "@/src/types/stock";
-import {parseNumberToDollars} from "@/src/helper/format";
-import MetricStat from "@/src/components/portfolio/MetricStat";
-import {HoldingsDataItem} from "@/src/types/trade";
+import {
+  FinnhubPriceChangesDataItem,
+  GainsResponse,
+  HoldingsPrice,
+  HoldingValue,
+} from '@/src/types/stock';
+import { parseNumberToDollars } from '@/src/helper/format';
+import MetricStat from '@/src/components/portfolio/MetricStat';
+import { HoldingsDataItem } from '@/src/types/trade';
 
-
-export default function Metrics({holdingsData, holdingsPriceData, priceChangesData, gains}: {
-    holdingsData: HoldingsDataItem[],
-    holdingsPriceData: HoldingsPrice,
-    priceChangesData: FinnhubPriceChangesDataItem[],
-    gains: GainsResponse
+export default function Metrics({
+  holdingsData,
+  holdingsPriceData,
+  priceChangesData,
+  gains,
+}: {
+  holdingsData: HoldingsDataItem[];
+  holdingsPriceData: HoldingsPrice;
+  priceChangesData: FinnhubPriceChangesDataItem[];
+  gains: GainsResponse;
 }) {
-    if (holdingsData.length === 0) {
-        return <p>Add some holdings to your portfolio to view your metrics!</p>
-    }
+  if (holdingsData.length === 0) {
+    return <p>Add some holdings to your portfolio to view your metrics!</p>;
+  }
 
-    const totalPortfolioValue = holdingsData.reduce((sum: number, holding: HoldingsDataItem) => {
-        const price = holdingsPriceData[holding.stock_symbol] ?? 0
+  const totalPortfolioValue = holdingsData.reduce(
+    (sum: number, holding: HoldingsDataItem) => {
+      const price = holdingsPriceData[holding.stock_symbol] ?? 0;
 
-        return sum + holding.quantity * price;
-    }, 0);
+      return sum + holding.quantity * price;
+    },
+    0,
+  );
 
-    // calculates today's gains by iterating through the user's holdings and multiplying the quantity of each stock by its change in price
-    const todaysGains = holdingsData.reduce((sum: number, holding: HoldingsDataItem) => {
-        const priceChange = priceChangesData.find(stock => stock.stock_symbol === holding.stock_symbol)?.price_change ?? 0
+  // calculates today's gains by iterating through the user's holdings and multiplying the quantity of each stock by its change in price
+  const todaysGains = holdingsData.reduce(
+    (sum: number, holding: HoldingsDataItem) => {
+      const priceChange =
+        priceChangesData.find(
+          (stock) => stock.stock_symbol === holding.stock_symbol,
+        )?.price_change ?? 0;
 
-        const gain = priceChange * holding.quantity
+      const gain = priceChange * holding.quantity;
 
-        return sum + gain
-    }, 0);
+      return sum + gain;
+    },
+    0,
+  );
 
-    const largestPosition = holdingsData.reduce<HoldingValue>((largest: HoldingValue, holding: HoldingsDataItem) => {
-        const holdingValue = holding.quantity * (holdingsPriceData[holding.stock_symbol] ?? 0)
+  const largestPosition = holdingsData.reduce<HoldingValue>(
+    (largest: HoldingValue, holding: HoldingsDataItem) => {
+      const holdingValue =
+        holding.quantity * (holdingsPriceData[holding.stock_symbol] ?? 0);
 
-        if (largest.value < holdingValue) {
-            return {
-                stock_symbol: holding.stock_symbol,
-                value: holdingValue
-            }
-        } else {
-            return largest
-        }
-    }, {
-        stock_symbol: "",
-        value: 0
-    })
+      if (largest.value < holdingValue) {
+        return {
+          stock_symbol: holding.stock_symbol,
+          value: holdingValue,
+        };
+      } else {
+        return largest;
+      }
+    },
+    {
+      stock_symbol: '',
+      value: 0,
+    },
+  );
 
-    const totalCombinedGains = gains.unrealised_gains + gains.realised_gains
+  const totalCombinedGains = gains.unrealised_gains + gains.realised_gains;
 
-    return (
-        <table>
-            <tbody>
-            <MetricStat text={"Portfolio Value:"} stat={totalPortfolioValue} format="currency"/>
-            <MetricStat text={"Today's Gain/Loss:"} stat={todaysGains} format="gain"/>
-            <MetricStat text={"Total Gain/Loss (realised):"} stat={gains.realised_gains} format="gain"/>
-            <MetricStat text={"Total Gain/Loss (unrealised):"} stat={gains.unrealised_gains}
-                        format="gainWithPercentage"
-                        portfolioValue={totalPortfolioValue}/>
-            <MetricStat text={"Total Gain/Loss (combined):"} stat={totalCombinedGains} format="gain"/>
-            <MetricStat text={"Largest Position:"}
-                        stat={parseNumberToDollars(largestPosition.value) + " of " + largestPosition.stock_symbol}
-                        format="text"/>
-            <MetricStat text={"Number of Holdings:"} stat={holdingsData.length} format="text"/>
-            </tbody>
-        </table>
-    )
+  return (
+    <table>
+      <tbody>
+        <MetricStat
+          text={'Portfolio Value:'}
+          stat={totalPortfolioValue}
+          format="currency"
+        />
+        <MetricStat
+          text={"Today's Gain/Loss:"}
+          stat={todaysGains}
+          format="gain"
+        />
+        <MetricStat
+          text={'Total Gain/Loss (realised):'}
+          stat={gains.realised_gains}
+          format="gain"
+        />
+        <MetricStat
+          text={'Total Gain/Loss (unrealised):'}
+          stat={gains.unrealised_gains}
+          format="gainWithPercentage"
+          portfolioValue={totalPortfolioValue}
+        />
+        <MetricStat
+          text={'Total Gain/Loss (combined):'}
+          stat={totalCombinedGains}
+          format="gain"
+        />
+        <MetricStat
+          text={'Largest Position:'}
+          stat={
+            parseNumberToDollars(largestPosition.value) +
+            ' of ' +
+            largestPosition.stock_symbol
+          }
+          format="text"
+        />
+        <MetricStat
+          text={'Number of Holdings:'}
+          stat={holdingsData.length}
+          format="text"
+        />
+      </tbody>
+    </table>
+  );
 }

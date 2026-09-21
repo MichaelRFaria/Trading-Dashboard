@@ -1,21 +1,27 @@
-import {Body, Controller, Get, Post, Request, UseGuards} from "@nestjs/common";
-import {RegisterAccountDto} from "../dto/account.dto";
-import {UserService} from "../services/user.service";
-import {AuthGuard} from "../guards/auth.guard";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
+import { RegisterAccountDto } from '../dto/account.dto';
+import { UserService } from '../services/user.service';
+import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('users')
 export class UserController {
-    constructor(private userService: UserService) {
-    }
+  constructor(private userService: UserService) {}
 
-    @Post("register")
-    async register(@Body() registerAccountDto: RegisterAccountDto) {
-        return this.userService.register(registerAccountDto)
-    }
+  @Post('register')
+  async register(@Body() registerAccountDto: RegisterAccountDto) {
+    return this.userService.register(registerAccountDto);
+  }
 
-    @UseGuards(AuthGuard)
-    @Get("me")
-    async GetCurrentUser(@Request() req) {
-        return req.user;
-    }
+  @UseGuards(AuthGuard)
+  @Get('me')
+  async GetCurrentUser(@Request() req) {
+    return req.user;
+  }
 }

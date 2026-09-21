@@ -1,73 +1,81 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import {getCurrentUser, loginAccount} from "@/src/helper/api";
-import {useRouter, useSearchParams} from "next/navigation";
-import React, {useEffect} from "react";
-import {LoginRequest, LoginResponse} from "@/src/types/account";
-import {useNotification} from "@/src/components/common/NotificationProvider";
-import FormInput from "@/src/components/common/FormInput";
+import Link from 'next/link';
+import { getCurrentUser, loginAccount } from '@/src/helper/api';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { LoginRequest, LoginResponse } from '@/src/types/account';
+import { useNotification } from '@/src/components/common/NotificationProvider';
+import FormInput from '@/src/components/common/FormInput';
 
 export default function HomePage() {
-    const router = useRouter()
-    const searchParams = useSearchParams()
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-    const {showNotification} = useNotification()
+  const { showNotification } = useNotification();
 
-    useEffect(() => {
-        getCurrentUser().then(user => {
-            if (user) {
-                router.push("/dashboard")
-            }
-        })
+  useEffect(() => {
+    getCurrentUser().then((user) => {
+      if (user) {
+        router.push('/dashboard');
+      }
+    });
 
-        if (searchParams.get("status") === "registration-successful") {
-            showNotification("Successfully registered an account")
-        }
-    }, [])
+    if (searchParams.get('status') === 'registration-successful') {
+      showNotification('Successfully registered an account');
+    }
+  }, []);
 
-    const handleFormSubmission = async (event: React.SubmitEvent<HTMLFormElement>) => {
-        event.preventDefault(); // prevent page refresh
+  const handleFormSubmission = async (
+    event: React.SubmitEvent<HTMLFormElement>,
+  ) => {
+    event.preventDefault(); // prevent page refresh
 
-        const formData = new FormData(event.target);
+    const formData = new FormData(event.target);
 
-        const request: LoginRequest = {
-            email: formData.get("email") as string,
-            password: formData.get("password") as string,
-        }
+    const request: LoginRequest = {
+      email: formData.get('email') as string,
+      password: formData.get('password') as string,
+    };
 
-        console.log(request.email)
+    console.log(request.email);
 
-        const response: LoginResponse | null = await loginAccount(request);
+    const response: LoginResponse | null = await loginAccount(request);
 
-        if (response === null) {
-            showNotification("Error encountered during login, please try again.")
-            return
-        }
-
-        console.log(response)
-
-        if (response.success) {
-            router.push("/dashboard")
-        } else if (response.message) {
-            showNotification(response.message)
-        }
+    if (response === null) {
+      showNotification('Error encountered during login, please try again.');
+      return;
     }
 
-    return (
-        <div className="flex flex-col min-h-screen justify-center items-center">
-            <h1 className="text-xl underline">Login</h1>
-            <form
-                className="flex flex-col items-center gap-3"
-                onSubmit={handleFormSubmission}
-            >
-                <FormInput label="E-mail" id="email" name="email" type="email"/>
-                <FormInput label="Password" id="password" name="password" type="password"/>
+    console.log(response);
 
-                <button type="submit">Login</button>
-            </form>
-            <Link className="text-sm" href="/register">If you don't already have an account, you can register
-                here!</Link>
-        </div>
-    );
+    if (response.success) {
+      router.push('/dashboard');
+    } else if (response.message) {
+      showNotification(response.message);
+    }
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen justify-center items-center">
+      <h1 className="text-xl underline">Login</h1>
+      <form
+        className="flex flex-col items-center gap-3"
+        onSubmit={handleFormSubmission}
+      >
+        <FormInput label="E-mail" id="email" name="email" type="email" />
+        <FormInput
+          label="Password"
+          id="password"
+          name="password"
+          type="password"
+        />
+
+        <button type="submit">Login</button>
+      </form>
+      <Link className="text-sm" href="/register">
+        If you don't already have an account, you can register here!
+      </Link>
+    </div>
+  );
 }
