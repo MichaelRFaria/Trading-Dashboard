@@ -35,11 +35,15 @@ export default function RegistrationPage() {
     if (response.success) {
       //console.log("account successfully registered")
       const params = new URLSearchParams();
-      params.set('status', 'registration-successful');
+      params.set('status', 'registration-successf ul');
       router.push(`/home/?${params.toString()}`);
     } else if (response.message) {
       //console.log("error on account registration")
-      showNotification(response.message);
+      showNotification(
+        Array.isArray(response.message) // AccountDto class validators will produce an array of messages on validation fail
+          ? response.message.join(', ')
+          : response.message,
+      );
     }
   };
 

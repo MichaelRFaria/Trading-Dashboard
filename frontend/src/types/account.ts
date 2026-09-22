@@ -5,7 +5,7 @@ export type RegisterRequest = {
 
 export type RegisterResponse = {
   success: boolean;
-  message: string;
+  message: string | string[]; // string[] for AccountDto class validator error messages
 };
 
 export type LoginRequest = {

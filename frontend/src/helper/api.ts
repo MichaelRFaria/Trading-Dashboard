@@ -187,11 +187,6 @@ async function fetchUrl<T>(
   try {
     const response = await fetch(url, options);
 
-    if (!response.ok) {
-      console.error(`Response status: ${response.status}`);
-      return null;
-    }
-
     return (await response.json()) as T;
   } catch (error) {
     if (error instanceof Error) {
