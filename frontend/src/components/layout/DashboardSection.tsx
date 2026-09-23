@@ -26,6 +26,7 @@ import {
 } from '@/src/helper/api';
 import { DashboardActiveSection, MessageType } from '@/src/types/misc';
 import { HistoryDataItem, HistoryRequest } from '@/src/types/history';
+import { useNotification } from '@/src/components/common/NotificationProvider';
 
 export default function DashboardSection({
   activeSection,
@@ -33,6 +34,7 @@ export default function DashboardSection({
   activeSection: DashboardActiveSection;
 }) {
   const router = useRouter();
+  const { showNotification } = useNotification();
 
   const [authenticatedUser, setAuthenticatedUser] = useState<AuthenticatedUser>(
     {
@@ -63,11 +65,12 @@ export default function DashboardSection({
   // check if the user is authenticated
   useEffect(() => {
     getCurrentUser().then((user) => {
-      if (user) {
+      console.log('user', user);
+      if (user && 'sub' in user) {
         // console.log("user response below")
-        //console.log(user)
         setAuthenticatedUser(user);
       } else {
+        showNotification('You are not authenticated, please login in.');
         router.push('/home');
       }
     });

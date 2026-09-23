@@ -31,3 +31,11 @@ export type AuthenticatedUser = {
   exp: number;
   iat: number;
 };
+
+export type AuthenticatedUserFailure = {
+  status_code: number;
+  message: string;
+};
+
+export type AuthenticatedUserResponse =
+  AuthenticatedUser | AuthenticatedUserFailure;

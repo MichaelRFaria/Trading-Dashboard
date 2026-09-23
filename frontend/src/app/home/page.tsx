@@ -16,7 +16,7 @@ export default function HomePage() {
 
   useEffect(() => {
     getCurrentUser().then((user) => {
-      if (user) {
+      if (user && 'sub' in user) {
         router.push('/dashboard');
       }
     });
