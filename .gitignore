@@ -18,3 +18,4 @@ Trading-Dashboard.iml
 /backend/.env
 /frontend/next-env.d.ts
 /TODO
+/frontend/tsconfig.tsbuildinfo

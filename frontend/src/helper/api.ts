@@ -43,6 +43,10 @@ export async function loginAccount(
   return await fetchUrl<LoginResponse>('/auth/login', 'POST', data);
 }
 
+export async function logoutAccount(): Promise<boolean | null> {
+  return await fetchUrl<boolean>('/auth/logout', 'POST');
+}
+
 export async function getWatchlistData(): Promise<WatchlistResponse | null> {
   return await fetchUrl<WatchlistResponse>('/watchlist/watchlist', 'GET');
 }

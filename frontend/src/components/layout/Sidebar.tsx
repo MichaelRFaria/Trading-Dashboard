@@ -2,6 +2,9 @@
 
 import React from 'react';
 import { DashboardActiveSection } from '@/src/types/misc';
+import { logoutAccount } from '@/src/helper/api';
+import { useRouter } from 'next/navigation';
+import { useNotification } from '@/src/components/common/NotificationProvider';
 
 export default function Sidebar({
   setActiveSection,
@@ -10,9 +13,18 @@ export default function Sidebar({
     React.SetStateAction<DashboardActiveSection>
   >;
 }) {
-  const logout = () => {
-    //window.location.href = "http://localhost:8080/logout";
-    // point to logout endpoint or change to whatever logout flow
+  const router = useRouter();
+  const { showNotification } = useNotification();
+
+  const handleLogout = async () => {
+    const success = await logoutAccount();
+
+    if (success) {
+      showNotification('Successfully logged out.');
+      router.push('/home');
+    } else {
+      showNotification('Error logging out, please try again.');
+    }
   };
 
   return (
@@ -27,7 +39,7 @@ export default function Sidebar({
       <hr />
       <div className="flex flex-col">
         <button>Settings</button>
-        <button onClick={logout}>Log Out</button>
+        <button onClick={handleLogout}>Log Out</button>
       </div>
     </aside>
   );
