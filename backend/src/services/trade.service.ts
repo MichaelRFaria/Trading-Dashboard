@@ -73,10 +73,10 @@ export class TradeService {
       totalUnrealisedGains += gains.unrealised_gains;
     }
 
-    const payload = new GainsDto();
-    payload.realised_gains = totalRealisedGains;
-    payload.unrealised_gains = totalUnrealisedGains;
-    return payload;
+    return {
+      realised_gains: totalRealisedGains,
+      unrealised_gains: totalUnrealisedGains,
+    };
   }
 
   // calculate realised gains for each stock using an average cost basis system (could look into FIFO/LIFO cost basis systems in the future)
@@ -124,10 +124,10 @@ export class TradeService {
       console.log('unrealised gain: ' + unrealisedGain);
     }
 
-    const payload = new GainsDto();
-    payload.realised_gains = realisedGain;
-    payload.unrealised_gains = unrealisedGain;
-    return payload;
+    return {
+      realised_gains: realisedGain,
+      unrealised_gains: unrealisedGain,
+    };
   }
 
   async getHistory(userId: number, dto: HistoryLookupDto) {
@@ -183,42 +183,17 @@ export class TradeService {
       },
     });
 
-    // todo: should probably make service methods return by defining response shape like below, instead of DTOs like current implementations + commented function below
     return {
       data: data.map((trade) => ({
-        ...trade,
+        id: trade.id,
+        user_id: trade.user_id,
+        stock_symbol: trade.stock_symbol,
+        quantity: trade.quantity,
+        price: trade.price,
+        type: trade.type,
         total_value: trade.price.mul(trade.quantity),
         created_at: trade.created_at.toISOString(),
       })),
     };
-
-    // const payload = new HistoryResultDto();
-    //
-    // payload.data = data.map((trade) => ({
-    //     id: trade.id,
-    //     user_id: trade.user_id,
-    //     stock_symbol: trade.stock_symbol,
-    //     quantity: trade.quantity,
-    //     price: trade.price,
-    //     type: trade.type,
-    //     createdAt: trade.createdAt.toISOString(),
-    // }));
-    //
-    // return payload;
-
-    // // trade.dto.ts
-    // export class HistoryResultDto {
-    //     data: HistoryDataItem[]
-    // }
-    //
-    // export class HistoryDataItem {
-    //     id: number;
-    //     user_id: number;
-    //     stock_symbol: string;
-    //     quantity: number;
-    //     price: number;
-    //     type: "buy" | "sell";
-    //     createdAt: string;
-    // }
   }
 }

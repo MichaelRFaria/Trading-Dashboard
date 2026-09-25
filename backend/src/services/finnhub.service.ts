@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
   FinnhubPriceLookupDto,
-  FinnhubPriceLookupResultDto,
   FinnhubSymbolLookupDto,
-  StockSymbolLookupResultDto,
 } from '../dto/finnhub.dto';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
@@ -29,12 +27,11 @@ export class FinnhubService {
 
     console.log(stockData);
 
-    const payload = new StockSymbolLookupResultDto();
-    payload.description = stockData.description;
-    payload.stock_symbol = stockData.symbol;
-    payload.type = stockData.type;
-
-    return payload;
+    return {
+      description: stockData.description,
+      stock_symbol: stockData.symbol,
+      type: stockData.type,
+    };
   }
 
   async getPrice(dto: FinnhubPriceLookupDto) {
@@ -47,27 +44,30 @@ export class FinnhubService {
       }),
     );
 
-    const payload = new FinnhubPriceLookupResultDto();
+    let price: number;
 
     // see https://finnhub.io/docs/api/quote for other prices that can be retrieved
     switch (dto.type) {
       case 'current':
-        payload.price = data.c;
+        price = data.c;
         break;
       case 'change':
-        payload.price = data.d;
+        price = data.d;
         break;
     }
 
-    if (payload.price) {
-      return payload;
+    if (price) {
+      return {
+        price: price,
+      };
     } else {
       // todo improve alternate flow
       console.log(
         'finnhub api did not give a price quote, price has been set to 0 for this request',
       );
-      payload.price = 0;
-      return payload;
+      return {
+        price: 0,
+      };
     }
   }
 }

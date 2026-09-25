@@ -10,15 +10,6 @@ export class SellHoldingDto {
   quantity: number;
 }
 
-export class TradeHoldingResultDto {
-  success: boolean;
-  message: string;
-}
-
-export class BuyHoldingResultDto extends TradeHoldingResultDto {}
-
-export class SellHoldingResultDto extends TradeHoldingResultDto {}
-
 export class GainsDto {
   realised_gains: number;
   unrealised_gains: number;

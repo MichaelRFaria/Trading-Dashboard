@@ -1,14 +1,4 @@
-export class HoldingsFetchFailureDto {
-  success = false;
-  message: string;
-}
-
-export class HoldingsFetchSuccessDto {
-  data: HoldingsDataItem[];
-}
-
-export class HoldingsDataItem {
-  id: number;
-  stock_symbol: string;
-  user_id: number;
-}
+// controller endpoint type validators will go here:
+// e.g:
+// holding.controller.ts: async getHoldings(@Req() request: someDto) {
+// then someDto gets a TS class, with class validators here

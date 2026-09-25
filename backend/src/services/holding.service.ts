@@ -1,15 +1,8 @@
 import { PrismaService } from './prisma.service';
 import { Injectable } from '@nestjs/common';
-import {
-  HoldingsFetchFailureDto,
-  HoldingsFetchSuccessDto,
-} from '../dto/holdings.dto';
 import { Prisma } from '@prisma/client';
 import { FinnhubService } from './finnhub.service';
-import {
-  FinnhubPriceChangeDataItemDto,
-  FinnhubPriceChangeDto,
-} from '../dto/finnhub.dto';
+import { FinnhubPriceChangeDataItemDto } from '../dto/finnhub.dto';
 import { BuyHoldingDto, SellHoldingDto } from '../dto/trade.dto';
 
 @Injectable()
@@ -27,14 +20,13 @@ export class HoldingService {
     });
 
     if (data) {
-      //console.log(data)
-      const payload = new HoldingsFetchSuccessDto();
-      payload.data = data;
-      return payload;
+      return {
+        data: data,
+      };
     } else {
-      const payload = new HoldingsFetchFailureDto();
-      payload.message = 'No holdings items found';
-      return payload;
+      return {
+        message: 'No holdings found',
+      };
     }
   }
 
@@ -117,8 +109,8 @@ export class HoldingService {
       });
     }
 
-    const payload = new FinnhubPriceChangeDto();
-    payload.data = priceChanges;
-    return payload;
+    return {
+      data: priceChanges,
+    };
   }
 }

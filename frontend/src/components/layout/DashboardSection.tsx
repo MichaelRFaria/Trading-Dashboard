@@ -57,9 +57,6 @@ export default function DashboardSection({
     unrealised_gains: 0,
   });
 
-  // todo: message unused right now. message should become notification component probably
-  const [message, setMessage] = useState<string>('');
-  const [messageType, setMessageType] = useState<MessageType>('success');
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // check if the user is authenticated
@@ -131,7 +128,14 @@ export default function DashboardSection({
 
           const response: FinnhubPriceLookupResponse | null =
             await finnhubPriceQuote(request);
-          const price = response?.price ?? 0;
+
+          let price: number;
+
+          if (response === null) {
+            price = 0;
+          } else {
+            price = response.price
+          }
 
           // console.log("holding data: " + holding)
           // console.log("price: " + price)

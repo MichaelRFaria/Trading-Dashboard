@@ -3,15 +3,7 @@ import { PrismaService } from './prisma.service';
 import {
   AddToWatchlistDto,
   DeleteFromWatchlistDto,
-  ModifyWatchlistFailureDto,
-  ModifyWatchlistSuccessDto,
-  WatchlistFetchFailureDto,
-  WatchlistFetchSuccessDto,
 } from '../dto/watchlist.dto';
-import {
-  HoldingsFetchFailureDto,
-  HoldingsFetchSuccessDto,
-} from '../dto/holdings.dto';
 
 @Injectable()
 export class WatchlistService {
@@ -26,13 +18,13 @@ export class WatchlistService {
 
     if (data) {
       //console.log(data)
-      const payload = new WatchlistFetchSuccessDto();
-      payload.data = data;
-      return payload;
+      return {
+        data: data,
+      };
     } else {
-      const payload = new WatchlistFetchFailureDto();
-      payload.message = 'No watchlist items found';
-      return payload;
+      return {
+        message: 'No watchlist data found',
+      };
     }
   }
 
@@ -47,9 +39,10 @@ export class WatchlistService {
     });
 
     if (existingEntry) {
-      const payload = new ModifyWatchlistFailureDto();
-      payload.message = 'You have already added this stock to your watchlist.';
-      return payload;
+      return {
+        success: false,
+        message: 'You have already added this stock to your watchlist',
+      };
     }
 
     try {
@@ -60,14 +53,15 @@ export class WatchlistService {
         },
       });
 
-      const payload = new ModifyWatchlistSuccessDto();
-      payload.message = `${dto.stock_symbol} successfully added to watchlist.`;
-      return payload;
+      return {
+        success: true,
+        message: `${dto.stock_symbol} successfully added to watchlist.`,
+      };
     } catch (error) {
-      console.error(error);
-      const payload = new ModifyWatchlistFailureDto();
-      payload.message = 'An error occurred';
-      return payload;
+      return {
+        success: false,
+        message: 'An error occurred',
+      };
     }
   }
 
@@ -80,9 +74,10 @@ export class WatchlistService {
     });
 
     if (!existingEntry) {
-      const payload = new ModifyWatchlistFailureDto();
-      payload.message = `${dto.stock_symbol} is not in your watchlist.`;
-      return payload;
+      return {
+        success: false,
+        message: `${dto.stock_symbol} is not in your watchlist.`,
+      };
     }
 
     try {
@@ -95,14 +90,15 @@ export class WatchlistService {
         },
       });
 
-      const payload = new ModifyWatchlistSuccessDto();
-      payload.message = `${dto.stock_symbol} successfully deleted from watchlist.`;
-      return payload;
+      return {
+        success: true,
+        message: `${dto.stock_symbol} successfully deleted from watchlist`,
+      };
     } catch (error) {
-      console.error(error);
-      const payload = new ModifyWatchlistFailureDto();
-      payload.message = 'An error occurred';
-      return payload;
+      return {
+        success: false,
+        message: 'An error occurred',
+      };
     }
   }
 }

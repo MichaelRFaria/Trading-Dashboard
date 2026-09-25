@@ -16,12 +16,10 @@ export type LoginRequest = {
 export type LoginResponse = LoginSuccess | LoginFailure;
 
 export type LoginSuccess = {
-  success: true;
   access_token: string;
 };
 
 export type LoginFailure = {
-  success: false;
   message: string;
 };
 

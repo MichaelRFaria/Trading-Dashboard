@@ -2,12 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { HoldingService } from './holding.service';
 import { TradeService } from './trade.service';
-import {
-  BuyHoldingDto,
-  BuyHoldingResultDto,
-  SellHoldingDto,
-  SellHoldingResultDto,
-} from '../dto/trade.dto';
+import { BuyHoldingDto, SellHoldingDto } from '../dto/trade.dto';
 
 @Injectable()
 export class TradeExecutionService {
@@ -24,16 +19,16 @@ export class TradeExecutionService {
         return await this.tradeService.recordTrade(tx, userId, dto, 'buy');
       });
 
-      const payload = new BuyHoldingResultDto();
-      payload.success = true;
-      payload.message = `Successfully bought ${dto.quantity} shares of ${dto.stock_symbol} at $${trade.price} per share`;
-      return payload;
+      return {
+        success: true,
+        message: `Successfully bought ${dto.quantity} shares of ${dto.stock_symbol} at $${trade.price} per share`,
+      };
     } catch (error) {
       console.log(error);
-      const payload = new BuyHoldingResultDto();
-      payload.success = false;
-      payload.message = 'An error occurred, the trade was not executed';
-      return payload;
+      return {
+        success: false,
+        message: 'An error occurred, the trade was not executed',
+      };
     }
   }
 
@@ -44,16 +39,16 @@ export class TradeExecutionService {
         return await this.tradeService.recordTrade(tx, userId, dto, 'sell');
       });
 
-      const payload = new SellHoldingResultDto();
-      payload.success = true;
-      payload.message = `Successfully sold ${dto.quantity} shares of ${dto.stock_symbol} at $${trade.price} per share`;
-      return payload;
+      return {
+        success: true,
+        message: `Successfully sold ${dto.quantity} shares of ${dto.stock_symbol} at $${trade.price} per share`,
+      };
     } catch (error) {
       console.log(error);
-      const payload = new SellHoldingResultDto();
-      payload.success = false;
-      payload.message = 'An error occurred, the trade was not executed';
-      return payload;
+      return {
+        success: false,
+        message: 'An error occurred, the trade was not executed',
+      };
     }
   }
 }

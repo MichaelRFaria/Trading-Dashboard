@@ -1,9 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
-  RegisterAccountDto,
-  RegisterFailureDto,
-  RegisterSuccessDto,
-} from '../dto/account.dto';
+import { RegisterAccountDto } from '../dto/account.dto';
 import { PrismaService } from './prisma.service';
 
 import * as bcrypt from 'bcrypt';
@@ -20,9 +16,10 @@ export class UserService {
     });
 
     if (existingUser) {
-      const payload = new RegisterFailureDto();
-      payload.message = 'A user with this email already exists';
-      return payload;
+      return {
+        success: false,
+        message: 'A user with this email already exists',
+      };
     }
 
     const hash = await bcrypt.hash(dto.password, 10);
@@ -35,14 +32,16 @@ export class UserService {
         },
       });
 
-      const payload = new RegisterSuccessDto();
-      payload.message = 'Successfully registered an account';
-      return payload;
+      return {
+        success: true,
+        message: 'Successfully registered an account', // technically don't need a message here. if success = true in frontend, then frontend can generate appropriate response, instead of using this message. need to think which option is the better standard.
+      };
     } catch (error) {
       console.error(error);
-      const payload = new RegisterFailureDto();
-      payload.message = 'Account did not register, please try again.';
-      return payload;
+      return {
+        success: false,
+        message: 'Account did not register, please try again',
+      };
     }
   }
 }

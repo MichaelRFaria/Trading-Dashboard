@@ -25,11 +25,12 @@ export default function FinnhubLookupForm() {
     const response: StockSymbolLookupResponse | null =
       await finnhubStockSymbolLookup(request);
 
-    if (response) {
-      showNotification(JSON.stringify(response));
-    } else {
+    if (response === null) {
       showNotification(request.stock_symbol + ' does not exist.');
+      return;
     }
+
+    showNotification(JSON.stringify(response));
   };
 
   return (

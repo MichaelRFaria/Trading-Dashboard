@@ -2,10 +2,9 @@ export type WatchlistRequest = {
   stock_symbol: string;
 };
 
-export type WatchlistResponse = WatchlistBasicResponse | WatchlistData;
+export type WatchlistResponse = WatchlistFailureResponse | WatchlistData;
 
-export type WatchlistBasicResponse = {
-  success: boolean;
+export type WatchlistFailureResponse = {
   message: string;
 };
 

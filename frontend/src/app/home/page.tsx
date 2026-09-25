@@ -49,9 +49,9 @@ export default function HomePage() {
 
     console.log(response);
 
-    if (response.success) {
+    if ('access_token' in response) {
       router.push('/dashboard');
-    } else if (response.message) {
+    } else if ('message' in response) {
       showNotification(response.message);
     }
   };
