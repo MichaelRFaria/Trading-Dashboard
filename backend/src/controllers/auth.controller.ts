@@ -1,8 +1,7 @@
-import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
-import { LoginAccountDto, LoginSuccessDto } from '../dto/account.dto';
+import { LoginAccountDto } from '../dto/account.dto';
 import type { Response } from 'express';
-import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -15,7 +14,7 @@ export class AuthController {
   ) {
     const res = await this.authService.login(loginAccountDto);
 
-    if (res instanceof LoginSuccessDto) {
+    if (res.access_token) {
       response.cookie('access_token', res.access_token, {
         httpOnly: true,
         secure: false, // should be true outside of dev purposes
