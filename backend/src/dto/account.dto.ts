@@ -19,8 +19,3 @@ export class RegisterAccountDto extends AccountDto {}
 
 // this is fine, but will cause problems for existing accounts, if the account rules change
 export class LoginAccountDto extends AccountDto {}
-
-export class LoginSuccessDto {
-  success = true;
-  access_token: string;
-}

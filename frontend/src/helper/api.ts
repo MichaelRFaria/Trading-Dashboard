@@ -8,17 +8,13 @@ import {
   StockSymbolLookupResponse,
 } from '@/src/types/stock';
 import {
-  AuthenticatedUser,
+  AuthenticatedUserResponse,
   LoginRequest,
   LoginResponse,
   RegisterRequest,
   RegisterResponse,
 } from '@/src/types/account';
-import {
-  WatchlistBasicResponse,
-  WatchlistRequest,
-  WatchlistResponse,
-} from '@/src/types/watchlist';
+import { WatchlistRequest, WatchlistResponse } from '@/src/types/watchlist';
 import {
   TradeBasicResponse,
   TradeRequest,
@@ -26,7 +22,7 @@ import {
 } from '@/src/types/trade';
 import { HistoryRequest, HistoryResponse } from '@/src/types/history';
 
-export async function getCurrentUser(): Promise<AuthenticatedUser | null> {
+export async function getCurrentUser(): Promise<AuthenticatedUserResponse | null> {
   return await fetchUrl('/users/me', 'GET');
 }
 
@@ -53,18 +49,14 @@ export async function getWatchlistData(): Promise<WatchlistResponse | null> {
 
 export async function addToWatchlist(
   data: WatchlistRequest,
-): Promise<WatchlistBasicResponse | null> {
-  return await fetchUrl<WatchlistBasicResponse>('/watchlist/add', 'POST', data);
+): Promise<WatchlistResponse | null> {
+  return await fetchUrl<WatchlistResponse>('/watchlist/add', 'POST', data);
 }
 
 export async function deleteFromWatchlist(
   data: WatchlistRequest,
-): Promise<WatchlistBasicResponse | null> {
-  return await fetchUrl<WatchlistBasicResponse>(
-    '/watchlist/delete',
-    'DELETE',
-    data,
-  );
+): Promise<WatchlistResponse | null> {
+  return await fetchUrl<WatchlistResponse>('/watchlist/delete', 'DELETE', data);
 }
 
 export async function getHoldingsData(): Promise<TradeResponse | null> {

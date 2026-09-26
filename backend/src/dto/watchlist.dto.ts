@@ -1,10 +1,7 @@
-export class WatchlistDataItem {
-  id: number;
-  stock_symbol: string;
-  user_id: number;
-}
+import { IsString } from 'class-validator';
 
 export class ModifyWatchlistDto {
+  @IsString()
   stock_symbol: string;
 }
 
