@@ -38,7 +38,7 @@ export default function Sidebar({
       </div>
       <hr />
       <div className="flex flex-col">
-        <button>Settings</button>
+        <button onClick={() => setActiveSection('settings')}>Settings</button>
         <button onClick={handleLogout}>Log Out</button>
       </div>
     </aside>

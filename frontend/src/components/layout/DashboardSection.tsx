@@ -24,9 +24,10 @@ import {
   getPriceChanges,
   getWatchlistData,
 } from '@/src/helper/api';
-import { DashboardActiveSection, MessageType } from '@/src/types/misc';
+import { DashboardActiveSection } from '@/src/types/misc';
 import { HistoryDataItem, HistoryRequest } from '@/src/types/history';
 import { useNotification } from '@/src/components/common/NotificationProvider';
+import Settings from '@/src/components/main_section/Settings';
 
 export default function DashboardSection({
   activeSection,
@@ -134,7 +135,7 @@ export default function DashboardSection({
           if (response === null) {
             price = 0;
           } else {
-            price = response.price
+            price = response.price;
           }
 
           // console.log("holding data: " + holding)
@@ -186,6 +187,8 @@ export default function DashboardSection({
       );
     case 'history':
       return <History historyData={historyData} fetchHistory={fetchHistory} />;
+    case 'settings':
+      return <Settings />;
     default:
       return (
         <Dashboard
