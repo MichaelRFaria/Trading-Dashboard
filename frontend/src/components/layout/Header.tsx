@@ -1,3 +1,6 @@
+import Link from 'next/link';
+import React from 'react';
+
 export default function Header() {
   return (
     <div className="flex justify-between">
@@ -8,7 +11,9 @@ export default function Header() {
         <>
           {/*list of buttons goes here later - notifications, something else idk */}
         </>
-        <p>name{/*user card here later - profile picture + name*/}</p>
+        <Link className="text-sm" href="/account">
+          name
+        </Link>
       </div>
     </div>
   );
