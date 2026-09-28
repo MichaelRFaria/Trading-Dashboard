@@ -5,10 +5,14 @@ import {
 } from '../dto/finnhub.dto';
 import { FinnhubService } from '../services/finnhub.service';
 import { AuthGuard } from '../guards/auth.guard';
+import { StockPriceService } from '../services/stockprice.service';
 
 @Controller('finnhub')
 export class FinnhubController {
-  constructor(private finnHubService: FinnhubService) {}
+  constructor(
+    private finnHubService: FinnhubService,
+    private stockPriceService: StockPriceService,
+  ) {}
 
   @UseGuards(AuthGuard)
   @Get('symbol-lookup')
@@ -19,6 +23,6 @@ export class FinnhubController {
   @UseGuards(AuthGuard)
   @Get('price')
   async getPrice(@Query() finnhubPriceLookupDto: FinnhubPriceLookupDto) {
-    return this.finnHubService.getPrice(finnhubPriceLookupDto);
+    return this.stockPriceService.getPrice(finnhubPriceLookupDto);
   }
 }

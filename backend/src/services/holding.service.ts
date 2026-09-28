@@ -4,12 +4,14 @@ import { Prisma } from '@prisma/client';
 import { FinnhubService } from './finnhub.service';
 import { FinnhubPriceChangeDataItemDto } from '../dto/finnhub.dto';
 import { BuyHoldingDto, SellHoldingDto } from '../dto/trade.dto';
+import { StockPriceService } from './stockprice.service';
 
 @Injectable()
 export class HoldingService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly finnhubService: FinnhubService,
+    private readonly stockPriceService: StockPriceService,
   ) {}
 
   async getHoldings(userId: number) {
@@ -96,12 +98,10 @@ export class HoldingService {
     const priceChanges = [] as FinnhubPriceChangeDataItemDto[];
 
     for (const holding of holdings) {
-      const priceChange = (
-        await this.finnhubService.getPrice({
-          stock_symbol: holding.stock_symbol,
-          type: 'change',
-        })
-      ).price;
+      const priceChange = await this.stockPriceService.getPrice({
+        stock_symbol: holding.stock_symbol,
+        type: 'change',
+      });
 
       priceChanges.push({
         stock_symbol: holding.stock_symbol,

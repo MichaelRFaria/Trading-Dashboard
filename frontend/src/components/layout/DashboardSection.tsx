@@ -75,6 +75,7 @@ export default function DashboardSection({
   }, [router]);
 
   const fetchDashboardData = useCallback(async () => {
+    console.log('fetching');
     setIsLoading(true);
     try {
       const [watchlist, holdings, priceChanges, history, gainsData] =

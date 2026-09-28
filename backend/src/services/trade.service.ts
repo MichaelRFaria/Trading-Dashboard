@@ -2,14 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { Prisma, Trade } from '@prisma/client';
 import { FinnhubService } from './finnhub.service';
-import { FinnhubPriceLookupDto } from '../dto/finnhub.dto';
 import { GainsDto, HistoryLookupDto, TradeHolding } from '../dto/trade.dto';
+import { StockPriceService } from './stockprice.service';
 
 @Injectable()
 export class TradeService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly finnhubService: FinnhubService,
+    private readonly stockPriceService: StockPriceService,
   ) {}
 
   async recordTrade(
@@ -18,12 +19,19 @@ export class TradeService {
     dto: TradeHolding,
     type: string,
   ) {
-    const stockSymbolLookup: FinnhubPriceLookupDto = {
-      stock_symbol: dto.stock_symbol,
-      type: 'current',
-    };
+    const price = (
+      await this.finnhubService.getPrice({
+        stock_symbol: dto.stock_symbol,
+        type: 'current',
+      })
+    ).price;
 
-    const price = (await this.finnhubService.getPrice(stockSymbolLookup)).price;
+    // could put this in finnhubService.getPrice, but if stockPriceService.getPrice calls finnhubService.getPrice, then we would be updating the cache twice (or setting then immediately updating the cache)
+    await this.stockPriceService.updateCache(
+      dto.stock_symbol,
+      'current',
+      price,
+    );
 
     return tx.trade.create({
       data: {
@@ -61,7 +69,7 @@ export class TradeService {
       }
     }
 
-    console.log(groupedTrades);
+    //console.log(groupedTrades);
 
     let gains: GainsDto;
     let totalRealisedGains = 0;
@@ -111,17 +119,15 @@ export class TradeService {
     }
 
     if (quantity > 0) {
-      const currPrice = (
-        await this.finnhubService.getPrice({
-          stock_symbol: stockSymbol,
-          type: 'current',
-        })
-      ).price;
+      const currPrice = await this.stockPriceService.getPrice({
+        stock_symbol: stockSymbol,
+        type: 'current',
+      });
 
       unrealisedGain = quantity * (currPrice - averagePrice);
-      console.log('stock: ' + stockSymbol);
-      console.log('quantity: ' + quantity);
-      console.log('unrealised gain: ' + unrealisedGain);
+      //console.log('stock: ' + stockSymbol);
+      //console.log('quantity: ' + quantity);
+      //console.log('unrealised gain: ' + unrealisedGain);
     }
 
     return {

@@ -25,7 +25,7 @@ export class FinnhubService {
       (item) => item.symbol === dto.stock_symbol,
     );
 
-    console.log(stockData);
+    //console.log(stockData);
 
     return {
       description: stockData.description,
@@ -57,6 +57,9 @@ export class FinnhubService {
     }
 
     if (price) {
+      console.log(
+        `Retrieved ${dto.stock_symbol}'s ${dto.type} from Finnhub API`,
+      );
       return {
         price: price,
       };

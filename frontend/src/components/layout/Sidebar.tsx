@@ -28,7 +28,7 @@ export default function Sidebar({
   };
 
   return (
-    <aside className="opactity-90 bg-gray">
+    <aside className="opacity-90 bg-gray space-y-4">
       <div className="flex flex-col">
         <button onClick={() => setActiveSection('dashboard')}>Dashboard</button>
         <button onClick={() => setActiveSection('portfolio')}>Portfolio</button>
