@@ -16,13 +16,13 @@ export class StockPriceService {
     const cachedPrice = await this.cacheManager.get<number>(cacheKey);
 
     if (cachedPrice !== undefined && cachedPrice !== null) {
-      console.log(`Cache hit on ${dto.stock_symbol}'s ${dto.type} price`);
+      // console.log(`Cache hit on ${dto.stock_symbol}'s ${dto.type} price`);
       return cachedPrice;
     }
 
-    console.log(
-      `Cache miss on ${dto.stock_symbol}'s ${dto.type} price, getting updated price`,
-    );
+    // console.log(
+    //   `Cache miss on ${dto.stock_symbol}'s ${dto.type} price, getting updated price`,
+    // );
 
     const price = await this.finnhubService.getPrice({
       stock_symbol: dto.stock_symbol,

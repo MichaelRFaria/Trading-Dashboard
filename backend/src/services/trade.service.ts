@@ -26,6 +26,12 @@ export class TradeService {
       })
     ).price;
 
+    if (price === 0) {
+      throw new Error(
+        `Could not retrieve a valid price for ${dto.stock_symbol}`,
+      );
+    }
+
     // could put this in finnhubService.getPrice, but if stockPriceService.getPrice calls finnhubService.getPrice, then we would be updating the cache twice (or setting then immediately updating the cache)
     await this.stockPriceService.updateCache(
       dto.stock_symbol,

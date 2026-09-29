@@ -57,9 +57,9 @@ export class FinnhubService {
     }
 
     if (price) {
-      console.log(
-        `Retrieved ${dto.stock_symbol}'s ${dto.type} from Finnhub API`,
-      );
+      // console.log(
+      //   `Retrieved ${dto.stock_symbol}'s ${dto.type} from Finnhub API`,
+      // );
       return {
         price: price,
       };
