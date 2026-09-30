@@ -1,8 +1,8 @@
 import { addToWatchlist, deleteFromWatchlist } from '@/src/helper/api';
 import {
-  WatchlistBasicResponse,
   WatchlistDataItem,
   WatchlistRequest,
+  WatchlistResponse,
 } from '@/src/types/watchlist';
 import React, { useEffect, useState } from 'react';
 import { useNotification } from '@/src/components/common/NotificationProvider';
@@ -52,7 +52,7 @@ export default function WatchlistForm({
     const action = formData.get('action') as string;
     //console.log(action)
 
-    let response: WatchlistBasicResponse | null;
+    let response: WatchlistResponse | null;
 
     if (request.stock_symbol === '' || !request.stock_symbol || !action) {
       showNotification('Invalid form inputs, please try again.', 3000, true);
@@ -82,7 +82,7 @@ export default function WatchlistForm({
       return;
     }
 
-    if (response.message) {
+    if ('message' in response) {
       showNotification(response.message);
     }
 
