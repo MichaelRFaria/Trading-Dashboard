@@ -14,12 +14,14 @@ export class FinnhubController {
     private stockPriceService: StockPriceService,
   ) {}
 
+  // endpoint for performing a basic information lookup on a stock using Finnhub API
   @UseGuards(AuthGuard)
   @Get('symbol-lookup')
   async symbolLookup(@Query() finnHubSymbolLookupDto: FinnhubSymbolLookupDto) {
     return this.finnHubService.symbolLookup(finnHubSymbolLookupDto);
   }
 
+  // endpoint for getting the price of a stock using Finnhub API
   @UseGuards(AuthGuard)
   @Get('price')
   async getPrice(@Query() finnhubPriceLookupDto: FinnhubPriceLookupDto) {

@@ -13,12 +13,14 @@ export class TradeService {
     private readonly stockPriceService: StockPriceService,
   ) {}
 
+  // method to record a trade in the database
   async recordTrade(
     tx: Prisma.TransactionClient,
     userId: number,
     dto: TradeHolding,
     type: string,
   ) {
+    // retrieve price from Finnhub API to get the latest price
     const price = (
       await this.finnhubService.getPrice({
         stock_symbol: dto.stock_symbol,
@@ -32,7 +34,7 @@ export class TradeService {
       );
     }
 
-    // could put this in finnhubService.getPrice, but if stockPriceService.getPrice calls finnhubService.getPrice, then we would be updating the cache twice (or setting then immediately updating the cache)
+    // update stock's cached value with updated value while we already have the latest price
     await this.stockPriceService.updateCache(
       dto.stock_symbol,
       'current',
@@ -50,9 +52,9 @@ export class TradeService {
     });
   }
 
-  // this could all be calculated when buying and selling stocks, then adding a realised gain and average price attributes to the Holdings table, but this is interesting to implement
+  // method to calculate the user's unrealised and realised gains
   async getGains(userId: number) {
-    // get trades chronoligcally, this is important as every buy changes the cost basis of future sells
+    // get the user's trades chronologically, this is important as every buy changes the cost basis of future sells
     const trades = await this.prisma.trade.findMany({
       where: {
         user_id: userId,
@@ -81,49 +83,53 @@ export class TradeService {
     let totalRealisedGains = 0;
     let totalUnrealisedGains = 0;
 
+    // for each stock the user has traded, calculate the gains for that stock
     for (const stockTrades of groupedTrades.values()) {
       gains = await this.calculateGains(stockTrades);
       totalRealisedGains += gains.realised_gains;
       totalUnrealisedGains += gains.unrealised_gains;
     }
 
+    // return total unrealised and realised gains
     return {
       realised_gains: totalRealisedGains,
       unrealised_gains: totalUnrealisedGains,
     };
   }
 
-  // calculate realised gains for each stock using an average cost basis system (could look into FIFO/LIFO cost basis systems in the future)
+  // method to calculate realised gains for each stock using an average cost basis system
   async calculateGains(trades: Trade[]): Promise<GainsDto> {
     let quantity = 0;
     let averagePrice = 0;
     let realisedGain = 0;
     let unrealisedGain = 0;
 
-    // this is stupid, but this works as trades is a subset of retrieved entries from the db, so it will never be null/empty
-    // we need the stock symbol in order to retrieve the current price of the stock we are calculating gains for, allowing us to calculate the unrealised gains
+    // get the stock ticker that we are calculating gains for so we can search up it's current price later, allowing us to calculate unrealised gains
     const stockSymbol = trades[0].stock_symbol;
 
     for (const trade of trades) {
       if (trade.type === 'buy') {
         if (quantity !== 0) {
+          // if the quantity is greater than zero then we update the average price
           averagePrice =
             (quantity * averagePrice +
               trade.quantity.toNumber() * trade.price.toNumber()) /
             (quantity + trade.quantity.toNumber());
           quantity += trade.quantity.toNumber();
         } else {
+          // if the quantity is not greater than zero (equal to zero) then we set the average price
           averagePrice = trade.price.toNumber();
           quantity = trade.quantity.toNumber();
         }
       } else {
-        // sell
+        // if we are not buying then we are selling, so we decrement the quantity and add up the realised gain
         realisedGain +=
           (trade.price.toNumber() - averagePrice) * trade.quantity.toNumber();
         quantity -= trade.quantity.toNumber();
       }
     }
 
+    // if the user still owns a stock, then we calculate the unrealised gain
     if (quantity > 0) {
       const currPrice = await this.stockPriceService.getPrice({
         stock_symbol: stockSymbol,
@@ -142,6 +148,7 @@ export class TradeService {
     };
   }
 
+  // method to get the user's history of trades from the database
   async getHistory(userId: number, dto: HistoryLookupDto) {
     const where: Prisma.TradeWhereInput = {
       user_id: userId,

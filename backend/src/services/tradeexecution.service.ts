@@ -12,8 +12,10 @@ export class TradeExecutionService {
     private readonly tradeService: TradeService,
   ) {}
 
+  // method to execute a stock purchase
   async buy(userId: number, dto: BuyHoldingDto) {
     try {
+      // database transaction to allow rollback if an error is occurred when updating the database
       const trade = await this.prisma.$transaction(async (tx) => {
         await this.holdingService.buy(tx, userId, dto);
         return await this.tradeService.recordTrade(tx, userId, dto, 'buy');
@@ -32,8 +34,10 @@ export class TradeExecutionService {
     }
   }
 
+  // method to execute a stock sell
   async sell(userId: number, dto: SellHoldingDto) {
     try {
+      // database transaction to allow rollback if an error is occurred when updating the database
       const trade = await this.prisma.$transaction(async (tx) => {
         await this.holdingService.sell(tx, userId, dto);
         return await this.tradeService.recordTrade(tx, userId, dto, 'sell');

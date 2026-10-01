@@ -6,15 +6,18 @@ import { FinnhubPriceLookupDto } from '../dto/finnhub.dto';
 @Injectable()
 export class StockPriceService {
   constructor(
-    @Inject(CACHE_MANAGER) private cacheManager: Cache, // https://docs.nestjs.com/data/caching
+    @Inject(CACHE_MANAGER) private cacheManager: Cache, // inject the cache-manager, see https://docs.nestjs.com/data/caching
     private readonly finnhubService: FinnhubService,
   ) {}
 
+  // method to get a stock's price
   async getPrice(dto: FinnhubPriceLookupDto): Promise<number> {
+    // first we attempt to retrieve the price from the cache
     const cacheKey = `stock-price:${dto.stock_symbol}-${dto.type}`;
 
     const cachedPrice = await this.cacheManager.get<number>(cacheKey);
 
+    // return cachedPrice on cache hit
     if (cachedPrice !== undefined && cachedPrice !== null) {
       // console.log(`Cache hit on ${dto.stock_symbol}'s ${dto.type} price`);
       return cachedPrice;
@@ -24,6 +27,7 @@ export class StockPriceService {
     //   `Cache miss on ${dto.stock_symbol}'s ${dto.type} price, getting updated price`,
     // );
 
+    // retrieve and store price in cache, from Finnhub API, on cache miss
     const price = await this.finnhubService.getPrice({
       stock_symbol: dto.stock_symbol,
       type: dto.type,
@@ -34,6 +38,7 @@ export class StockPriceService {
     return price.price;
   }
 
+  // method to update a cached value
   async updateCache(
     stock_symbol: string,
     type: 'current' | 'change',

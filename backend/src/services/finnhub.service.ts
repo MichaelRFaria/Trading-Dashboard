@@ -11,7 +11,9 @@ import * as process from 'process';
 export class FinnhubService {
   constructor(private readonly httpService: HttpService) {}
 
+  // method to retrieve basic information on a stock from Finnhub API
   async symbolLookup(dto: FinnhubSymbolLookupDto) {
+    // make HTTP request to Finnhub API
     const { data } = await firstValueFrom(
       this.httpService.get('https://finnhub.io/api/v1/search', {
         params: {
@@ -21,6 +23,7 @@ export class FinnhubService {
       }),
     );
 
+    // the search returns multiple ticker matches (e.g. searching ACA gives: ACA, ACAA, ACAD) so we find the exact ticker
     const stockData = data.result.find(
       (item) => item.symbol === dto.stock_symbol,
     );
@@ -34,6 +37,7 @@ export class FinnhubService {
     };
   }
 
+  // method to retrieve the price of a stock from Finnhub API
   async getPrice(dto: FinnhubPriceLookupDto) {
     const { data } = await firstValueFrom(
       this.httpService.get('https://finnhub.io/api/v1/quote', {
@@ -46,6 +50,7 @@ export class FinnhubService {
 
     let price: number;
 
+    // response contains several different prices, so we only return the price requested in dto.type
     // see https://finnhub.io/docs/api/quote for other prices that can be retrieved
     switch (dto.type) {
       case 'current':

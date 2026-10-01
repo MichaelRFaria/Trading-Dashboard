@@ -18,6 +18,7 @@ import { AuthGuard } from '../guards/auth.guard';
 export class WatchlistController {
   constructor(private watchlistService: WatchlistService) {}
 
+  // endpoint for retrieving all watchlist stocks a user has, from the database
   @UseGuards(AuthGuard)
   @Get('watchlist')
   async getWatchlist(@Req() request) {
@@ -26,6 +27,7 @@ export class WatchlistController {
     return this.watchlistService.getWatchlist(userId);
   }
 
+  // endpoint for adding a stock to the user's watchlist
   @UseGuards(AuthGuard)
   @Post('add')
   async add(@Body() addToWatchlistDto: AddToWatchlistDto, @Req() request) {
@@ -34,6 +36,7 @@ export class WatchlistController {
     return this.watchlistService.add(userId, addToWatchlistDto);
   }
 
+  // endpoint for removing a stock to the user's watchlist
   @UseGuards(AuthGuard)
   @Delete('delete')
   async delete(

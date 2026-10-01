@@ -1,4 +1,5 @@
 import { IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export type TradeHolding = BuyHoldingDto | SellHoldingDto;
 
@@ -7,7 +8,7 @@ export class BuyHoldingDto {
   stock_symbol: string;
 
   @IsNumber()
-  @Min(0.00000001)
+  @Min(0.00000001) // this is the minimum number allowed in the frontend form when buying a stock, and must mirror the value used there
   quantity: number;
 }
 
@@ -26,8 +27,6 @@ export class GainsDto {
   @IsNumber()
   unrealised_gains: number;
 }
-
-import { Type } from 'class-transformer';
 
 export class HistoryLookupDto {
   @IsString()

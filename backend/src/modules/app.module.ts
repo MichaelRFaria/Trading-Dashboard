@@ -21,13 +21,14 @@ import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
-    HttpModule,
+    HttpModule, // axios config
     JwtModule.register({
+      // JWT config
       global: true,
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
     }),
-    CacheModule.register(),
+    CacheModule.register(), // cache-manager config
   ],
   controllers: [
     UserController,

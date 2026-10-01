@@ -7,6 +7,7 @@ import type { Response } from 'express';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  // endpoint for logging in
   @Post('login')
   async login(
     @Body() loginAccountDto: LoginAccountDto,
@@ -14,6 +15,7 @@ export class AuthController {
   ) {
     const res = await this.authService.login(loginAccountDto);
 
+    // if login was successful, then res will contain a JWT which we return in the response as a cookie
     if (res.access_token) {
       response.cookie('access_token', res.access_token, {
         httpOnly: true,
@@ -26,8 +28,10 @@ export class AuthController {
     return res;
   }
 
+  // endpoint for logging out
   @Post('logout')
   logout(@Res({ passthrough: true }) response: Response) {
+    // clearing the access_token cookie
     response.clearCookie('access_token', {
       httpOnly: true,
       secure: false, // should be true outside of dev purposes

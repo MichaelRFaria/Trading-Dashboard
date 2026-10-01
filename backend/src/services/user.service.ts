@@ -8,6 +8,7 @@ import * as bcrypt from 'bcrypt';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
+  // method to register an account
   async register(dto: RegisterAccountDto) {
     const existingUser = await this.prisma.user.findUnique({
       where: {
@@ -34,7 +35,7 @@ export class UserService {
 
       return {
         success: true,
-        message: 'Successfully registered an account', // technically don't need a message here. if success = true in frontend, then frontend can generate appropriate response, instead of using this message. need to think which option is the better standard.
+        message: 'Successfully registered an account',
       };
     } catch (error) {
       console.error(error);
