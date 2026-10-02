@@ -1,4 +1,11 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Res,
+} from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { LoginAccountDto } from '../dto/account.dto';
 import type { Response } from 'express';
@@ -9,6 +16,7 @@ export class AuthController {
 
   // endpoint for logging in
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   async login(
     @Body() loginAccountDto: LoginAccountDto,
     @Res({ passthrough: true }) response: Response,
@@ -30,6 +38,7 @@ export class AuthController {
 
   // endpoint for logging out
   @Post('logout')
+  @HttpCode(HttpStatus.OK)
   logout(@Res({ passthrough: true }) response: Response) {
     // clearing the access_token cookie
     response.clearCookie('access_token', {
