@@ -19,8 +19,8 @@ describe('Auth', () => {
     const response = await request(app.getHttpServer())
       .post('/auth/login')
       .send({
-        email: 'testuser@email.com',
-        password: 'TestPassword123!',
+        email: 'old-user-1@email.com',
+        password: 'testtest1!',
       });
 
     expect(response.status).toBe(200);

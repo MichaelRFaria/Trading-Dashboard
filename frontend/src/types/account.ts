@@ -3,9 +3,18 @@ export type RegisterRequest = {
   password: string;
 };
 
-export type RegisterResponse = {
+export type RegisterResponse =
+  RegisterSuccessResponse | RegisterFailureResponse;
+
+export type RegisterSuccessResponse = {
   success: boolean;
-  message: string | string[]; // string[] for AccountDto class validator error messages
+  message: string;
+};
+
+export type RegisterFailureResponse = {
+  statusCode: number;
+  error: string;
+  message: string[];
 };
 
 export type LoginRequest = {

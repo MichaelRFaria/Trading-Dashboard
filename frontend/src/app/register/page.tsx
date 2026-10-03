@@ -32,10 +32,10 @@ export default function RegistrationPage() {
       return;
     }
 
-    if (response.success) {
+    if (response?.success) {
       //console.log("account successfully registered")
       const params = new URLSearchParams();
-      params.set('status', 'registration-successf ul');
+      params.set('status', 'registration-successful');
       router.push(`/home/?${params.toString()}`);
     } else if (response.message) {
       //console.log("error on account registration")

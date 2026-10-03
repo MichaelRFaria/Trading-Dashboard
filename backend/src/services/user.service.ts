@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { RegisterAccountDto } from '../dto/account.dto';
 import { PrismaService } from './prisma.service';
 
@@ -17,10 +17,7 @@ export class UserService {
     });
 
     if (existingUser) {
-      return {
-        success: false,
-        message: 'A user with this email already exists',
-      };
+      throw new ConflictException('A user with this email already exists');
     }
 
     const hash = await bcrypt.hash(dto.password, 10);
