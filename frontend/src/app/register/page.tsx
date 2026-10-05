@@ -32,7 +32,7 @@ export default function RegistrationPage() {
       return;
     }
 
-    if (response?.success) {
+    if ('success' in response) {
       //console.log("account successfully registered")
       const params = new URLSearchParams();
       params.set('status', 'registration-successful');
