@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { AppModule } from '../../src/modules/app.module';
 import { PrismaService } from '../../src/services/prisma.service';
+import cookieParser from 'cookie-parser';
 
 describe('Users', () => {
   let app: INestApplication;
@@ -16,6 +17,8 @@ describe('Users', () => {
     prisma = module.get<PrismaService>(PrismaService);
 
     app = module.createNestApplication();
+
+    app.use(cookieParser());
 
     app.useGlobalPipes(
       new ValidationPipe({
@@ -128,6 +131,30 @@ describe('Users', () => {
         error: 'Bad Request',
         statusCode: 400,
       });
+  });
+
+  it('should retrieve the user', async () => {
+    const loginResponse = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({
+        email: 'old-user-1@email.com',
+        password: 'testtest1!',
+      })
+      .expect(200);
+
+    const response = await request(app.getHttpServer())
+      .get('/users/me')
+      .set('Cookie', loginResponse.headers['set-cookie'])
+      .expect(200);
+
+    expect(response.body.sub).toEqual(expect.any(Number));
+    expect(response.body.email).toEqual(expect.any(String));
+    expect(response.body.exp).toEqual(expect.any(Number));
+    expect(response.body.iat).toEqual(expect.any(Number));
+  });
+
+  it('should reject the unauthenticated request trying to retrieve the user', async () => {
+    await request(app.getHttpServer()).get('/users/me').expect(401);
   });
 
   afterAll(async () => {
