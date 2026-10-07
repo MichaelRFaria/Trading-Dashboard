@@ -12,6 +12,7 @@ A full-stack trading dashboard for simulating stock trading, managing portfolios
 - Realised and unrealised gain/loss tracking
 - Portfolio performance metrics
 - Average cost-basis calculation based on trade history
+- Caching system to minimise API usage and prevent rate limiting
 - Protected backend API endpoints through custom [guard](https://docs.nestjs.com/guards)
 
 ## Tech Stack
