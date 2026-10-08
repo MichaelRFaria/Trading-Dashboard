@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import {
   AddToWatchlistDto,
@@ -16,17 +16,10 @@ export class WatchlistService {
         user_id: userId,
       },
     });
-
-    if (data) {
-      //console.log(data)
-      return {
-        data: data,
-      };
-    } else {
-      return {
-        message: 'No watchlist data found',
-      };
-    }
+    //console.log(data)
+    return {
+      data: data,
+    };
   }
 
   // method to add stock to the user's watchlist in the database
@@ -41,10 +34,7 @@ export class WatchlistService {
     });
 
     if (existingEntry) {
-      return {
-        success: false,
-        message: 'You have already added this stock to your watchlist',
-      };
+      throw new ConflictException('Stock already exists in watchlist');
     }
 
     try {
@@ -57,7 +47,7 @@ export class WatchlistService {
 
       return {
         success: true,
-        message: `${dto.stock_symbol} successfully added to watchlist.`,
+        message: `${dto.stock_symbol} successfully added to watchlist`,
       };
     } catch (error) {
       console.log(error);
@@ -80,7 +70,7 @@ export class WatchlistService {
     if (!existingEntry) {
       return {
         success: false,
-        message: `${dto.stock_symbol} is not in your watchlist.`,
+        message: `${dto.stock_symbol} is not in your watchlist`,
       };
     }
 
