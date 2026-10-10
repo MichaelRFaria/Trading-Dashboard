@@ -11,7 +11,7 @@ export class StockPriceService {
   ) {}
 
   // method to get a stock's price
-  async getPrice(dto: FinnhubPriceLookupDto): Promise<number> {
+  async getPrice(dto: FinnhubPriceLookupDto) {
     // first we attempt to retrieve the price from the cache
     const cacheKey = `stock-price:${dto.stock_symbol}-${dto.type}`;
 
@@ -20,7 +20,9 @@ export class StockPriceService {
     // return cachedPrice on cache hit
     if (cachedPrice !== undefined && cachedPrice !== null) {
       // console.log(`Cache hit on ${dto.stock_symbol}'s ${dto.type} price`);
-      return cachedPrice;
+      return {
+        price: cachedPrice,
+      };
     }
 
     // console.log(
@@ -28,14 +30,18 @@ export class StockPriceService {
     // );
 
     // retrieve and store price in cache, from Finnhub API, on cache miss
-    const price = await this.finnhubService.getPrice({
+    const response = await this.finnhubService.getPrice({
       stock_symbol: dto.stock_symbol,
       type: dto.type,
     });
 
+    const price = response.price;
+
     await this.cacheManager.set(cacheKey, price, 60000); // 1 min ttl for now, 15-30 seconds would probably be ideal
 
-    return price.price;
+    return {
+      price: price,
+    };
   }
 
   // method to update a cached value

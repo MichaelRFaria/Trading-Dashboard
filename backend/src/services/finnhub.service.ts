@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   FinnhubPriceLookupDto,
   FinnhubSymbolLookupDto,
@@ -29,6 +29,10 @@ export class FinnhubService {
     );
 
     //console.log(stockData);
+
+    if (!stockData) {
+      throw new NotFoundException(`${dto.stock_symbol} not found`);
+    }
 
     return {
       description: stockData.description,
@@ -61,21 +65,12 @@ export class FinnhubService {
         break;
     }
 
-    if (price) {
-      // console.log(
-      //   `Retrieved ${dto.stock_symbol}'s ${dto.type} from Finnhub API`,
-      // );
-      return {
-        price: price,
-      };
-    } else {
-      // todo improve alternate flow
-      console.log(
-        'finnhub api did not give a price quote, price has been set to 0 for this request',
-      );
-      return {
-        price: 0,
-      };
+    if (!price) {
+      throw new NotFoundException(`${dto.stock_symbol} price not found`);
     }
+
+    return {
+      price: price,
+    };
   }
 }

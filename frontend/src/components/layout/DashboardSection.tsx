@@ -133,10 +133,11 @@ export default function DashboardSection({
 
           let price: number;
 
-          if (response === null) {
-            price = 0;
-          } else {
+          if (response && 'price' in response) {
             price = response.price;
+          } else {
+            // response is null or service threw NotFoundException
+            price = 0;
           }
 
           // console.log("holding data: " + holding)

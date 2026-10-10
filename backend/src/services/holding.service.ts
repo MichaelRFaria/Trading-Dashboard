@@ -102,10 +102,12 @@ export class HoldingService {
 
     // for each holding, we get the daily price change and add it to the array, priceChanges
     for (const holding of holdings) {
-      const priceChange = await this.stockPriceService.getPrice({
+      const response = await this.stockPriceService.getPrice({
         stock_symbol: holding.stock_symbol,
         type: 'change',
       });
+
+      const priceChange = response.price;
 
       priceChanges.push({
         stock_symbol: holding.stock_symbol,

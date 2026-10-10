@@ -131,10 +131,12 @@ export class TradeService {
 
     // if the user still owns a stock, then we calculate the unrealised gain
     if (quantity > 0) {
-      const currPrice = await this.stockPriceService.getPrice({
+      const response = await this.stockPriceService.getPrice({
         stock_symbol: stockSymbol,
         type: 'current',
       });
+
+      const currPrice = response.price;
 
       unrealisedGain = quantity * (currPrice - averagePrice);
       //console.log('stock: ' + stockSymbol);

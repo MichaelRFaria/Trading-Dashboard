@@ -26,8 +26,12 @@ export default function FinnhubLookupForm() {
       await finnhubStockSymbolLookup(request);
 
     if (response === null) {
-      showNotification(request.stock_symbol + ' does not exist.');
+      showNotification('Something went wrong, please try again');
       return;
+    }
+
+    if ('message' in response) {
+      showNotification(response.message);
     }
 
     showNotification(JSON.stringify(response));
