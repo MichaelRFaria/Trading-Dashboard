@@ -1,5 +1,5 @@
 import { PrismaService } from './prisma.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { FinnhubPriceChangeDataItemDto } from '../dto/finnhub.dto';
 import { BuyHoldingDto, SellHoldingDto } from '../dto/trade.dto';
@@ -20,15 +20,13 @@ export class HoldingService {
       },
     });
 
-    if (data) {
-      return {
-        data: data,
-      };
-    } else {
-      return {
-        message: 'No holdings found',
-      };
+    if (data.length === 0) {
+      throw new NotFoundException(`No holdings found`);
     }
+
+    return {
+      data: data,
+    };
   }
 
   // method to update/add a holding that has been purchased
