@@ -64,7 +64,7 @@ describe('Holdings', () => {
           stock_symbol: 'AAPL',
           quantity: 5,
         })
-        .expect(201);
+        .expect(200);
     });
 
     it('should successfully retrieve holdings', async () => {
@@ -99,6 +99,7 @@ describe('Holdings', () => {
   afterAll(async () => {
     await request(app.getHttpServer()).post('/auth/logout'); // backup
 
+    await prisma.trade.deleteMany({});
     await prisma.holding.deleteMany({});
 
     await app.close();

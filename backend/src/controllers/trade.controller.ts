@@ -1,7 +1,7 @@
 import {
   Body,
   Controller,
-  Get,
+  Get, HttpCode, HttpStatus,
   Post,
   Query,
   Req,
@@ -26,6 +26,7 @@ export class TradeController {
   // endpoint to purchase a stock
   @UseGuards(AuthGuard)
   @Post('buy')
+  @HttpCode(HttpStatus.OK)
   async buyHolding(@Body() buyHoldingDto: BuyHoldingDto, @Req() request) {
     const userId = request.user.sub;
 
@@ -35,6 +36,7 @@ export class TradeController {
   // endpoint to sell an owned stock
   @UseGuards(AuthGuard)
   @Post('sell')
+  @HttpCode(HttpStatus.OK)
   async sellHolding(@Body() sellHoldingDto: SellHoldingDto, @Req() request) {
     const userId = request.user.sub;
 

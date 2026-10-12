@@ -3,7 +3,7 @@ import { Type } from 'class-transformer';
 
 export type TradeHolding = BuyHoldingDto | SellHoldingDto;
 
-export class BuyHoldingDto {
+export class TradeHoldingDto {
   @IsString()
   stock_symbol: string;
 
@@ -12,13 +12,9 @@ export class BuyHoldingDto {
   quantity: number;
 }
 
-export class SellHoldingDto {
-  @IsString()
-  stock_symbol: string;
+export class BuyHoldingDto extends TradeHoldingDto {}
 
-  @IsNumber()
-  quantity: number;
-}
+export class SellHoldingDto extends TradeHoldingDto {}
 
 export class GainsDto {
   @IsNumber()

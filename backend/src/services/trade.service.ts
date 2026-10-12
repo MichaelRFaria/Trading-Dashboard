@@ -1,8 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { Prisma, Trade } from '@prisma/client';
 import { FinnhubService } from './finnhub.service';
-import { GainsDto, HistoryLookupDto, TradeHolding } from '../dto/trade.dto';
+import {
+  BuyHoldingDto,
+  GainsDto,
+  HistoryLookupDto,
+  SellHoldingDto,
+  TradeHolding,
+} from '../dto/trade.dto';
 import { StockPriceService } from './stockprice.service';
 
 @Injectable()
@@ -13,6 +23,89 @@ export class TradeService {
     private readonly stockPriceService: StockPriceService,
   ) {}
 
+  // method to update/add a holding that has been purchased
+  async buy(tx: Prisma.TransactionClient, userId: number, dto: BuyHoldingDto) {
+    return tx.holding.upsert({
+      where: {
+        user_id_stock_symbol: {
+          stock_symbol: dto.stock_symbol,
+          user_id: userId,
+        },
+      },
+      update: {
+        quantity: {
+          increment: dto.quantity,
+        },
+      },
+      create: {
+        stock_symbol: dto.stock_symbol,
+        quantity: dto.quantity,
+        user_id: userId,
+      },
+    });
+  }
+
+  // update to sell/remove a holding that has been sold
+  async sell(
+    tx: Prisma.TransactionClient,
+    userId: number,
+    dto: SellHoldingDto,
+  ) {
+    const holding = await tx.holding.findUnique({
+      where: {
+        user_id_stock_symbol: {
+          user_id: userId,
+          stock_symbol: dto.stock_symbol,
+        },
+      },
+    });
+
+    // check that the user owns this stock
+    if (!holding) {
+      throw new NotFoundException(
+        `You do not own any shares of ${dto.stock_symbol}`,
+      );
+    }
+
+    //console.log(holding);
+
+    // check that the user owns enough shares
+    if (holding.quantity.lt(dto.quantity)) {
+      throw new BadRequestException(
+        `Insufficient shares. You own ${holding.quantity.toString()} shares of ${dto.stock_symbol}`,
+      );
+    }
+
+    // decrease the holding's quantity
+    const updatedHolding = await tx.holding.update({
+      where: {
+        user_id_stock_symbol: {
+          user_id: userId,
+          stock_symbol: dto.stock_symbol,
+        },
+      },
+      data: {
+        quantity: {
+          decrement: dto.quantity,
+        },
+      },
+    });
+
+    // delete the holding if all shares have been sold
+    if (updatedHolding.quantity.isZero()) {
+      return tx.holding.delete({
+        where: {
+          user_id_stock_symbol: {
+            user_id: userId,
+            stock_symbol: dto.stock_symbol,
+          },
+        },
+      });
+    }
+
+    return updatedHolding;
+  }
+
   // method to record a trade in the database
   async recordTrade(
     tx: Prisma.TransactionClient,
@@ -21,18 +114,13 @@ export class TradeService {
     type: string,
   ) {
     // retrieve price from Finnhub API to get the latest price
+    console.log(`attempting to retrieve price of ${dto.stock_symbol}`);
     const price = (
       await this.finnhubService.getPrice({
         stock_symbol: dto.stock_symbol,
         type: 'current',
       })
     ).price;
-
-    if (price === 0) {
-      throw new Error(
-        `Could not retrieve a valid price for ${dto.stock_symbol}`,
-      );
-    }
 
     // update stock's cached value with updated value while we already have the latest price
     await this.stockPriceService.updateCache(
