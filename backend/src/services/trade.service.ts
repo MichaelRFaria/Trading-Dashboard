@@ -152,6 +152,14 @@ export class TradeService {
       },
     });
 
+    //console.log('trades', trades);
+
+    if (trades.length === 0) {
+      throw new NotFoundException(
+        'Gains can not be retrieved, you have made no trades.',
+      );
+    }
+
     const groupedTrades = new Map<string, Trade[]>();
 
     // group trades by stock symbols todo maybe a way to do this in the prisma method call above, some group by attribute
@@ -291,6 +299,14 @@ export class TradeService {
         created_at: 'desc',
       },
     });
+
+    //console.log('history', data);
+
+    if (data.length === 0) {
+      throw new NotFoundException(
+        'History was not retrieved. Either make some trades or change the search filters.',
+      );
+    }
 
     return {
       data: data.map((trade) => ({

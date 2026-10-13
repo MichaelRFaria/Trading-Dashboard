@@ -143,6 +143,23 @@ describe('Trade', () => {
       });
   });
 
+  it('should not get gains (user has no trades)', async () => {
+    return await agent.get('/trade/gains').expect(404).expect({
+      message: 'Gains can not be retrieved, you have made no trades.',
+      error: 'Not Found',
+      statusCode: 404,
+    });
+  });
+
+  it('should not get history (user has no trades)', async () => {
+    return await agent.get('/trade/history').expect(404).expect({
+      message:
+        'History was not retrieved. Either make some trades or change the search filters.',
+      error: 'Not Found',
+      statusCode: 404,
+    });
+  });
+
   describe('when the user owns stocks', () => {
     beforeEach(async () => {
       // Create a holding before these tests run
@@ -205,6 +222,57 @@ describe('Trade', () => {
       });
 
       expect(holding).toBeNull();
+    });
+
+    it('should get gains', async () => {
+      const response = await agent.get('/trade/gains').expect(200);
+
+      expect(response.body.realised_gains).toEqual(expect.any(Number));
+      expect(response.body.unrealised_gains).toEqual(expect.any(Number));
+    });
+
+    it('should get history', async () => {
+      const response = await agent.get('/trade/history').expect(200);
+
+      expect(response.body.data).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            stock_symbol: 'AAPL',
+          }),
+        ]),
+      );
+    });
+
+    it('should get history (filter valid)', async () => {
+      const response = await agent
+        .get('/trade/history')
+        .query({
+          stock_symbol: 'AAPL',
+        })
+        .expect(200);
+
+      expect(response.body.data).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            stock_symbol: 'AAPL',
+          }),
+        ]),
+      );
+    });
+
+    it('should not get history (filter invalid)', async () => {
+      return await agent
+        .get('/trade/history')
+        .query({
+          stock_symbol: 'NON-EXISTENT',
+        })
+        .expect(404)
+        .expect({
+          message:
+            'History was not retrieved. Either make some trades or change the search filters.',
+          error: 'Not Found',
+          statusCode: 404,
+        });
     });
 
     afterEach(async () => {
