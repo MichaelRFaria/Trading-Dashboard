@@ -4,10 +4,14 @@ import {
   AddToWatchlistDto,
   DeleteFromWatchlistDto,
 } from '../dto/watchlist.dto';
+import { FinnhubService } from './finnhub.service';
 
 @Injectable()
 export class WatchlistService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private finnhubService: FinnhubService,
+  ) {}
 
   // method to retrieve a user's watchlist from the database
   async getWatchlist(userId: number) {
@@ -36,6 +40,9 @@ export class WatchlistService {
     if (existingEntry) {
       throw new ConflictException('Stock already exists in watchlist');
     }
+
+    // throws 404 if it can't find the stock via Finnhub API
+    await this.finnhubService.symbolLookup({ stock_symbol: dto.stock_symbol });
 
     try {
       await this.prisma.watchlist.create({

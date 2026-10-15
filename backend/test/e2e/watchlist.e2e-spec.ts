@@ -56,6 +56,21 @@ describe('Watchlist', () => {
       });
   });
 
+  it('should not add a watchlist item (stock does not exist)', async () => {
+    return await agent
+      .post('/watchlist/add')
+      .send({
+        stock_symbol: 'NON-EXISTENT',
+      })
+      .expect(404)
+      .expect({
+        message: 'NON-EXISTENT not found',
+        error: 'Not Found',
+        statusCode: 404,
+      });
+  });
+
+
   it('should not add a watchlist item (conflict)', async () => {
     return await agent
       .post('/watchlist/add')
