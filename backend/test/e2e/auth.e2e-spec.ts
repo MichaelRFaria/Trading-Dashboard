@@ -19,7 +19,7 @@ describe('Auth', () => {
     const response = await request(app.getHttpServer())
       .post('/auth/login')
       .send({
-        email: 'old-user-1@email.com',
+        email: 'test-user-auth@email.com',
         password: 'testtest1!',
       });
 
@@ -46,6 +46,8 @@ describe('Auth', () => {
   });
 
   afterAll(async () => {
+    await request(app.getHttpServer()).post('/auth/logout'); // backup
+
     await app.close();
   });
 });

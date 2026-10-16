@@ -32,7 +32,7 @@ describe('Finnhub', () => {
     await agent
       .post('/auth/login')
       .send({
-        email: 'old-user-1@email.com',
+        email: 'test-user-finnhub@email.com',
         password: 'testtest1!',
       })
       .expect(200);

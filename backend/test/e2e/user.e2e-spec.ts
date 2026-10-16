@@ -33,7 +33,7 @@ describe('Users', () => {
     return request(app.getHttpServer())
       .post('/users/register')
       .send({
-        email: 'new-user-1@email.com',
+        email: 'test-user-user-new-1@email.com',
         password: 'TestPassword123!',
       })
       .expect(201)
@@ -43,11 +43,11 @@ describe('Users', () => {
       });
   });
 
-  it('should not register a user', async () => {
+  it('should not register a user (email conflict)', async () => {
     return request(app.getHttpServer())
       .post('/users/register')
       .send({
-        email: 'old-user-1@email.com',
+        email: 'test-user-user@email.com',
         password: 'testtest1!',
       })
       .expect(409)
@@ -58,7 +58,7 @@ describe('Users', () => {
       });
   });
 
-  it('should not register a user', async () => {
+  it('should not register a user (invalid email - DTO class validation)', async () => {
     return request(app.getHttpServer())
       .post('/users/register')
       .send({
@@ -73,11 +73,11 @@ describe('Users', () => {
       });
   });
 
-  it('should not register a user', async () => {
+  it('should not register a user (invalid password - DTO class validation)', async () => {
     return request(app.getHttpServer())
       .post('/users/register')
       .send({
-        email: 'new-user-2@email.com',
+        email: 'test-user-user-new-2@email.com',
         password: 'test1!',
       })
       .expect(400)
@@ -88,11 +88,11 @@ describe('Users', () => {
       });
   });
 
-  it('should not register a user', async () => {
+  it('should not register a user (invalid password - DTO class validation)', async () => {
     return request(app.getHttpServer())
       .post('/users/register')
       .send({
-        email: 'new-user-3@email.com',
+        email: 'test-user-user-new-3@email.com',
         password: 'testtesttesttesttesttesttesttest1!',
       })
       .expect(400)
@@ -107,7 +107,7 @@ describe('Users', () => {
     return request(app.getHttpServer())
       .post('/users/register')
       .send({
-        email: 'new-user-4@email.com',
+        email: 'test-user-user-new-4@email.com',
         password: 'testtest!',
       })
       .expect(400)
@@ -118,11 +118,11 @@ describe('Users', () => {
       });
   });
 
-  it('should not register a user', async () => {
+  it('should not register a user (invalid password - DTO class validation)', async () => {
     return request(app.getHttpServer())
       .post('/users/register')
       .send({
-        email: 'new-user-5@email.com',
+        email: 'test-user-user-new-5@email.com',
         password: 'testtest1',
       })
       .expect(400)
@@ -137,7 +137,7 @@ describe('Users', () => {
     const loginResponse = await request(app.getHttpServer())
       .post('/auth/login')
       .send({
-        email: 'old-user-1@email.com',
+        email: 'test-user-user@email.com',
         password: 'testtest1!',
       })
       .expect(200);
@@ -161,7 +161,14 @@ describe('Users', () => {
     await prisma.user.deleteMany({
       where: {
         email: {
-          not: 'old-user-1@email.com',
+          notIn: [
+            'test-user-auth@email.com',
+            'test-user-finnhub@email.com',
+            'test-user-holding@email.com',
+            'test-user-user@email.com',
+            'test-user-watchlist@email.com',
+            'test-user-trade@email.com',
+          ],
         },
       },
     });

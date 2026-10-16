@@ -36,14 +36,14 @@ describe('Trade', () => {
     await agent
       .post('/auth/login')
       .send({
-        email: 'old-user-1@email.com',
+        email: 'test-user-trade@email.com',
         password: 'testtest1!',
       })
       .expect(200);
 
     const user = await prisma.user.findUniqueOrThrow({
       where: {
-        email: 'old-user-1@email.com',
+        email: 'test-user-trade@email.com',
       },
     });
 
@@ -276,8 +276,13 @@ describe('Trade', () => {
     });
 
     afterEach(async () => {
-      await prisma.holding.deleteMany({});
-      await prisma.trade.deleteMany({});
+      await prisma.trade.deleteMany({
+        where: { user_id: testUserId },
+      });
+
+      await prisma.holding.deleteMany({
+        where: { user_id: testUserId },
+      });
     });
   });
 
@@ -297,8 +302,13 @@ describe('Trade', () => {
   afterAll(async () => {
     await request(app.getHttpServer()).post('/auth/logout'); // backup
 
-    await prisma.holding.deleteMany({});
-    await prisma.trade.deleteMany({});
+    await prisma.trade.deleteMany({
+      where: { user_id: testUserId },
+    });
+
+    await prisma.holding.deleteMany({
+      where: { user_id: testUserId },
+    });
 
     await app.close();
   });

@@ -9,6 +9,7 @@ describe('Holdings', () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let agent: ReturnType<typeof request.agent>;
+  let testUserId: number;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -35,10 +36,18 @@ describe('Holdings', () => {
     await agent
       .post('/auth/login')
       .send({
-        email: 'old-user-1@email.com',
+        email: 'test-user-holding@email.com',
         password: 'testtest1!',
       })
       .expect(200);
+
+    const user = await prisma.user.findUniqueOrThrow({
+      where: {
+        email: 'test-user-holding@email.com',
+      },
+    });
+
+    testUserId = user.id;
   });
 
   it('should not retrieve holdings (no holdings to retrieve)', async () => {
@@ -99,8 +108,13 @@ describe('Holdings', () => {
   afterAll(async () => {
     await request(app.getHttpServer()).post('/auth/logout'); // backup
 
-    await prisma.trade.deleteMany({});
-    await prisma.holding.deleteMany({});
+    await prisma.trade.deleteMany({
+      where: { user_id: testUserId },
+    });
+
+    await prisma.holding.deleteMany({
+      where: { user_id: testUserId },
+    });
 
     await app.close();
   });

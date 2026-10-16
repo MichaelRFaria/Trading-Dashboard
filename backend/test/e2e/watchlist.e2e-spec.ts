@@ -10,6 +10,7 @@ describe('Watchlist', () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let agent: ReturnType<typeof request.agent>;
+  let testUserId: number;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -37,10 +38,18 @@ describe('Watchlist', () => {
     await agent
       .post('/auth/login')
       .send({
-        email: 'old-user-1@email.com',
+        email: 'test-user-watchlist@email.com',
         password: 'testtest1!',
       })
       .expect(200);
+
+    const user = await prisma.user.findUniqueOrThrow({
+      where: {
+        email: 'test-user-watchlist@email.com',
+      },
+    });
+
+    testUserId = user.id;
   });
 
   it('should add a watchlist item', async () => {
@@ -171,7 +180,9 @@ describe('Watchlist', () => {
   afterAll(async () => {
     await request(app.getHttpServer()).post('/auth/logout'); // backup
 
-    await prisma.watchlist.deleteMany({});
+    await prisma.watchlist.deleteMany({
+      where: { user_id: testUserId },
+    });
 
     await app.close();
   });
