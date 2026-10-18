@@ -13,7 +13,7 @@ import {
   LoginResponse,
   RegisterRequest,
   RegisterResponse,
-} from '@/src/types/account';
+} from '@/src/types/user';
 import { WatchlistRequest, WatchlistResponse } from '@/src/types/watchlist';
 import {
   TradeBasicResponse,
@@ -21,6 +21,7 @@ import {
   TradeResponse,
 } from '@/src/types/trade';
 import { HistoryRequest, HistoryResponse } from '@/src/types/history';
+import { AccountsResponse } from '@/src/types/account';
 
 export async function getCurrentUser(): Promise<AuthenticatedUserResponse | null> {
   return await fetchUrl('/users/me', 'GET');
@@ -156,6 +157,11 @@ export async function finnhubPriceQuote(
     'GET',
     data,
   );
+}
+
+// gets the user's accounts
+export async function getAccounts(): Promise<AccountsResponse | null> {
+  return await fetchUrl<AccountsResponse>('/account/accounts', 'GET');
 }
 
 // helper function to make HTTP calls

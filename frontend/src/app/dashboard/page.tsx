@@ -2,8 +2,8 @@
 
 import Sidebar from '@/src/components/layout/Sidebar';
 import Header from '@/src/components/layout/Header';
-import DashboardSection from '@/src/components/layout/DashboardSection';
-import { act, useEffect, useState } from 'react';
+import DashboardPageBody from '@/src/components/layout/DashboardPageBody';
+import { useEffect, useState } from 'react';
 import { DashboardActiveSection } from '@/src/types/misc';
 
 export default function DashboardPage() {
@@ -23,7 +23,7 @@ export default function DashboardPage() {
         <Header />
       </header>
       <main className="col-start-2 col-span-1 row-start-2 row-span-2">
-        <DashboardSection activeSection={activeSection} />
+        <DashboardPageBody activeSection={activeSection} />
       </main>
     </div>
   );

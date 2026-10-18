@@ -23,7 +23,7 @@ export default function HoldingsList({
 
         <tbody>
           {holdingsData.map((item: HoldingsDataItem, index: number) => (
-            <tr>
+            <tr key={item.id}>
               <td>{index + 1}</td>
               <td>{item.stock_symbol}</td>
               <td>{item.quantity}</td>

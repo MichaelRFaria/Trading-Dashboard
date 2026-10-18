@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { getCurrentUser, loginAccount } from '@/src/helper/api';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect } from 'react';
-import { LoginRequest, LoginResponse } from '@/src/types/account';
+import { LoginRequest, LoginResponse } from '@/src/types/user';
 import { useNotification } from '@/src/components/common/NotificationProvider';
 import FormInput from '@/src/components/common/FormInput';
 

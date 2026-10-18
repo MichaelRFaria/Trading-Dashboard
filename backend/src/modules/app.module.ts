@@ -18,6 +18,8 @@ import { TradeService } from '../services/trade.service';
 import { TradeExecutionService } from '../services/tradeexecution.service';
 import { StockPriceService } from '../services/stockprice.service';
 import { CacheModule } from '@nestjs/cache-manager';
+import { AccountController } from '../controllers/account.controller';
+import { AccountService } from '../services/account.service';
 
 @Module({
   imports: [
@@ -37,6 +39,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     AuthController,
     HoldingController,
     TradeController,
+    AccountController,
   ],
   providers: [
     UserService,
@@ -48,6 +51,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     TradeService,
     TradeExecutionService,
     StockPriceService,
+    AccountService,
   ],
 })
 export class AppModule {}

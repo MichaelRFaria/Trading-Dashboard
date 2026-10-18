@@ -3,7 +3,7 @@
 import { registerAccount } from '@/src/helper/api';
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { RegisterRequest, RegisterResponse } from '@/src/types/account';
+import { RegisterRequest, RegisterResponse } from '@/src/types/user';
 import { useNotification } from '@/src/components/common/NotificationProvider';
 import FormInput from '@/src/components/common/FormInput';
 

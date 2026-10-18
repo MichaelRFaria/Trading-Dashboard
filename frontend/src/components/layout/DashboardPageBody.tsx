@@ -5,7 +5,7 @@ import Trade from '@/src/components/main_section/Trade';
 import History from '@/src/components/main_section/History';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
-import { AuthenticatedUser } from '@/src/types/account';
+import { AuthenticatedUser } from '@/src/types/user';
 import { WatchlistDataItem } from '@/src/types/watchlist';
 import { HoldingsDataItem } from '@/src/types/trade';
 import {
@@ -29,7 +29,7 @@ import { HistoryDataItem, HistoryRequest } from '@/src/types/history';
 import { useNotification } from '@/src/components/common/NotificationProvider';
 import Settings from '@/src/components/main_section/Settings';
 
-export default function DashboardSection({
+export default function DashboardPageBody({
   activeSection,
 }: {
   activeSection: DashboardActiveSection;
