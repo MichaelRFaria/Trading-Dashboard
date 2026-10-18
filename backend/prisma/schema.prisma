@@ -20,6 +20,17 @@ model User {
   Holding   Holding[]
   Watchlist Watchlist[]
   Trade     Trade[]
+  Account   Account[]
+}
+
+model Account {
+  id       Int     @id @default(autoincrement())
+  user_id  Int
+  balance  Decimal @default(0) @db.Decimal(20, 2)
+  selected Boolean @default(false)
+  user     User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
 }
 
 model Watchlist {
@@ -27,7 +38,7 @@ model Watchlist {
   stock_symbol String
   user_id      Int
 
-  user User @relation(fields: [user_id], references: [id])
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, stock_symbol])
 }
@@ -38,7 +49,7 @@ model Holding {
   quantity     Decimal @db.Decimal(20, 8)
   user_id      Int
 
-  user User @relation(fields: [user_id], references: [id])
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, stock_symbol])
 }
@@ -52,5 +63,5 @@ model Trade {
   user_id      Int
   created_at   DateTime @default(now())
 
-  user User @relation(fields: [user_id], references: [id])
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
