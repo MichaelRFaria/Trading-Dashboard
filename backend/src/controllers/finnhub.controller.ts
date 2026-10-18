@@ -10,8 +10,8 @@ import { StockPriceService } from '../services/stockprice.service';
 @Controller('finnhub')
 export class FinnhubController {
   constructor(
-    private finnHubService: FinnhubService,
-    private stockPriceService: StockPriceService,
+    private readonly finnHubService: FinnhubService,
+    private readonly stockPriceService: StockPriceService,
   ) {}
 
   // endpoint for performing a basic information lookup on a stock using Finnhub API

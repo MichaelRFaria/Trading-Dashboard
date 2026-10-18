@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   // method to register an account
   async register(dto: RegisterAccountDto) {
@@ -27,6 +27,11 @@ export class UserService {
         data: {
           email: dto.email,
           password: hash,
+          Account: {
+            create: {
+              selected: true,
+            },
+          },
         },
       });
 

@@ -6,7 +6,7 @@ import { FinnhubPriceLookupDto } from '../dto/finnhub.dto';
 @Injectable()
 export class StockPriceService {
   constructor(
-    @Inject(CACHE_MANAGER) private cacheManager: Cache, // inject the cache-manager, see https://docs.nestjs.com/data/caching
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache, // inject the cache-manager, see https://docs.nestjs.com/data/caching
     private readonly finnhubService: FinnhubService,
   ) {}
 

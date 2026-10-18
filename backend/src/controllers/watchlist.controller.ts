@@ -16,7 +16,7 @@ import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('watchlist')
 export class WatchlistController {
-  constructor(private watchlistService: WatchlistService) {}
+  constructor(private readonly watchlistService: WatchlistService) {}
 
   // endpoint for retrieving all watchlist stocks a user has, from the database
   @UseGuards(AuthGuard)

@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Req,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -12,7 +13,7 @@ import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('users')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
   // endpoint to register a user account
   @Post('register')
@@ -24,8 +25,8 @@ export class UserController {
   // AuthGuard will attach a 'user' object to the request (assuming their JWT is valid)
   @UseGuards(AuthGuard)
   @Get('me')
-  async GetCurrentUser(@Request() req) {
+  GetCurrentUser(@Req() request) {
     // if the 'user' object exists, then the user must is authenticated, if it does not exist then this returns null, and handling will be done by the frontend
-    return req.user;
+    return request.user;
   }
 }

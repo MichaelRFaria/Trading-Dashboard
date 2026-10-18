@@ -9,8 +9,8 @@ import { FinnhubService } from './finnhub.service';
 @Injectable()
 export class WatchlistService {
   constructor(
-    private prisma: PrismaService,
-    private finnhubService: FinnhubService,
+    private readonly prisma: PrismaService,
+    private readonly finnhubService: FinnhubService,
   ) {}
 
   // method to retrieve a user's watchlist from the database
