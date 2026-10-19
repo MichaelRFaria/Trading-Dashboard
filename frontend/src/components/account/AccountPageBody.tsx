@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useNotification } from '@/src/components/common/NotificationProvider';
 import { AuthenticatedUser } from '@/src/types/user';
 import { AccountsListItem, AccountsResponse } from '@/src/types/account';
+import BalanceUpdateForm from '@/src/components/account/BalanceUpdateForm';
 
 export default function AccountPageBody() {
   const router = useRouter();
@@ -66,6 +67,7 @@ export default function AccountPageBody() {
   return (
     <div className="flex flex-col justify-center items-center">
       <AccountList accountsData={accountsData} />
+      <BalanceUpdateForm fetchAccountData={fetchAccountData} />
       <p>account page</p>
     </div>
   );

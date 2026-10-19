@@ -21,7 +21,11 @@ import {
   TradeResponse,
 } from '@/src/types/trade';
 import { HistoryRequest, HistoryResponse } from '@/src/types/history';
-import { AccountsResponse } from '@/src/types/account';
+import {
+  AccountsResponse,
+  BalanceUpdateRequest,
+  BalanceUpdateResponse,
+} from '@/src/types/account';
 
 export async function getCurrentUser(): Promise<AuthenticatedUserResponse | null> {
   return await fetchUrl('/users/me', 'GET');
@@ -162,6 +166,28 @@ export async function finnhubPriceQuote(
 // gets the user's accounts
 export async function getAccounts(): Promise<AccountsResponse | null> {
   return await fetchUrl<AccountsResponse>('/account/accounts', 'GET');
+}
+
+// deposits balance into the selected account
+export async function depositBalance(
+  data: BalanceUpdateRequest,
+): Promise<BalanceUpdateResponse | null> {
+  return await fetchUrl<BalanceUpdateResponse>(
+    '/account/deposit',
+    'POST',
+    data,
+  );
+}
+
+// withdraws balance from the selected account
+export async function withdrawBalance(
+  data: BalanceUpdateRequest,
+): Promise<BalanceUpdateResponse | null> {
+  return await fetchUrl<BalanceUpdateResponse>(
+    '/account/withdraw',
+    'POST',
+    data,
+  );
 }
 
 // helper function to make HTTP calls

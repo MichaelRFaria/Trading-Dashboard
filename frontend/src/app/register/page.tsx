@@ -40,7 +40,7 @@ export default function RegistrationPage() {
     } else if (response.message) {
       //console.log("error on account registration")
       showNotification(
-        Array.isArray(response.message) // AccountDto class validators will produce an array of messages on validation fail
+        Array.isArray(response.message) // UserDto class validators will produce an array of messages on validation fail
           ? response.message.join(', ')
           : response.message,
       );

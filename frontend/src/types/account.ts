@@ -8,3 +8,11 @@ export type AccountsListItem = {
   balance: number;
   selected: boolean;
 };
+
+export type BalanceUpdateRequest = {
+  amount: number;
+};
+
+export type BalanceUpdateResponse = {
+  message: string;
+};

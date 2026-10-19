@@ -7,7 +7,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { RegisterAccountDto } from '../dto/account.dto';
+import { RegisterAccountDto } from '../dto/user.dto';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '../guards/auth.guard';
 

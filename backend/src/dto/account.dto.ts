@@ -1,20 +1,11 @@
-import { IsEmail, IsString, Length, Matches } from 'class-validator';
+import { IsNumber, Min } from 'class-validator';
 
-export class AccountDto {
-  @IsEmail()
-  email: string;
-
-  @IsString()
-  @Length(8, 30)
-  @Matches(/[0-9]/, {
-    message: 'Password must contain at least one number',
-  })
-  @Matches(/[^A-Za-z0-9]/, {
-    message: 'Password must contain at least one special character',
-  })
-  password: string;
+export class AccountBalanceDto {
+  @IsNumber()
+  @Min(0.01) // this is the minimum number allowed in the frontend form when buying a stock, and must mirror the value used there
+  amount: number;
 }
 
-export class RegisterAccountDto extends AccountDto {}
+export class DepositBalanceDto extends AccountBalanceDto {}
 
-export class LoginAccountDto extends AccountDto {}
+export class WithdrawBalanceDto extends AccountBalanceDto {}
