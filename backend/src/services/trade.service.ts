@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { Prisma, Trade } from '@prisma/client';
-import { FinnhubService } from './finnhub.service';
 import {
   BuyHoldingDto,
   GainsDto,
@@ -14,18 +13,57 @@ import {
   TradeHolding,
 } from '../dto/trade.dto';
 import { StockPriceService } from './stockprice.service';
+import { AccountService } from './account.service';
 
 @Injectable()
 export class TradeService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly finnhubService: FinnhubService,
     private readonly stockPriceService: StockPriceService,
+    private readonly accountService: AccountService,
   ) {}
 
   // method to update/add a holding that has been purchased
-  async buy(tx: Prisma.TransactionClient, userId: number, dto: BuyHoldingDto) {
-    return tx.holding.upsert({
+  async buy(
+    tx: Prisma.TransactionClient,
+    userId: number,
+    price: number,
+    dto: BuyHoldingDto,
+  ) {
+    const account = await tx.account.findFirst({
+      where: {
+        user_id: userId,
+        selected: true,
+      },
+    });
+
+    const totalPurchasePrice = new Prisma.Decimal(price).mul(dto.quantity);
+
+    if (!account) {
+      throw new NotFoundException(`No accounts found`);
+    }
+
+    const result = await tx.account.updateMany({
+      where: {
+        id: account.id,
+        balance: {
+          gte: totalPurchasePrice,
+        },
+      },
+      data: {
+        balance: {
+          decrement: totalPurchasePrice,
+        },
+      },
+    });
+
+    if (result.count === 0) {
+      throw new BadRequestException(
+        `Insufficient funds to purchase. Your balance is $${account.balance.toString()}, and the total purchase price was $${totalPurchasePrice.toString()}`,
+      );
+    }
+
+    await tx.holding.upsert({
       where: {
         user_id_stock_symbol: {
           stock_symbol: dto.stock_symbol,
@@ -49,39 +87,29 @@ export class TradeService {
   async sell(
     tx: Prisma.TransactionClient,
     userId: number,
+    price: number,
     dto: SellHoldingDto,
   ) {
-    const holding = await tx.holding.findUnique({
+    const account = await tx.account.findFirst({
       where: {
-        user_id_stock_symbol: {
-          user_id: userId,
-          stock_symbol: dto.stock_symbol,
-        },
+        user_id: userId,
+        selected: true,
       },
     });
+    const totalSalePrice = new Prisma.Decimal(price).mul(dto.quantity);
 
-    // check that the user owns this stock
-    if (!holding) {
-      throw new NotFoundException(
-        `You do not own any shares of ${dto.stock_symbol}`,
-      );
+    if (!account) {
+      throw new NotFoundException(`No accounts found`);
     }
 
     //console.log(holding);
 
-    // check that the user owns enough shares
-    if (holding.quantity.lt(dto.quantity)) {
-      throw new BadRequestException(
-        `Insufficient shares. You own ${holding.quantity.toString()} shares of ${dto.stock_symbol}`,
-      );
-    }
-
-    // decrease the holding's quantity
-    const updatedHolding = await tx.holding.update({
+    const result = await tx.holding.updateMany({
       where: {
-        user_id_stock_symbol: {
-          user_id: userId,
-          stock_symbol: dto.stock_symbol,
+        user_id: userId,
+        stock_symbol: dto.stock_symbol,
+        quantity: {
+          gte: dto.quantity,
         },
       },
       data: {
@@ -91,9 +119,24 @@ export class TradeService {
       },
     });
 
+    if (result.count === 0) {
+      throw new BadRequestException(
+        `Insufficient shares of ${dto.stock_symbol}`,
+      );
+    }
+
     // delete the holding if all shares have been sold
-    if (updatedHolding.quantity.isZero()) {
-      return tx.holding.delete({
+    const updatedHolding = await tx.holding.findUnique({
+      where: {
+        user_id_stock_symbol: {
+          user_id: userId,
+          stock_symbol: dto.stock_symbol,
+        },
+      },
+    });
+
+    if (updatedHolding?.quantity.isZero()) {
+      await tx.holding.delete({
         where: {
           user_id_stock_symbol: {
             user_id: userId,
@@ -103,32 +146,24 @@ export class TradeService {
       });
     }
 
-    return updatedHolding;
+    await tx.account.update({
+      where: { id: account.id },
+      data: {
+        balance: {
+          increment: totalSalePrice,
+        },
+      },
+    });
   }
 
   // method to record a trade in the database
   async recordTrade(
     tx: Prisma.TransactionClient,
     userId: number,
+    price: number,
     dto: TradeHolding,
     type: string,
   ) {
-    // retrieve price from Finnhub API to get the latest price
-    console.log(`attempting to retrieve price of ${dto.stock_symbol}`);
-    const price = (
-      await this.finnhubService.getPrice({
-        stock_symbol: dto.stock_symbol,
-        type: 'current',
-      })
-    ).price;
-
-    // update stock's cached value with updated value while we already have the latest price
-    await this.stockPriceService.updateCache(
-      dto.stock_symbol,
-      'current',
-      price,
-    );
-
     return tx.trade.create({
       data: {
         stock_symbol: dto.stock_symbol,
