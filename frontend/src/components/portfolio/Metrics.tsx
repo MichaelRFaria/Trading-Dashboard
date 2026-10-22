@@ -7,30 +7,34 @@ import {
 import { parseNumberToDollars } from '@/src/helper/format';
 import MetricStat from '@/src/components/portfolio/MetricStat';
 import { HoldingsDataItem } from '@/src/types/trade';
+import { AccountsListItem } from '@/src/types/account';
 
 export default function Metrics({
   holdingsData,
   holdingsPriceData,
   priceChangesData,
   gains,
+  accountsData,
 }: {
   holdingsData: HoldingsDataItem[];
   holdingsPriceData: HoldingsPrice;
   priceChangesData: FinnhubPriceChangesDataItem[];
   gains: GainsResponse;
+  accountsData: AccountsListItem[];
 }) {
   if (holdingsData.length === 0) {
     return <p>Add some holdings to your portfolio to view your metrics!</p>;
   }
 
-  const totalPortfolioValue = holdingsData.reduce(
-    (sum: number, holding: HoldingsDataItem) => {
+  const totalPortfolioValue =
+    holdingsData.reduce((sum: number, holding: HoldingsDataItem) => {
       const price = holdingsPriceData[holding.stock_symbol] ?? 0;
 
       return sum + holding.quantity * price;
-    },
-    0,
-  );
+    }, 0) +
+    accountsData.reduce((sum: number, account: AccountsListItem) => {
+      return sum + Number(account.balance); // Prisma decimal is serialised as String so it must be converted
+    }, 0);
 
   // calculates today's gains by iterating through the user's holdings and multiplying the quantity of each stock by its change in price
   const todaysGains = holdingsData.reduce(

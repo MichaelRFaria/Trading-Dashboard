@@ -17,6 +17,7 @@ import {
 } from '@/src/types/stock';
 import {
   finnhubPriceQuote,
+  getAccounts,
   getCurrentUser,
   getGains,
   getHistory,
@@ -28,6 +29,7 @@ import { DashboardActiveSection } from '@/src/types/misc';
 import { HistoryDataItem, HistoryRequest } from '@/src/types/history';
 import { useNotification } from '@/src/components/common/NotificationProvider';
 import Settings from '@/src/components/main_section/Settings';
+import { AccountsListItem } from '@/src/types/account';
 
 export default function DashboardPageBody({
   activeSection,
@@ -57,6 +59,7 @@ export default function DashboardPageBody({
     realised_gains: 0,
     unrealised_gains: 0,
   });
+  const [accountsData, setAccountsData] = useState<AccountsListItem[]>([]);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -78,13 +81,14 @@ export default function DashboardPageBody({
     console.log('fetching');
     setIsLoading(true);
     try {
-      const [watchlist, holdings, priceChanges, history, gainsData] =
+      const [watchlist, holdings, priceChanges, history, gainsData, accounts] =
         await Promise.all([
           getWatchlistData(),
           getHoldingsData(),
           getPriceChanges(),
           getHistory({}),
           getGains(),
+          getAccounts(),
         ]);
 
       if (watchlist && 'data' in watchlist) setWatchlistData(watchlist.data);
@@ -93,6 +97,7 @@ export default function DashboardPageBody({
         setPriceChangesData(priceChanges.data);
       if (history && 'data' in history) setHistoryData(history.data);
       if (gainsData) setGains(gainsData);
+      if (accounts && 'data' in accounts) setAccountsData(accounts.data);
     } catch (error) {
       console.error('Error when fetching dashboard data', error);
     } finally {
@@ -163,6 +168,7 @@ export default function DashboardPageBody({
           holdingsPriceData={holdingsPriceData}
           priceChangesData={priceChangesData}
           gains={gains}
+          accountsData={accountsData}
         />
       );
     case 'portfolio':
@@ -198,6 +204,7 @@ export default function DashboardPageBody({
           holdingsPriceData={holdingsPriceData}
           priceChangesData={priceChangesData}
           gains={gains}
+          accountsData={accountsData}
         />
       );
   }
