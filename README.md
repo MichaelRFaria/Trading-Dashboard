@@ -6,6 +6,7 @@ A full-stack trading dashboard for simulating stock trading, managing portfolios
 ## Features
 - User registration and JWT-based authentication
 - Stock search and market data using the Finnhub API
+- Account balance system
 - Personal stock watchlist
 - Simulated buy and sell orders
 - Portfolio and holdings management
