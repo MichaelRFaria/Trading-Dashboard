@@ -42,10 +42,9 @@ export class HoldingService {
     for (const holding of holdings) {
       const response = await this.stockPriceService.getPrice({
         stock_symbol: holding.stock_symbol,
-        type: 'change',
       });
 
-      const priceChange = response.price;
+      const priceChange = response.change;
 
       priceChanges.push({
         stock_symbol: holding.stock_symbol,

@@ -153,7 +153,6 @@ export async function finnhubPriceQuote(
 ): Promise<FinnhubPriceLookupResponse | null> {
   const params = new URLSearchParams({
     stock_symbol: data.stock_symbol,
-    type: data.type,
   });
 
   return await fetchUrl<FinnhubPriceLookupResponse>(

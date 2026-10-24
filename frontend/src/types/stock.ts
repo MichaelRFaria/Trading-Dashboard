@@ -25,20 +25,27 @@ export type HoldingValue = {
 };
 
 export type GainsResponse = {
-  realised_gains: number;
-  unrealised_gains: number;
+  lifetime_realised_gains: number;
+  lifetime_unrealised_gains: number;
+  todays_realised_gains: number;
+  todays_unrealised_gains: number;
 };
 
 export type FinnhubPriceLookupRequest = {
   stock_symbol: string;
-  type: 'current' | 'change';
 };
 
 export type FinnhubPriceLookupResponse =
   FinnhubPriceLookupResponseSuccess | FinnhubPriceLookupResponseFailure;
 
 export type FinnhubPriceLookupResponseSuccess = {
-  price: number;
+  current: number;
+  change: number;
+  percent_change: number;
+  high: number;
+  low: number;
+  open: number;
+  previous_close: number;
 };
 
 export type FinnhubPriceLookupResponseFailure = {

@@ -56,8 +56,10 @@ export default function DashboardPageBody({
   const [holdingsPriceData, setHoldingsPriceData] = useState<HoldingsPrice>({});
   const [historyData, setHistoryData] = useState<HistoryDataItem[]>([]);
   const [gains, setGains] = useState<GainsResponse>({
-    realised_gains: 0,
-    unrealised_gains: 0,
+    lifetime_realised_gains: 0,
+    lifetime_unrealised_gains: 0,
+    todays_realised_gains: 0,
+    todays_unrealised_gains: 0,
   });
   const [accountsData, setAccountsData] = useState<AccountsListItem[]>([]);
 
@@ -130,7 +132,6 @@ export default function DashboardPageBody({
         holdingsData.map(async (holding: HoldingsDataItem) => {
           const request: FinnhubPriceLookupRequest = {
             stock_symbol: holding.stock_symbol,
-            type: 'current',
           };
 
           const response: FinnhubPriceLookupResponse | null =
@@ -138,8 +139,8 @@ export default function DashboardPageBody({
 
           let price: number;
 
-          if (response && 'price' in response) {
-            price = response.price;
+          if (response && 'current' in response) {
+            price = response.current;
           } else {
             // response is null or service threw NotFoundException
             price = 0;
@@ -166,7 +167,6 @@ export default function DashboardPageBody({
         <Dashboard
           holdingsData={holdingsData}
           holdingsPriceData={holdingsPriceData}
-          priceChangesData={priceChangesData}
           gains={gains}
           accountsData={accountsData}
         />
@@ -202,7 +202,6 @@ export default function DashboardPageBody({
         <Dashboard
           holdingsData={holdingsData}
           holdingsPriceData={holdingsPriceData}
-          priceChangesData={priceChangesData}
           gains={gains}
           accountsData={accountsData}
         />

@@ -21,19 +21,14 @@ export class TradeExecutionService {
   // method to execute a stock purchase
   async buy(userId: number, dto: BuyHoldingDto) {
     try {
-      const price = (
-        await this.finnhubService.getPrice({
-          stock_symbol: dto.stock_symbol,
-          type: 'current',
-        })
-      ).price;
+      const priceData = await this.finnhubService.getPrice({
+        stock_symbol: dto.stock_symbol,
+      });
 
-      // update stock's cached value with updated value while we already have the latest price
-      await this.stockPriceService.updateCache(
-        dto.stock_symbol,
-        'current',
-        price,
-      );
+      const price = priceData.current;
+
+      // update stock's cached values with updated values while we already have the latest price data
+      await this.stockPriceService.updateCache(dto.stock_symbol, priceData);
 
       // database transaction to allow rollback if an error is occurred when updating the database
       const trade = await this.prisma.$transaction(async (tx) => {
@@ -67,19 +62,14 @@ export class TradeExecutionService {
   // method to execute a stock sell
   async sell(userId: number, dto: SellHoldingDto) {
     try {
-      const price = (
-        await this.finnhubService.getPrice({
-          stock_symbol: dto.stock_symbol,
-          type: 'current',
-        })
-      ).price;
+      const priceData = await this.finnhubService.getPrice({
+        stock_symbol: dto.stock_symbol,
+      });
 
-      // update stock's cached value with updated value while we already have the latest price
-      await this.stockPriceService.updateCache(
-        dto.stock_symbol,
-        'current',
-        price,
-      );
+      const price = priceData.current;
+
+      // update stock's cached values with updated values while we already have the latest price data
+      await this.stockPriceService.updateCache(dto.stock_symbol, priceData);
 
       // database transaction to allow rollback if an error is occurred when updating the database
       const trade = await this.prisma.$transaction(async (tx) => {

@@ -52,25 +52,18 @@ export class FinnhubService {
       }),
     );
 
-    let price: number;
-
-    // response contains several different prices, so we only return the price requested in dto.type
-    // see https://finnhub.io/docs/api/quote for other prices that can be retrieved
-    switch (dto.type) {
-      case 'current':
-        price = data.c;
-        break;
-      case 'change':
-        price = data.d;
-        break;
-    }
-
-    if (!price) {
-      throw new NotFoundException(`${dto.stock_symbol} price not found`);
+    if (!data || data.c == null) {
+      throw new NotFoundException(`${dto.stock_symbol} price data not found`);
     }
 
     return {
-      price: price,
+      current: data.c,
+      change: data.d,
+      percent_change: data.dp,
+      high: data.h,
+      low: data.l,
+      open: data.o,
+      previous_close: data.pc,
     };
   }
 }

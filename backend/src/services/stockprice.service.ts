@@ -1,57 +1,55 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { FinnhubService } from './finnhub.service';
 import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
-import { FinnhubPriceLookupDto } from '../dto/finnhub.dto';
+import {
+  FinnhubPriceLookupDto,
+  FinnhubPriceResponseDto,
+} from '../dto/finnhub.dto';
 
 @Injectable()
 export class StockPriceService {
+  private readonly cacheTtl = 60_000; // 1 min ttl for now, 15-30 seconds would probably be ideal
+
   constructor(
-    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache, // inject the cache-manager, see https://docs.nestjs.com/data/caching
+    @Inject(CACHE_MANAGER)
+    private readonly cacheManager: Cache, // inject the cache-manager, see https://docs.nestjs.com/data/caching
     private readonly finnhubService: FinnhubService,
   ) {}
 
   // method to get a stock's price
-  async getPrice(dto: FinnhubPriceLookupDto) {
-    // first we attempt to retrieve the price from the cache
-    const cacheKey = `stock-price:${dto.stock_symbol}-${dto.type}`;
+  async getPrice(dto: FinnhubPriceLookupDto): Promise<FinnhubPriceResponseDto> {
+    // first we attempt to retrieve the prices from the cache
+    const cacheKey = `stock-price:${dto.stock_symbol}`;
 
-    const cachedPrice = await this.cacheManager.get<number>(cacheKey);
+    const cachedPrices =
+      await this.cacheManager.get<FinnhubPriceResponseDto>(cacheKey);
 
     // return cachedPrice on cache hit
-    if (cachedPrice !== undefined && cachedPrice !== null) {
-      // console.log(`Cache hit on ${dto.stock_symbol}'s ${dto.type} price`);
-      return {
-        price: cachedPrice,
-      };
+    if (cachedPrices !== null && cachedPrices !== undefined) {
+      console.log(
+        `Cache hit on ${dto.stock_symbol}'s price :: ${cachedPrices}`,
+      );
+      return cachedPrices;
     }
 
-    // console.log(
-    //   `Cache miss on ${dto.stock_symbol}'s ${dto.type} price, getting updated price`,
-    // );
+    console.log(
+      `Cache miss on ${dto.stock_symbol}'s prices, getting updated prices`,
+    );
 
     // retrieve and store price in cache, from Finnhub API, on cache miss
-    const response = await this.finnhubService.getPrice({
+    const prices = await this.finnhubService.getPrice({
       stock_symbol: dto.stock_symbol,
-      type: dto.type,
     });
 
-    const price = response.price;
+    await this.cacheManager.set(cacheKey, prices, this.cacheTtl); // 1 min ttl for now, 15-30 seconds would probably be ideal
 
-    await this.cacheManager.set(cacheKey, price, 60000); // 1 min ttl for now, 15-30 seconds would probably be ideal
-
-    return {
-      price: price,
-    };
+    return prices;
   }
 
-  // method to update a cached value
-  async updateCache(
-    stock_symbol: string,
-    type: 'current' | 'change',
-    price: number,
-  ) {
-    const cacheKey = `stock-price:${stock_symbol}-${type}`;
+  // method to update cached values
+  async updateCache(stock_symbol: string, prices: FinnhubPriceResponseDto) {
+    const cacheKey = `stock-price:${stock_symbol}`;
 
-    await this.cacheManager.set(cacheKey, price, 60000); // 1 min ttl for now, 15-30 seconds would probably be ideal
+    await this.cacheManager.set(cacheKey, prices, this.cacheTtl);
   }
 }
