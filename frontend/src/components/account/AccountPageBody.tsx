@@ -8,6 +8,7 @@ import { useNotification } from '@/src/components/common/NotificationProvider';
 import { AuthenticatedUser } from '@/src/types/user';
 import { AccountsListItem, AccountsResponse } from '@/src/types/account';
 import BalanceUpdateForm from '@/src/components/account/BalanceUpdateForm';
+import AccountUpdateForm from '@/src/components/account/AccountUpdateForm';
 
 export default function AccountPageBody() {
   const router = useRouter();
@@ -47,7 +48,13 @@ export default function AccountPageBody() {
       const accounts: AccountsResponse | null = await getAccounts();
       console.log(accounts);
 
-      if (accounts && 'data' in accounts) setAccountsData(accounts.data);
+      if (accounts && 'data' in accounts) {
+        setAccountsData(
+          accounts.data.toSorted(
+            (a, b) => Number(b.selected) - Number(a.selected) || a.id - b.id,
+          ),
+        );
+      }
     } catch (error) {
       console.error('Error when fetching account data', error);
     } finally {
@@ -68,6 +75,10 @@ export default function AccountPageBody() {
     <div className="flex flex-col justify-center items-center">
       <AccountList accountsData={accountsData} />
       <BalanceUpdateForm fetchAccountData={fetchAccountData} />
+      <AccountUpdateForm
+        accountsData={accountsData}
+        fetchAccountData={fetchAccountData}
+      />
       <p>account page</p>
     </div>
   );

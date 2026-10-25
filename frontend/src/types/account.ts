@@ -16,3 +16,11 @@ export type BalanceUpdateRequest = {
 export type BalanceUpdateResponse = {
   message: string;
 };
+
+export type AccountActionRequest = {
+  account_id: number;
+};
+
+export type AccountActionResponse = {
+  message: string;
+};

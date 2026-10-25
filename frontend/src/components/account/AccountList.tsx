@@ -18,16 +18,16 @@ export default function AccountList({
       <table>
         <thead>
           <tr>
-            <th>Index</th>
+            <th>Id</th>
             <th>Balance</th>
             <th>Selected</th>
           </tr>
         </thead>
 
         <tbody>
-          {accountsData.map((item: AccountsListItem, index: number) => (
+          {accountsData.map((item: AccountsListItem) => (
             <tr key={item.id}>
-              <td>{index + 1}</td>
+              <td>{item.id}</td>
               <td>{item.balance}</td>
               <td>{item.selected ? 'Yes' : 'No'}</td>
             </tr>

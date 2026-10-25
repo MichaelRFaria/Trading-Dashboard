@@ -22,6 +22,8 @@ import {
 } from '@/src/types/trade';
 import { HistoryRequest, HistoryResponse } from '@/src/types/history';
 import {
+  AccountActionRequest,
+  AccountActionResponse,
   AccountsResponse,
   BalanceUpdateRequest,
   BalanceUpdateResponse,
@@ -187,6 +189,29 @@ export async function withdrawBalance(
     'POST',
     data,
   );
+}
+
+// updates the user's selected account
+export async function updateSelectedAccount(
+  data: AccountActionRequest,
+): Promise<AccountActionResponse | null> {
+  return await fetchUrl<AccountActionResponse>('/account/update', 'PUT', data);
+}
+
+// deletes the given user account
+export async function deleteAccount(
+  data: AccountActionRequest,
+): Promise<AccountActionResponse | null> {
+  return await fetchUrl<AccountActionResponse>(
+    '/account/delete',
+    'DELETE',
+    data,
+  );
+}
+
+// creates a new account
+export async function createAccount(): Promise<AccountActionResponse | null> {
+  return await fetchUrl<AccountActionResponse>('/account/create', 'POST');
 }
 
 // helper function to make HTTP calls
