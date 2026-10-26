@@ -66,7 +66,7 @@ export default function Notification({
                     : 'translate-x-[calc(100vw+1rem)] opacity-0 pointer-events-none'
                 }`}
     >
-      <p className="mb-2 break-words">{message}</p>
+      <p className="mb-2 wrap-break-word">{message}</p>
 
       {progressIsRendered && (
         <div className="h-2 w-full overflow-hidden rounded-full bg-gray-700">

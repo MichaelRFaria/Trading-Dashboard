@@ -1,4 +1,4 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { RegisterAccountDto } from '../dto/user.dto';
 import { PrismaService } from './prisma.service';
 

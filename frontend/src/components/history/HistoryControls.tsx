@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import type { HistoryRequest } from '@/src/types/history';
 
 export default function HistoryControls({
-  fetchHistory,
+  fetchHistoryAction,
 }: {
-  fetchHistory: (request: HistoryRequest) => void;
+  fetchHistoryAction: (request: HistoryRequest) => void;
 }) {
   const [stockSymbol, setStockSymbol] = useState('');
   const [quantityFrom, setQuantityFrom] = useState('');
@@ -42,7 +42,7 @@ export default function HistoryControls({
         : undefined,
     };
 
-    fetchHistory(request);
+    fetchHistoryAction(request);
   };
 
   const clearFilters = () => {
@@ -55,7 +55,7 @@ export default function HistoryControls({
     setDateFrom('');
     setDateTo('');
 
-    fetchHistory({});
+    fetchHistoryAction({});
   };
 
   return (

@@ -33,7 +33,7 @@ export default function TradeForm({
     if (!holdingsData.find((stock) => stock.stock_symbol === selectedStock)) {
       setSelectedStock(holdingsData[0].stock_symbol);
     }
-  }, [holdingsData]);
+  }, [holdingsData, selectedStock]);
 
   const selectedStockObj = holdingsData.find(
     (stock) => stock.stock_symbol === selectedStock,
@@ -94,7 +94,7 @@ export default function TradeForm({
       showNotification(response.message);
     }
 
-    getHoldingsDataAsync();
+    await getHoldingsDataAsync();
   };
 
   return (

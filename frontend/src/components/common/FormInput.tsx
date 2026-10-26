@@ -1,4 +1,5 @@
 import FormField from '@/src/components/common/FormField';
+import React from 'react';
 
 type FormInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label: string;

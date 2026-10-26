@@ -11,7 +11,7 @@ export default function History({
 }) {
   return (
     <div>
-      <HistoryControls fetchHistory={fetchHistory} />
+      <HistoryControls fetchHistoryAction={fetchHistory} />
       <HistoryList historyData={historyData} />
     </div>
   );

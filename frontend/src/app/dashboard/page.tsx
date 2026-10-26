@@ -17,7 +17,7 @@ export default function DashboardPage() {
   return (
     <div className="grid grid-cols-[240px_1fr] grid-rows-[70px_1fr] h-screen w-screen">
       <aside className="col-start-1 col-span-1 row-start-2 row-span-1">
-        <Sidebar setActiveSection={setActiveSection} />
+        <Sidebar setActiveSectionAction={setActiveSection} />
       </aside>
       <header className="col-start-1 col-span-2 row-start-1 row-span-1">
         <Header />

@@ -57,7 +57,7 @@ export default function BalanceUpdateForm({
       showNotification(response.message);
     }
 
-    fetchAccountData();
+    await fetchAccountData();
   };
 
   return (

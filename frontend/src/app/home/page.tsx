@@ -24,7 +24,7 @@ export default function HomePage() {
     if (searchParams.get('status') === 'registration-successful') {
       showNotification('Successfully registered an account');
     }
-  }, []);
+  }, [router, searchParams, showNotification]);
 
   const handleFormSubmission = async (
     event: React.SubmitEvent<HTMLFormElement>,
@@ -74,7 +74,7 @@ export default function HomePage() {
         <button type="submit">Login</button>
       </form>
       <Link className="text-sm" href="/register">
-        If you don't already have an account, you can register here!
+        If you don&#39;t already have an account, you can register here!
       </Link>
     </div>
   );

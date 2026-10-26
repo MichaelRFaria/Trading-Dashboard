@@ -13,14 +13,12 @@ import {
   TradeHolding,
 } from '../dto/trade.dto';
 import { StockPriceService } from './stockprice.service';
-import { AccountService } from './account.service';
 
 @Injectable()
 export class TradeService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly stockPriceService: StockPriceService,
-    private readonly accountService: AccountService,
   ) {}
 
   // method to update/add a holding that has been purchased

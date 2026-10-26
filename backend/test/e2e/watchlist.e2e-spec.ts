@@ -79,7 +79,6 @@ describe('Watchlist', () => {
       });
   });
 
-
   it('should not add a watchlist item (conflict)', async () => {
     return await agent
       .post('/watchlist/add')

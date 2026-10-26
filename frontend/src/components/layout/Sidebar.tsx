@@ -7,9 +7,9 @@ import { useRouter } from 'next/navigation';
 import { useNotification } from '@/src/components/common/NotificationProvider';
 
 export default function Sidebar({
-  setActiveSection,
+  setActiveSectionAction,
 }: {
-  setActiveSection: React.Dispatch<
+  setActiveSectionAction: React.Dispatch<
     React.SetStateAction<DashboardActiveSection>
   >;
 }) {
@@ -30,15 +30,25 @@ export default function Sidebar({
   return (
     <aside className="opacity-90 bg-gray space-y-4">
       <div className="flex flex-col">
-        <button onClick={() => setActiveSection('dashboard')}>Dashboard</button>
-        <button onClick={() => setActiveSection('portfolio')}>Portfolio</button>
-        <button onClick={() => setActiveSection('watchlist')}>Watchlist</button>
-        <button onClick={() => setActiveSection('trade')}>Trade</button>
-        <button onClick={() => setActiveSection('history')}>History</button>
+        <button onClick={() => setActiveSectionAction('dashboard')}>
+          Dashboard
+        </button>
+        <button onClick={() => setActiveSectionAction('portfolio')}>
+          Portfolio
+        </button>
+        <button onClick={() => setActiveSectionAction('watchlist')}>
+          Watchlist
+        </button>
+        <button onClick={() => setActiveSectionAction('trade')}>Trade</button>
+        <button onClick={() => setActiveSectionAction('history')}>
+          History
+        </button>
       </div>
       <hr />
       <div className="flex flex-col">
-        <button onClick={() => setActiveSection('settings')}>Settings</button>
+        <button onClick={() => setActiveSectionAction('settings')}>
+          Settings
+        </button>
         <button onClick={handleLogout}>Log Out</button>
       </div>
     </aside>

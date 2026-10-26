@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import StockCard from '@/src/components/portfolio/StockCard';
 import { HoldingsDataItem } from '@/src/types/trade';
 import { FinnhubPriceChangesDataItem, HoldingsPrice } from '@/src/types/stock';

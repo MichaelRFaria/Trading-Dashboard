@@ -77,7 +77,7 @@ export default function DashboardPageBody({
         router.push('/home');
       }
     });
-  }, [router]);
+  }, [router, showNotification]);
 
   const fetchDashboardData = useCallback(async () => {
     console.log('fetching');

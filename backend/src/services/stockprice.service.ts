@@ -26,15 +26,15 @@ export class StockPriceService {
 
     // return cachedPrice on cache hit
     if (cachedPrices !== null && cachedPrices !== undefined) {
-      console.log(
-        `Cache hit on ${dto.stock_symbol}'s price :: ${cachedPrices}`,
-      );
+      // console.log(
+      //   `Cache hit on ${dto.stock_symbol}'s price`,
+      // );
       return cachedPrices;
     }
 
-    console.log(
-      `Cache miss on ${dto.stock_symbol}'s prices, getting updated prices`,
-    );
+    // console.log(
+    //   `Cache miss on ${dto.stock_symbol}'s prices, getting updated prices`,
+    // );
 
     // retrieve and store price in cache, from Finnhub API, on cache miss
     const prices = await this.finnhubService.getPrice({

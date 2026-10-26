@@ -33,7 +33,7 @@ export default function WatchlistForm({
     if (!watchlistData.find((stock) => stock.stock_symbol === selectedStock)) {
       setSelectedStock(watchlistData[0].stock_symbol);
     }
-  }, [watchlistData]);
+  }, [selectedStock, watchlistData]);
 
   const modifyWatchlistFormSubmission = async (
     event: React.SubmitEvent<HTMLFormElement>,
@@ -86,7 +86,7 @@ export default function WatchlistForm({
       showNotification(response.message);
     }
 
-    getWatchlistDataAsync();
+    await getWatchlistDataAsync();
   };
 
   return (

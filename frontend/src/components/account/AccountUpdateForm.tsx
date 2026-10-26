@@ -77,7 +77,7 @@ export default function AccountUpdateForm({
       showNotification(response.message);
     }
 
-    fetchAccountData();
+    await fetchAccountData();
   };
 
   return (
