@@ -52,7 +52,7 @@ export class FinnhubService {
       }),
     );
 
-    if (!data || data.c == null) {
+    if (!data || data.c == null || data.c == 0) {
       throw new NotFoundException(`${dto.stock_symbol} price data not found`);
     }
 

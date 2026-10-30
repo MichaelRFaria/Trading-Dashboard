@@ -66,40 +66,32 @@ describe('Finnhub', () => {
       });
   });
 
-  it("should retrieve AAPL's current stock price", async () => {
+  it("should retrieve AAPL's stock prices", async () => {
     const response = await agent
       .get('/finnhub/price')
       .query({
         stock_symbol: 'AAPL',
-        type: 'current',
       })
       .expect(200);
 
-    expect(response.body.price).toEqual(expect.any(Number));
+    expect(response.body.current).toEqual(expect.any(Number));
+    expect(response.body.change).toEqual(expect.any(Number));
+    expect(response.body.percent_change).toEqual(expect.any(Number));
+    expect(response.body.high).toEqual(expect.any(Number));
+    expect(response.body.low).toEqual(expect.any(Number));
+    expect(response.body.open).toEqual(expect.any(Number));
+    expect(response.body.previous_close).toEqual(expect.any(Number));
   });
 
-  it("should retrieve AAPL's daily price change", async () => {
-    const response = await agent
-      .get('/finnhub/price')
-      .query({
-        stock_symbol: 'AAPL',
-        type: 'change',
-      })
-      .expect(200);
-
-    expect(response.body.price).toEqual(expect.any(Number));
-  });
-
-  it('should not retrieve stock price', async () => {
+  it('should not retrieve stock price (non-existent stock ticker)', async () => {
     return await agent
       .get('/finnhub/price')
       .query({
         stock_symbol: 'NON-EXISTENT',
-        type: 'current',
       })
       .expect(404)
       .expect({
-        message: 'NON-EXISTENT price not found',
+        message: 'NON-EXISTENT price data not found',
         error: 'Not Found',
         statusCode: 404,
       });
