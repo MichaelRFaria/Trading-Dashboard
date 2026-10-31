@@ -168,6 +168,7 @@ describe('Users', () => {
             'test-user-user@email.com',
             'test-user-watchlist@email.com',
             'test-user-trade@email.com',
+            'test-user-account@email.com',
           ],
         },
       },

@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { AppModule } from '../../src/modules/app.module';
 import { PrismaService } from '../../src/services/prisma.service';
+import { Prisma } from '@prisma/client';
 import cookieParser from 'cookie-parser';
 import request from 'supertest';
 
@@ -10,6 +11,8 @@ describe('Trade', () => {
   let prisma: PrismaService;
   let agent: ReturnType<typeof request.agent>;
   let testUserId: number;
+  let selectedAccountId: number;
+  let originalBalance: Prisma.Decimal;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -48,20 +51,26 @@ describe('Trade', () => {
     });
 
     testUserId = user.id;
+
+    const account = await prisma.account.findFirstOrThrow({
+      where: { user_id: testUserId, selected: true },
+    });
+    selectedAccountId = account.id;
+    originalBalance = account.balance;
   });
 
-  it('should not sell holding (no holding to sell)', async () => {
+  it('should not sell holding (no shares to sell)', async () => {
     return await agent
       .post('/trade/sell')
       .send({
         stock_symbol: 'AAPL',
         quantity: 5,
       })
-      .expect(404)
+      .expect(400)
       .expect({
-        message: 'You do not own any shares of AAPL',
-        error: 'Not Found',
-        statusCode: 404,
+        message: 'Insufficient shares of AAPL',
+        error: 'Bad Request',
+        statusCode: 400,
       });
   });
 
@@ -128,6 +137,18 @@ describe('Trade', () => {
       });
   });
 
+  it('should reject unexpected trade body properties', async () => {
+    return agent
+      .post('/trade/buy')
+      .send({ stock_symbol: 'AAPL', quantity: 1, extra: true })
+      .expect(400)
+      .expect({
+        message: ['property extra should not exist'],
+        error: 'Bad Request',
+        statusCode: 400,
+      });
+  });
+
   it('should not buy holding (non-existent stock ticker)', async () => {
     return await agent
       .post('/trade/buy')
@@ -137,10 +158,32 @@ describe('Trade', () => {
       })
       .expect(404)
       .expect({
-        message: 'NON-EXISTENT price not found',
+        message: 'NON-EXISTENT price data not found',
         error: 'Not Found',
         statusCode: 404,
       });
+  });
+
+  it('should not buy holding when the selected account has insufficient funds', async () => {
+    await prisma.account.update({
+      where: { id: selectedAccountId },
+      data: { balance: 0 },
+    });
+
+    const response = await agent
+      .post('/trade/buy')
+      .send({ stock_symbol: 'AAPL', quantity: 5 })
+      .expect(400);
+
+    expect(response.body.error).toBe('Bad Request');
+    expect(response.body.message).toMatch(
+      /^Insufficient funds to purchase\. Your balance is \$0, and the total purchase price was \$/,
+    );
+
+    await prisma.account.update({
+      where: { id: selectedAccountId },
+      data: { balance: originalBalance },
+    });
   });
 
   it('should not get gains (user has no trades)', async () => {
@@ -162,7 +205,8 @@ describe('Trade', () => {
 
   describe('when the user owns stocks', () => {
     beforeEach(async () => {
-      // Create a holding before these tests run
+      // Fund the selected account before buying the shares used in each test.
+      await agent.post('/account/deposit').send({ amount: 100000 }).expect(200);
       await agent
         .post('/trade/buy')
         .send({
@@ -194,7 +238,7 @@ describe('Trade', () => {
         })
         .expect(400)
         .expect({
-          message: 'Insufficient shares. You own 5 shares of AAPL',
+          message: 'Insufficient shares of AAPL',
           error: 'Bad Request',
           statusCode: 400,
         });
@@ -227,8 +271,12 @@ describe('Trade', () => {
     it('should get gains', async () => {
       const response = await agent.get('/trade/gains').expect(200);
 
-      expect(response.body.realised_gains).toEqual(expect.any(Number));
-      expect(response.body.unrealised_gains).toEqual(expect.any(Number));
+      expect(response.body.lifetime_realised_gains).toEqual(expect.any(Number));
+      expect(response.body.lifetime_unrealised_gains).toEqual(
+        expect.any(Number),
+      );
+      expect(response.body.todays_realised_gains).toEqual(expect.any(Number));
+      expect(response.body.todays_unrealised_gains).toEqual(expect.any(Number));
     });
 
     it('should get history', async () => {
@@ -287,6 +335,7 @@ describe('Trade', () => {
   });
 
   it('should buy holding ', async () => {
+    await agent.post('/account/deposit').send({ amount: 100000 }).expect(200);
     const response = await agent
       .post('/trade/buy')
       .send({
@@ -308,6 +357,11 @@ describe('Trade', () => {
 
     await prisma.holding.deleteMany({
       where: { user_id: testUserId },
+    });
+
+    await prisma.account.update({
+      where: { id: selectedAccountId },
+      data: { balance: originalBalance },
     });
 
     await app.close();

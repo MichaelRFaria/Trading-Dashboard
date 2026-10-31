@@ -4,12 +4,15 @@ import { AppModule } from '../../src/modules/app.module';
 import { PrismaService } from '../../src/services/prisma.service';
 import cookieParser from 'cookie-parser';
 import request from 'supertest';
+import { Prisma } from '@prisma/client';
 
 describe('Holdings', () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let agent: ReturnType<typeof request.agent>;
   let testUserId: number;
+  let selectedAccountId: number;
+  let originalBalance: Prisma.Decimal;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -48,6 +51,12 @@ describe('Holdings', () => {
     });
 
     testUserId = user.id;
+
+    const account = await prisma.account.findFirstOrThrow({
+      where: { user_id: testUserId, selected: true },
+    });
+    selectedAccountId = account.id;
+    originalBalance = account.balance;
   });
 
   it('should not retrieve holdings (no holdings to retrieve)', async () => {
@@ -66,6 +75,8 @@ describe('Holdings', () => {
 
   describe('when holdings exist', () => {
     beforeAll(async () => {
+      // ensure account has enough funds to purchase holding for tests
+      await agent.post('/account/deposit').send({ amount: 100000 }).expect(200);
       // Create a holding before these tests run
       await agent
         .post('/trade/buy')
@@ -114,6 +125,11 @@ describe('Holdings', () => {
 
     await prisma.holding.deleteMany({
       where: { user_id: testUserId },
+    });
+
+    await prisma.account.update({
+      where: { id: selectedAccountId },
+      data: { balance: originalBalance },
     });
 
     await app.close();
