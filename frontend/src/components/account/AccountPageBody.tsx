@@ -74,7 +74,10 @@ export default function AccountPageBody() {
   return (
     <div className="flex flex-col justify-center items-center">
       <AccountList accountsData={accountsData} />
-      <BalanceUpdateForm fetchAccountData={fetchAccountData} />
+      <BalanceUpdateForm
+        accountsData={accountsData}
+        fetchAccountData={fetchAccountData}
+      />
       <AccountUpdateForm
         accountsData={accountsData}
         fetchAccountData={fetchAccountData}

@@ -10,6 +10,11 @@ export class DepositBalanceDto extends AccountBalanceDto {}
 
 export class WithdrawBalanceDto extends AccountBalanceDto {}
 
+export class TransferBalanceDto extends AccountBalanceDto {
+  @IsNumber()
+  account_id: number;
+}
+
 export class AccountUpdateDto {
   @IsNumber()
   account_id: number;

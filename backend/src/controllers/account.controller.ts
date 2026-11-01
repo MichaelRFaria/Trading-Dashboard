@@ -16,6 +16,7 @@ import {
   AccountDeleteDto,
   AccountUpdateDto,
   DepositBalanceDto,
+  TransferBalanceDto,
   WithdrawBalanceDto,
 } from '../dto/account.dto';
 
@@ -56,6 +57,19 @@ export class AccountController {
     const userId = request.user.sub;
 
     return this.accountService.withdraw(userId, withdrawBalanceDto);
+  }
+
+  // endpoint to transfer funds from the user's selected account to the given account
+  @UseGuards(AuthGuard)
+  @Post('transfer')
+  @HttpCode(HttpStatus.OK)
+  async transferBalance(
+    @Body() transferBalanceDto: TransferBalanceDto,
+    @Req() request,
+  ) {
+    const userId = request.user.sub;
+
+    return this.accountService.transfer(userId, transferBalanceDto);
   }
 
   // endpoint to update the selected account

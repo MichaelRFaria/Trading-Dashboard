@@ -10,6 +10,7 @@ import {
   AccountDeleteDto,
   AccountSelectDto,
   DepositBalanceDto,
+  TransferBalanceDto,
   WithdrawBalanceDto,
 } from '../dto/account.dto';
 import { Prisma } from '@prisma/client';
@@ -111,6 +112,57 @@ export class AccountService {
 
       throw new InternalServerErrorException(
         'An error occurred, the withdrawal was not executed',
+      );
+    }
+  }
+
+  async transfer(userId: number, dto: TransferBalanceDto) {
+    try {
+      const account = await this.getSelectedAccount(userId);
+
+      // service logic ensures that the user always has at least one account, this is here for the TS compiler (and as an extra safety measure I suppose)
+      if (!account) {
+        throw new NotFoundException(`The selected account no longer exists.`);
+      }
+
+      if (account.balance.lt(dto.amount)) {
+        throw new BadRequestException(
+          `Insufficient amount to transfer. The account balance is $${account.balance.toString()}, you cannot transfer $${dto.amount}`,
+        );
+      }
+      await this.prisma.$transaction(async (tx) => {
+        await tx.account.update({
+          where: { id: dto.account_id },
+          data: {
+            balance: {
+              increment: dto.amount,
+            },
+          },
+        });
+
+        await tx.account.update({
+          where: { id: account.id },
+          data: {
+            balance: {
+              decrement: dto.amount,
+            },
+          },
+        });
+      });
+
+      return {
+        success: true,
+        message: `Successfully transferred $${dto.amount} to ${dto.account_id}`,
+      };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      console.error(error);
+
+      throw new InternalServerErrorException(
+        'An error occurred, the transfer was not executed',
       );
     }
   }

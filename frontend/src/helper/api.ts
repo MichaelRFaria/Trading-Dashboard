@@ -25,6 +25,7 @@ import {
   AccountActionRequest,
   AccountActionResponse,
   AccountsResponse,
+  BalanceTransferRequest,
   BalanceUpdateRequest,
   BalanceUpdateResponse,
 } from '@/src/types/account';
@@ -186,6 +187,17 @@ export async function withdrawBalance(
 ): Promise<BalanceUpdateResponse | null> {
   return await fetchUrl<BalanceUpdateResponse>(
     '/account/withdraw',
+    'POST',
+    data,
+  );
+}
+
+// transfers balance from the selected account to the given account
+export async function transferBalance(
+  data: BalanceTransferRequest,
+): Promise<BalanceUpdateResponse | null> {
+  return await fetchUrl<BalanceUpdateResponse>(
+    '/account/transfer',
     'POST',
     data,
   );

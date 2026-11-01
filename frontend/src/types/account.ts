@@ -13,6 +13,11 @@ export type BalanceUpdateRequest = {
   amount: number;
 };
 
+export type BalanceTransferRequest = {
+  amount: number;
+  account_id: number;
+};
+
 export type BalanceUpdateResponse = {
   message: string;
 };
