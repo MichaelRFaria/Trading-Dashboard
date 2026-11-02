@@ -220,6 +220,28 @@ describe('Accounts', () => {
       });
   });
 
+  it('should reject a transfer greater than the selected balance', async () => {
+    await agent.post('/account/create').expect(201);
+    const selectedAccount = await prisma.account.findFirstOrThrow({
+      where: { id: testAccountId },
+    });
+    const recipient = await prisma.account.findFirstOrThrow({
+      where: { user_id: testUserId, selected: false },
+      orderBy: { id: 'desc' },
+    });
+    const amount = Number(selectedAccount.balance) + 1000;
+
+    await agent
+      .post('/account/transfer')
+      .send({ amount, account_id: recipient.id })
+      .expect(400)
+      .expect({
+        message: `Insufficient amount to transfer. The account balance is $${selectedAccount.balance.toString()}, you cannot transfer $${amount}`,
+        error: 'Bad Request',
+        statusCode: 400,
+      });
+  });
+
   it('should deposit into the selected account', async () => {
     await agent
       .post('/account/deposit')
@@ -234,6 +256,37 @@ describe('Accounts', () => {
       .send({ amount: 10 })
       .expect(200)
       .expect({ success: true, message: 'Successfully withdrew $10' });
+  });
+
+  it('should transfer balance from the selected account to the target account', async () => {
+    // Create an account so the test has a recipient regardless of prior test state.
+    await agent.post('/account/create').expect(201);
+    const recipient = await prisma.account.findFirstOrThrow({
+      where: { user_id: testUserId, selected: false },
+      orderBy: { id: 'desc' },
+    });
+    const selectedAccount = await prisma.account.findFirstOrThrow({
+      where: { user_id: testUserId, selected: true },
+    });
+    const amount = 5;
+    const sourceBalanceBefore = Number(selectedAccount.balance);
+    const recipientBalanceBefore = Number(recipient.balance);
+
+    await agent
+      .post('/account/transfer')
+      .send({ amount, account_id: recipient.id })
+      .expect(200)
+      .expect({
+        success: true,
+        message: `Successfully transferred $${amount} to ${recipient.id}`,
+      });
+
+    const [sourceAfter, recipientAfter] = await Promise.all([
+      prisma.account.findUniqueOrThrow({ where: { id: selectedAccount.id } }),
+      prisma.account.findUniqueOrThrow({ where: { id: recipient.id } }),
+    ]);
+    expect(Number(sourceAfter.balance)).toBe(sourceBalanceBefore - amount);
+    expect(Number(recipientAfter.balance)).toBe(recipientBalanceBefore + amount);
   });
 
   it('should create an account', async () => {
