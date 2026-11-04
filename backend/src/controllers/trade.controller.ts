@@ -17,6 +17,7 @@ import {
   HistoryLookupDto,
   SellHoldingDto,
 } from '../dto/trade.dto';
+import type { AuthenticatedRequest } from '../types/misc';
 
 @Controller('trade')
 export class TradeController {
@@ -29,29 +30,35 @@ export class TradeController {
   @UseGuards(AuthGuard)
   @Post('buy')
   @HttpCode(HttpStatus.OK)
-  async buyHolding(@Body() buyHoldingDto: BuyHoldingDto, @Req() request) {
+  async buyHolding(
+    @Body() buyHoldingDto: BuyHoldingDto,
+    @Req() request: AuthenticatedRequest,
+  ) {
     const userId = request.user.sub;
 
-    return this.tradeExecutionService.buy(userId, buyHoldingDto);
+    return this.tradeExecutionService.buy(Number(userId), buyHoldingDto);
   }
 
   // endpoint to sell an owned stock
   @UseGuards(AuthGuard)
   @Post('sell')
   @HttpCode(HttpStatus.OK)
-  async sellHolding(@Body() sellHoldingDto: SellHoldingDto, @Req() request) {
+  async sellHolding(
+    @Body() sellHoldingDto: SellHoldingDto,
+    @Req() request: AuthenticatedRequest,
+  ) {
     const userId = request.user.sub;
 
-    return this.tradeExecutionService.sell(userId, sellHoldingDto);
+    return this.tradeExecutionService.sell(Number(userId), sellHoldingDto);
   }
 
   // endpoint to retrieve the unrealised and realised gains of all stocks owned by the user
   @UseGuards(AuthGuard)
   @Get('gains')
-  async getGains(@Req() request) {
+  async getGains(@Req() request: AuthenticatedRequest) {
     const userId = request.user.sub;
 
-    return this.tradeService.getGains(userId);
+    return this.tradeService.getGains(Number(userId));
   }
 
   // endpoint to retrieve all the trades made by the user from the database
@@ -59,10 +66,10 @@ export class TradeController {
   @Get('history')
   async getHistory(
     @Query() historyLookupDto: HistoryLookupDto,
-    @Req() request,
+    @Req() request: AuthenticatedRequest,
   ) {
     const userId = request.user.sub;
 
-    return this.tradeService.getHistory(userId, historyLookupDto);
+    return this.tradeService.getHistory(Number(userId), historyLookupDto);
   }
 }

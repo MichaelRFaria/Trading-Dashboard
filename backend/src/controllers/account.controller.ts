@@ -19,6 +19,7 @@ import {
   TransferBalanceDto,
   WithdrawBalanceDto,
 } from '../dto/account.dto';
+import type { AuthenticatedRequest } from '../types/misc';
 
 @Controller('account')
 export class AccountController {
@@ -27,10 +28,10 @@ export class AccountController {
   // endpoint to get an account balance
   @UseGuards(AuthGuard)
   @Get('accounts')
-  async getAccounts(@Req() request) {
+  async getAccounts(@Req() request: AuthenticatedRequest) {
     const userId = request.user.sub;
 
-    return this.accountService.getAccounts(userId);
+    return this.accountService.getAccounts(Number(userId));
   }
 
   // endpoint to deposit funds to the user's selected account
@@ -39,11 +40,11 @@ export class AccountController {
   @HttpCode(HttpStatus.OK)
   async depositBalance(
     @Body() depositBalanceDto: DepositBalanceDto,
-    @Req() request,
+    @Req() request: AuthenticatedRequest,
   ) {
     const userId = request.user.sub;
 
-    return this.accountService.deposit(userId, depositBalanceDto);
+    return this.accountService.deposit(Number(userId), depositBalanceDto);
   }
 
   // endpoint to withdraw funds from the user's selected account
@@ -52,11 +53,11 @@ export class AccountController {
   @HttpCode(HttpStatus.OK)
   async withdrawBalance(
     @Body() withdrawBalanceDto: WithdrawBalanceDto,
-    @Req() request,
+    @Req() request: AuthenticatedRequest,
   ) {
     const userId = request.user.sub;
 
-    return this.accountService.withdraw(userId, withdrawBalanceDto);
+    return this.accountService.withdraw(Number(userId), withdrawBalanceDto);
   }
 
   // endpoint to transfer funds from the user's selected account to the given account
@@ -65,11 +66,11 @@ export class AccountController {
   @HttpCode(HttpStatus.OK)
   async transferBalance(
     @Body() transferBalanceDto: TransferBalanceDto,
-    @Req() request,
+    @Req() request: AuthenticatedRequest,
   ) {
     const userId = request.user.sub;
 
-    return this.accountService.transfer(userId, transferBalanceDto);
+    return this.accountService.transfer(Number(userId), transferBalanceDto);
   }
 
   // endpoint to update the selected account
@@ -77,20 +78,23 @@ export class AccountController {
   @Put('update')
   async updateAccount(
     @Body() updateAccountDto: AccountUpdateDto,
-    @Req() request,
+    @Req() request: AuthenticatedRequest,
   ) {
     const userId = request.user.sub;
 
-    return this.accountService.updateSelectedAccount(userId, updateAccountDto);
+    return this.accountService.updateSelectedAccount(
+      Number(userId),
+      updateAccountDto,
+    );
   }
 
   // endpoint to create an account
   @UseGuards(AuthGuard)
   @Post('create')
-  async createAccount(@Req() request) {
+  async createAccount(@Req() request: AuthenticatedRequest) {
     const userId = request.user.sub;
 
-    return this.accountService.create(userId);
+    return this.accountService.create(Number(userId));
   }
 
   // endpoint to delete an account
@@ -98,10 +102,10 @@ export class AccountController {
   @Delete('delete')
   async deleteAccount(
     @Body() deleteAccountDto: AccountDeleteDto,
-    @Req() request,
+    @Req() request: AuthenticatedRequest,
   ) {
     const userId = request.user.sub;
 
-    return this.accountService.delete(userId, deleteAccountDto);
+    return this.accountService.delete(Number(userId), deleteAccountDto);
   }
 }

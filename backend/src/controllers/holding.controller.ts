@@ -1,6 +1,7 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { HoldingService } from '../services/holding.service';
 import { AuthGuard } from '../guards/auth.guard';
+import type { AuthenticatedRequest } from '../types/misc';
 
 @Controller('holdings')
 export class HoldingController {
@@ -9,18 +10,18 @@ export class HoldingController {
   // endpoint for retrieving all holdings a user has, from the database
   @UseGuards(AuthGuard)
   @Get('holdings')
-  async getHoldings(@Req() request) {
+  async getHoldings(@Req() request: AuthenticatedRequest) {
     const userId = request.user.sub;
 
-    return this.holdingService.getHoldings(userId);
+    return this.holdingService.getHoldings(Number(userId));
   }
 
   // endpoint for retrieving the daily price changes of each stock (via Finnhub API) that the user owns
   @UseGuards(AuthGuard)
   @Get('price-changes')
-  async getHoldingsPriceChanges(@Req() request) {
+  async getHoldingsPriceChanges(@Req() request: AuthenticatedRequest) {
     const userId = request.user.sub;
 
-    return this.holdingService.getHoldingsPriceChanges(userId);
+    return this.holdingService.getHoldingsPriceChanges(Number(userId));
   }
 }
