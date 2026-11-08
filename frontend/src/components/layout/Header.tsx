@@ -11,6 +11,9 @@ export default function Header() {
         <>
           {/*list of buttons goes here later - notifications, something else idk */}
         </>
+        <Link className="text-sm" href="/dashboard">
+          dashboard
+        </Link>
         <Link className="text-sm" href="/account">
           name
         </Link>
