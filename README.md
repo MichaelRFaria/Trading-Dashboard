@@ -27,7 +27,7 @@ A full-stack trading dashboard for simulating stock trading, managing portfolios
 - TypeScript
 - Prisma ORM
 - JWT Authentication
-- Jest
+- Jest (60+ endpoint and service tests implemented so far)
 
 ### Database
 - PostgreSQL
