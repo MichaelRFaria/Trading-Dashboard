@@ -72,6 +72,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
         isVisible={notification !== null}
         progressIsRendered={notification?.progress ?? false}
         time={notification?.duration ?? 5000}
+        onDismiss={hideNotification}
       />
     </NotificationContext.Provider>
   );

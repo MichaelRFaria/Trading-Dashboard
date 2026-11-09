@@ -8,6 +8,7 @@ type NotificationProps = {
   isVisible: boolean;
   progressIsRendered?: boolean;
   time: number;
+  onDismiss: () => void;
 };
 
 // component adapted from: https://github.com/MichaelRFaria/CommitQuest/blob/main/frontend/src/components/sub/Notification.jsx
@@ -16,6 +17,7 @@ export default function Notification({
   isVisible,
   progressIsRendered,
   time,
+  onDismiss,
 }: NotificationProps) {
   const [progress, setProgress] = useState(0);
   const [displayedMessage, setDisplayedMessage] = useState(message);
@@ -59,13 +61,15 @@ export default function Notification({
 
   return (
     // styling adapted from: https://github.com/MichaelRFaria/CommitQuest/blob/main/frontend/src/styles/Notification.css
-    <div
+    <button
+      type="button"
+      onClick={onDismiss}
       className={`
                 fixed top-4 right-4 
                 w-[min(300px,calc(100vw-2rem))]
                 rounded-2xl border border-white/10
                 bg-slate-900/90 p-4
-                font-semibold text-white
+                text-left font-semibold text-white
                 shadow-2xl shadow-black/30 backdrop-blur
                 transition-all duration-500 ease-in-out
                 ${
@@ -84,6 +88,6 @@ export default function Notification({
           />
         </div>
       )}
-    </div>
+    </button>
   );
 }
