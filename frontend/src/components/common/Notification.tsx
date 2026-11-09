@@ -18,6 +18,14 @@ export default function Notification({
   time,
 }: NotificationProps) {
   const [progress, setProgress] = useState(0);
+  const [displayedMessage, setDisplayedMessage] = useState(message);
+
+  // Keep the last message mounted while the notification slides out.
+  useEffect(() => {
+    if (message) {
+      setDisplayedMessage(message);
+    }
+  }, [message]);
 
   // handles animating the progress bar indicating the timeout of the notification
   useEffect(() => {
@@ -55,10 +63,10 @@ export default function Notification({
       className={`
                 fixed top-4 right-4 
                 w-[min(300px,calc(100vw-2rem))]
-                rounded-2xl border border-gray-600
-                bg-[#282c34] p-4
-                font-bold text-white
-                shadow-lg
+                rounded-2xl border border-white/10
+                bg-slate-900/90 p-4
+                font-semibold text-white
+                shadow-2xl shadow-black/30 backdrop-blur
                 transition-all duration-500 ease-in-out
                 ${
                   isVisible
@@ -66,12 +74,12 @@ export default function Notification({
                     : 'translate-x-[calc(100vw+1rem)] opacity-0 pointer-events-none'
                 }`}
     >
-      <p className="mb-2 wrap-break-word">{message}</p>
+      <p className="mb-2 wrap-break-word">{displayedMessage}</p>
 
       {progressIsRendered && (
-        <div className="h-2 w-full overflow-hidden rounded-full bg-gray-700">
+        <div className="h-2 w-full overflow-hidden rounded-full bg-slate-700">
           <div
-            className="h-full rounded-full bg-green-600 transition-none"
+            className="h-full rounded-full bg-sky-400 transition-none"
             style={{ width: `${progress}%` }}
           />
         </div>
