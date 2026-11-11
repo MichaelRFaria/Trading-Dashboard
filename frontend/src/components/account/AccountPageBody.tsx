@@ -82,7 +82,6 @@ export default function AccountPageBody() {
         accountsData={accountsData}
         fetchAccountData={fetchAccountData}
       />
-      <p>account page</p>
     </div>
   );
 }

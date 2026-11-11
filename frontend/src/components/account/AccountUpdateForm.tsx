@@ -53,7 +53,7 @@ export default function AccountUpdateForm({
       case 'create':
         response = await createAccount();
         break;
-      case 'update':
+      case 'select':
         response = await updateSelectedAccount(request);
         break;
       case 'delete':
@@ -88,7 +88,7 @@ export default function AccountUpdateForm({
         className="flex flex-col items-center gap-3"
         onSubmit={accountUpdateFormSubmission}
       >
-        {(actionType === 'update' || actionType === 'delete') &&
+        {(actionType === 'select' || actionType === 'delete') &&
           accountsData.length > 1 && (
             <FormSelect
               label="Account"
@@ -116,7 +116,7 @@ export default function AccountUpdateForm({
           {accountsData.length > 1 && (
             <>
               <option value="delete">Delete</option>
-              <option value="update">Update</option>
+              <option value="select">Select</option>
             </>
           )}
         </FormSelect>
