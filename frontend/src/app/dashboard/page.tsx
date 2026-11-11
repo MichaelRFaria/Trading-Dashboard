@@ -15,11 +15,14 @@ export default function DashboardPage() {
   }, [activeSection]);
 
   return (
-    <div className="grid grid-cols-[240px_1fr] grid-rows-[70px_1fr] h-screen w-screen">
-      <aside className="col-start-1 col-span-1 row-start-2 row-span-1">
-        <Sidebar setActiveSectionAction={setActiveSection} />
+    <div className="grid h-screen w-screen grid-cols-[240px_1fr] grid-rows-[70px_1fr] overflow-hidden bg-slate-950 text-slate-100">
+      <aside className="col-start-1 col-span-1 row-start-2 row-span-1 border-r border-white/10 bg-slate-950/70">
+        <Sidebar
+          activeSection={activeSection}
+          setActiveSectionAction={setActiveSection}
+        />
       </aside>
-      <header className="col-start-1 col-span-2 row-start-1 row-span-1">
+      <header className="col-start-1 col-span-2 row-start-1 row-span-1 relative border-b border-white/10 bg-slate-950/70 px-6 py-4 backdrop-blur">
         <Header />
       </header>
       <main className="col-start-2 col-span-1 row-start-2 row-span-2">
