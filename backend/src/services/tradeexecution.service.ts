@@ -8,6 +8,7 @@ import { TradeService } from './trade.service';
 import { BuyHoldingDto, SellHoldingDto } from '../dto/trade.dto';
 import { FinnhubService } from './finnhub.service';
 import { StockPriceService } from './stockprice.service';
+import { AxiosError } from 'axios';
 
 @Injectable()
 export class TradeExecutionService {
@@ -21,7 +22,7 @@ export class TradeExecutionService {
   // method to execute a stock purchase
   async buy(userId: number, dto: BuyHoldingDto) {
     try {
-      const priceData = await this.finnhubService.getPrice({
+      const priceData = await this.finnhubService.getPriceIfOpen({
         stock_symbol: dto.stock_symbol,
       });
 
@@ -62,7 +63,7 @@ export class TradeExecutionService {
   // method to execute a stock sell
   async sell(userId: number, dto: SellHoldingDto) {
     try {
-      const priceData = await this.finnhubService.getPrice({
+      const priceData = await this.finnhubService.getPriceIfOpen({
         stock_symbol: dto.stock_symbol,
       });
 

@@ -5,9 +5,16 @@ export class FinnhubSymbolLookupDto {
   stock_symbol: string;
 }
 
-export class FinnhubPriceLookupDto {
+export class FinnhubPriceLookupDto extends FinnhubSymbolLookupDto {}
+
+export class FinnhubPriceChangeDataItemDto extends FinnhubSymbolLookupDto {
+  @IsNumber()
+  price_change: number;
+}
+
+export class FinnhubExchangeLookupDto {
   @IsString()
-  stock_symbol: string;
+  exchange: string;
 }
 
 export class FinnhubPriceResponseDto {
@@ -18,12 +25,4 @@ export class FinnhubPriceResponseDto {
   low: number;
   open: number;
   previous_close: number;
-}
-
-export class FinnhubPriceChangeDataItemDto {
-  @IsString()
-  stock_symbol: string;
-
-  @IsNumber()
-  price_change: number;
 }
