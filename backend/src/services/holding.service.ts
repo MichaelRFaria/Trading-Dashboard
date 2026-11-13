@@ -1,13 +1,13 @@
 import { PrismaService } from './prisma.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { FinnhubPriceChangeDataItemDto } from '../dto/finnhub.dto';
-import { StockPriceService } from './stockprice.service';
+import { FinnhubService } from './finnhub.service';
 
 @Injectable()
 export class HoldingService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly stockPriceService: StockPriceService,
+    private readonly finnhubService: FinnhubService,
   ) {}
 
   // method to retrieve all the user's holdings from the database
@@ -40,7 +40,7 @@ export class HoldingService {
 
     // for each holding, we get the daily price change and add it to the array, priceChanges
     for (const holding of holdings) {
-      const response = await this.stockPriceService.getPrice({
+      const response = await this.finnhubService.getCachedPrice({
         stock_symbol: holding.stock_symbol,
       });
 

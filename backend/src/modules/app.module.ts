@@ -16,7 +16,7 @@ import { HoldingService } from '../services/holding.service';
 import { TradeController } from '../controllers/trade.controller';
 import { TradeService } from '../services/trade.service';
 import { TradeExecutionService } from '../services/tradeexecution.service';
-import { StockPriceService } from '../services/stockprice.service';
+import { CacheService } from '../services/cache.service';
 import { CacheModule } from '@nestjs/cache-manager';
 import { AccountController } from '../controllers/account.controller';
 import { AccountService } from '../services/account.service';
@@ -50,7 +50,7 @@ import { AccountService } from '../services/account.service';
     HoldingService,
     TradeService,
     TradeExecutionService,
-    StockPriceService,
+    CacheService,
     AccountService,
   ],
 })

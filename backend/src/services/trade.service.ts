@@ -12,13 +12,13 @@ import {
   SellHoldingDto,
   TradeHolding,
 } from '../dto/trade.dto';
-import { StockPriceService } from './stockprice.service';
+import { FinnhubService } from './finnhub.service';
 
 @Injectable()
 export class TradeService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly stockPriceService: StockPriceService,
+    private readonly finnhubService: FinnhubService,
   ) {}
 
   // method to update/add a holding that has been purchased
@@ -262,7 +262,7 @@ export class TradeService {
     // if the user still owns a stock, then we calculate the unrealised gain
     if (quantity > 0) {
       const price = (
-        await this.stockPriceService.getPrice({
+        await this.finnhubService.getCachedPrice({
           stock_symbol: stockSymbol,
         })
       ).current;
@@ -343,7 +343,7 @@ export class TradeService {
 
     const quotes = await Promise.all(
       symbols.map(async (symbol) => {
-        const quote = await this.stockPriceService.getPrice({
+        const quote = await this.finnhubService.getCachedPrice({
           stock_symbol: symbol,
         });
 

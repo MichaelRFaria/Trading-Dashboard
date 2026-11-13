@@ -7,7 +7,6 @@ import { PrismaService } from './prisma.service';
 import { TradeService } from './trade.service';
 import { BuyHoldingDto, SellHoldingDto } from '../dto/trade.dto';
 import { FinnhubService } from './finnhub.service';
-import { StockPriceService } from './stockprice.service';
 import { AxiosError } from 'axios';
 
 @Injectable()
@@ -16,7 +15,6 @@ export class TradeExecutionService {
     private readonly prisma: PrismaService,
     private readonly tradeService: TradeService,
     private readonly finnhubService: FinnhubService,
-    private readonly stockPriceService: StockPriceService,
   ) {}
 
   // method to execute a stock purchase
@@ -27,9 +25,6 @@ export class TradeExecutionService {
       });
 
       const price = priceData.current;
-
-      // update stock's cached values with updated values while we already have the latest price data
-      await this.stockPriceService.updateCache(dto.stock_symbol, priceData);
 
       // database transaction to allow rollback if an error is occurred when updating the database
       const trade = await this.prisma.$transaction(async (tx) => {
@@ -68,9 +63,6 @@ export class TradeExecutionService {
       });
 
       const price = priceData.current;
-
-      // update stock's cached values with updated values while we already have the latest price data
-      await this.stockPriceService.updateCache(dto.stock_symbol, priceData);
 
       // database transaction to allow rollback if an error is occurred when updating the database
       const trade = await this.prisma.$transaction(async (tx) => {

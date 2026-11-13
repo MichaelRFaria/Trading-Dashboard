@@ -5,13 +5,11 @@ import {
 } from '../dto/finnhub.dto';
 import { FinnhubService } from '../services/finnhub.service';
 import { AuthGuard } from '../guards/auth.guard';
-import { StockPriceService } from '../services/stockprice.service';
 
 @Controller('finnhub')
 export class FinnhubController {
   constructor(
     private readonly finnHubService: FinnhubService,
-    private readonly stockPriceService: StockPriceService,
   ) {}
 
   // endpoint for performing a basic information lookup on a stock using Finnhub API
@@ -25,6 +23,6 @@ export class FinnhubController {
   @UseGuards(AuthGuard)
   @Get('price')
   async getPrice(@Query() finnhubPriceLookupDto: FinnhubPriceLookupDto) {
-    return this.stockPriceService.getPrice(finnhubPriceLookupDto);
+    return this.finnHubService.getCachedPrice(finnhubPriceLookupDto);
   }
 }
