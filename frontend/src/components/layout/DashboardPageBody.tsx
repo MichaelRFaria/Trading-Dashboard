@@ -107,13 +107,22 @@ export default function DashboardPageBody({
     }
   }, []);
 
-  const fetchHistory = useCallback(async (request: HistoryRequest) => {
-    const history = await getHistory(request);
+  // method to refetch history when filtering the trade history
+  const fetchHistory = useCallback(
+    async (request: HistoryRequest) => {
+      const history = await getHistory(request);
 
-    console.log('history: ', history);
+      console.log('history: ', history);
 
-    if (history && 'data' in history) setHistoryData(history.data);
-  }, []);
+      if (history) {
+        if ('data' in history) setHistoryData(history.data);
+        else if ('statusCode' in history && history.statusCode) {
+          showNotification('No trades found with the current filters applied.');
+        }
+      }
+    },
+    [showNotification],
+  );
 
   // once user has been authenticated, fetch dashboard data
   useEffect(() => {

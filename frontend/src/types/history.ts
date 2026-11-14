@@ -26,6 +26,13 @@ export type HistoryDataItem = {
   created_at: string;
 };
 
-export type HistoryResponse = {
+export type HistoryResponse = HistoryResponseSuccess | HistoryResponseFailure;
+
+export type HistoryResponseSuccess = {
   data: HistoryDataItem[];
+};
+
+export type HistoryResponseFailure = {
+  message: string;
+  statusCode: number;
 };
