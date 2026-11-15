@@ -15,13 +15,4 @@ export class HoldingController {
 
     return this.holdingService.getHoldings(Number(userId));
   }
-
-  // endpoint for retrieving the daily price changes of each stock (via Finnhub API) that the user owns
-  @UseGuards(AuthGuard)
-  @Get('price-changes')
-  async getHoldingsPriceChanges(@Req() request: AuthenticatedRequest) {
-    const userId = request.user.sub;
-
-    return this.holdingService.getHoldingsPriceChanges(Number(userId));
-  }
 }

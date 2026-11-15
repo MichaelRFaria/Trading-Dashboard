@@ -17,8 +17,6 @@ export type StockSymbolLookupResponseFailure = {
   statusCode: number;
 };
 
-export type HoldingsPrice = Record<string, number>;
-
 export type HoldingValue = {
   stock_symbol: string;
   value: number;
@@ -48,17 +46,13 @@ export type FinnhubPriceLookupResponseSuccess = {
   previous_close: number;
 };
 
+export type PriceData = Record<
+  string,
+  FinnhubPriceLookupResponseSuccess | null
+>;
+
 export type FinnhubPriceLookupResponseFailure = {
   message: string;
   error: string;
   statusCode: number;
-};
-
-export type FinnhubPriceChangesResponse = {
-  data: FinnhubPriceChangesDataItem[];
-};
-
-export type FinnhubPriceChangesDataItem = {
-  stock_symbol: string;
-  price_change: number;
 };

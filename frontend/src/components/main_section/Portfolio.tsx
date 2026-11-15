@@ -1,16 +1,14 @@
 import HoldingsList from '@/src/components/portfolio/HoldingsList';
 import StockCards from '@/src/components/portfolio/StockCards';
 import { HoldingsDataItem } from '@/src/types/trade';
-import { FinnhubPriceChangesDataItem, HoldingsPrice } from '@/src/types/stock';
+import { PriceData } from '@/src/types/stock';
 
 export default function Portfolio({
   holdingsData,
-  holdingsPriceData,
-  priceChangesData,
+  priceData,
 }: {
   holdingsData: HoldingsDataItem[];
-  holdingsPriceData: HoldingsPrice;
-  priceChangesData: FinnhubPriceChangesDataItem[];
+  priceData: PriceData;
 }) {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-5 sm:p-8">
@@ -26,11 +24,7 @@ export default function Portfolio({
         </p>
       </div>
       <HoldingsList holdingsData={holdingsData} />
-      <StockCards
-        holdingsData={holdingsData}
-        holdingsPriceData={holdingsPriceData}
-        priceChangesData={priceChangesData}
-      />
+      <StockCards holdingsData={holdingsData} priceData={priceData} />
     </div>
   );
 }

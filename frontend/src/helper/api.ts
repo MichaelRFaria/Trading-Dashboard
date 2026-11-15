@@ -1,6 +1,5 @@
 // function to get the authenticated user
 import {
-  FinnhubPriceChangesResponse,
   FinnhubPriceLookupRequest,
   FinnhubPriceLookupResponse,
   GainsResponse,
@@ -129,13 +128,6 @@ export async function getHistory(
 
 export async function getGains(): Promise<GainsResponse | null> {
   return await fetchUrl<GainsResponse>('/trade/gains', 'GET');
-}
-
-export async function getPriceChanges(): Promise<FinnhubPriceChangesResponse | null> {
-  return await fetchUrl<FinnhubPriceChangesResponse>(
-    '/holdings/price-changes',
-    'GET',
-  );
 }
 
 export async function finnhubStockSymbolLookup(

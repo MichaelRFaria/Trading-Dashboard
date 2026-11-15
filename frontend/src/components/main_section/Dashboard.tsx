@@ -2,17 +2,17 @@
 
 import Metrics from '@/src/components/portfolio/Metrics';
 import { HoldingsDataItem } from '@/src/types/trade';
-import { GainsResponse, HoldingsPrice } from '@/src/types/stock';
+import { GainsResponse, PriceData } from '@/src/types/stock';
 import { AccountsListItem } from '@/src/types/account';
 
 export default function Dashboard({
   holdingsData,
-  holdingsPriceData,
+  priceData,
   gains,
   accountsData,
 }: {
   holdingsData: HoldingsDataItem[];
-  holdingsPriceData: HoldingsPrice;
+  priceData: PriceData;
   gains: GainsResponse;
   accountsData: AccountsListItem[];
 }) {
@@ -20,7 +20,7 @@ export default function Dashboard({
     <div className="flex flex-col justify-center items-center">
       <Metrics
         holdingsData={holdingsData}
-        holdingsPriceData={holdingsPriceData}
+        holdingsPriceData={priceData}
         gains={gains}
         accountsData={accountsData}
       />

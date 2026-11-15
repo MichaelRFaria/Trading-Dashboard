@@ -1,15 +1,13 @@
 import StockCard from '@/src/components/portfolio/StockCard';
 import { HoldingsDataItem } from '@/src/types/trade';
-import { FinnhubPriceChangesDataItem, HoldingsPrice } from '@/src/types/stock';
+import { PriceData } from '@/src/types/stock';
 
 export default function StockCards({
   holdingsData,
-  holdingsPriceData,
-  priceChangesData,
+  priceData,
 }: {
   holdingsData: HoldingsDataItem[];
-  holdingsPriceData: HoldingsPrice;
-  priceChangesData: FinnhubPriceChangesDataItem[];
+  priceData: PriceData;
 }) {
   // useEffect(() => {
   //     console.log("holdingsData: ", holdingsData)
@@ -22,16 +20,13 @@ export default function StockCards({
       {holdingsData.map((holding) => {
         const symbol = holding.stock_symbol;
         const quantity = holding.quantity;
-        const currentPrice = holdingsPriceData[symbol];
-        const priceChange =
-          priceChangesData.find((holding) => holding.stock_symbol === symbol)
-            ?.price_change ?? 0;
+        const currentPrice = priceData[symbol]?.current ?? 0;
+        const priceChange = priceData[symbol]?.change ?? 0;
 
         const totalValue = (quantity * currentPrice).toFixed(2);
 
         const percentageChange = (
-          (priceChange / (currentPrice + priceChange)) *
-          100
+          priceData[symbol]?.percent_change ?? 0
         ).toFixed(2);
 
         return (

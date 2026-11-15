@@ -9,11 +9,10 @@ import { AuthenticatedUser } from '@/src/types/user';
 import { WatchlistDataItem } from '@/src/types/watchlist';
 import { HoldingsDataItem } from '@/src/types/trade';
 import {
-  FinnhubPriceChangesDataItem,
   FinnhubPriceLookupRequest,
   FinnhubPriceLookupResponse,
   GainsResponse,
-  HoldingsPrice,
+  PriceData,
 } from '@/src/types/stock';
 import {
   finnhubPriceQuote,
@@ -22,7 +21,6 @@ import {
   getGains,
   getHistory,
   getHoldingsData,
-  getPriceChanges,
   getWatchlistData,
 } from '@/src/helper/api';
 import { DashboardActiveSection } from '@/src/types/misc';
@@ -50,10 +48,7 @@ export default function DashboardPageBody({
 
   const [watchlistData, setWatchlistData] = useState<WatchlistDataItem[]>([]);
   const [holdingsData, setHoldingsData] = useState<HoldingsDataItem[]>([]);
-  const [priceChangesData, setPriceChangesData] = useState<
-    FinnhubPriceChangesDataItem[]
-  >([]);
-  const [holdingsPriceData, setHoldingsPriceData] = useState<HoldingsPrice>({});
+  const [priceData, setPriceData] = useState<PriceData>({});
   const [historyData, setHistoryData] = useState<HistoryDataItem[]>([]);
   const [gains, setGains] = useState<GainsResponse>({
     lifetime_realised_gains: 0,
@@ -83,11 +78,10 @@ export default function DashboardPageBody({
     console.log('fetching');
     setIsLoading(true);
     try {
-      const [watchlist, holdings, priceChanges, history, gainsData, accounts] =
+      const [watchlist, holdings, history, gainsData, accounts] =
         await Promise.all([
           getWatchlistData(),
           getHoldingsData(),
-          getPriceChanges(),
           getHistory({}),
           getGains(),
           getAccounts(),
@@ -95,8 +89,6 @@ export default function DashboardPageBody({
 
       if (watchlist && 'data' in watchlist) setWatchlistData(watchlist.data);
       if (holdings && 'data' in holdings) setHoldingsData(holdings.data);
-      if (priceChanges && 'data' in priceChanges)
-        setPriceChangesData(priceChanges.data);
       if (history && 'data' in history) setHistoryData(history.data);
       if (gainsData) setGains(gainsData);
       if (accounts && 'data' in accounts) setAccountsData(accounts.data);
@@ -146,23 +138,19 @@ export default function DashboardPageBody({
           const response: FinnhubPriceLookupResponse | null =
             await finnhubPriceQuote(request);
 
-          let price: number;
+          //console.log(response);
 
-          if (response && 'current' in response) {
-            price = response.current;
+          if (response) {
+            return [holding.stock_symbol, response];
           } else {
-            // response is null or service threw NotFoundException
-            price = 0;
+            return [holding.stock_symbol, null];
           }
-
-          // console.log("holding data: " + holding)
-          // console.log("price: " + price)
-
-          return [holding.stock_symbol!, price] as const;
         }),
       );
+      //console.log(Object.fromEntries(prices));
 
-      setHoldingsPriceData(Object.fromEntries(prices));
+      setPriceData(Object.fromEntries(prices));
+      console.log(priceData);
     };
 
     getHoldingsPricesAsync();
@@ -175,19 +163,13 @@ export default function DashboardPageBody({
       return (
         <Dashboard
           holdingsData={holdingsData}
-          holdingsPriceData={holdingsPriceData}
+          priceData={priceData}
           gains={gains}
           accountsData={accountsData}
         />
       );
     case 'portfolio':
-      return (
-        <Portfolio
-          holdingsData={holdingsData}
-          holdingsPriceData={holdingsPriceData}
-          priceChangesData={priceChangesData}
-        />
-      );
+      return <Portfolio holdingsData={holdingsData} priceData={priceData} />;
     case 'watchlist':
       return (
         <Watchlist
@@ -210,7 +192,7 @@ export default function DashboardPageBody({
       return (
         <Dashboard
           holdingsData={holdingsData}
-          holdingsPriceData={holdingsPriceData}
+          priceData={priceData}
           gains={gains}
           accountsData={accountsData}
         />
