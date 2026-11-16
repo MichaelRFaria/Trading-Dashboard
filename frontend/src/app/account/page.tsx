@@ -13,19 +13,17 @@ export default function AccountPage() {
       <header className="relative border-b border-white/10 bg-slate-950/70 px-6 py-4 backdrop-blur">
         <Header />
       </header>
-      <main className="relative mx-auto w-full max-w-5xl px-5 py-10 sm:px-8">
-        <section className="rounded-2xl border border-white/10 bg-slate-900/70 p-6 shadow-2xl shadow-black/30 backdrop-blur sm:p-8">
-          <div className="mb-8">
-            <p className="mb-2 text-xs font-medium uppercase tracking-[0.22em] text-sky-400">
-              Trading Dashboard
-            </p>
-            <h1 className="text-3xl font-semibold tracking-tight">Accounts</h1>
-            <p className="mt-2 text-sm leading-6 text-slate-400">
-              Manage your accounts and balances.
-            </p>
-          </div>
-          <AccountPageBody />
-        </section>
+      <main className="relative mx-auto w-full max-w-6xl px-5 py-10 sm:px-8">
+        <div className="mb-6">
+          <p className="mb-2 text-xs font-medium uppercase tracking-[0.22em] text-sky-400">
+            Trading Dashboard
+          </p>
+          <h1 className="text-3xl font-semibold tracking-tight">Accounts</h1>
+          <p className="mt-2 text-sm leading-6 text-slate-400">
+            Manage your accounts and balances.
+          </p>
+        </div>
+        <AccountPageBody />
       </main>
     </div>
   );

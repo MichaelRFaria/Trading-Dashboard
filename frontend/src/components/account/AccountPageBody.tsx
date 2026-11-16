@@ -69,11 +69,19 @@ export default function AccountPageBody() {
     }
   }, [authenticatedUser, fetchAccountData]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) {
+    return (
+      <p className="rounded-2xl border border-white/10 bg-slate-900/70 p-6 text-sm text-slate-400">
+        Loading accounts...
+      </p>
+    );
+  }
 
   return (
-    <div className="flex flex-col justify-center items-center">
-      <AccountList accountsData={accountsData} />
+    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+      <div className="md:col-span-2">
+        <AccountList accountsData={accountsData} />
+      </div>
       <BalanceUpdateForm
         accountsData={accountsData}
         fetchAccountData={fetchAccountData}
