@@ -17,15 +17,19 @@ export default function MetricStat({
     case 'text':
       return (
         <tr>
-          <td>{text}</td>
-          <td>{stat}</td>
+          <td className="px-1 py-3 text-slate-400">{text}</td>
+          <td className="px-1 py-3 text-right font-medium text-slate-100">
+            {stat}
+          </td>
         </tr>
       );
     case 'currency':
       return (
         <tr>
-          <td>{text}</td>
-          <td>{parseNumberToDollars(stat as number)}</td>
+          <td className="px-1 py-3 text-slate-400">{text}</td>
+          <td className="px-1 py-3 text-right font-semibold tabular-nums text-slate-100">
+            {parseNumberToDollars(stat as number)}
+          </td>
         </tr>
       );
     case 'gain': {
@@ -37,8 +41,12 @@ export default function MetricStat({
 
       return (
         <tr>
-          <td>{text}</td>
-          <td className={positive ? 'text-green-600' : 'text-red-600'}>
+          <td className="px-1 py-3 text-slate-400">{text}</td>
+          <td
+            className={`px-1 py-3 text-right font-semibold tabular-nums ${
+              positive ? 'text-emerald-400' : 'text-rose-400'
+            }`}
+          >
             {positive ? '+' : '-'}
             {parseNumberToDollars(Math.abs(gain))}
 
