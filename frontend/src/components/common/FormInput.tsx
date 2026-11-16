@@ -11,7 +11,7 @@ export default function FormInput({ label, id, ...props }: FormInputProps) {
       <input
         id={id!}
         {...props}
-        className="rounded border border-gray-600 bg-gray-800 px-2 py-1"
+        className="w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-2 text-sm text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-sky-400/60 focus:ring-2 focus:ring-sky-400/20"
       />
     </FormField>
   );

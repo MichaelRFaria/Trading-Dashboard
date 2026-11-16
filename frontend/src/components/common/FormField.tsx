@@ -13,8 +13,10 @@ export default function FormField({
   children,
 }: FormFieldProps) {
   return (
-    <div className="flex w-full items-center justify-between gap-4">
-      <label htmlFor={htmlFor}>{label}</label>
+    <div className="flex w-full flex-col gap-1.5">
+      <label className="text-xs font-medium text-slate-400" htmlFor={htmlFor}>
+        {label}
+      </label>
 
       {children}
     </div>
