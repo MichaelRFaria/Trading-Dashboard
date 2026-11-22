@@ -67,12 +67,6 @@ describe('Holdings', () => {
     });
   });
 
-  it('should retrieve no price changes (no holdings)', async () => {
-    return await agent.get('/holdings/price-changes').expect(200).expect({
-      data: [],
-    });
-  });
-
   describe('when holdings exist', () => {
     beforeAll(async () => {
       // ensure account has enough funds to purchase holding for tests

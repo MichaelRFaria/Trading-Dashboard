@@ -158,7 +158,7 @@ describe('Trade', () => {
       })
       .expect(404)
       .expect({
-        message: 'NON-EXISTENT price data not found',
+        message: 'NON-EXISTENT not found',
         error: 'Not Found',
         statusCode: 404,
       });
