@@ -1,6 +1,5 @@
 import { buyHolding, sellHolding } from '@/src/helper/api';
 import {
-  HoldingsDataItem,
   TradeBasicResponse,
   TradeRequest,
 } from '@/src/types/trade';
@@ -8,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { useNotification } from '@/src/components/common/NotificationProvider';
 import FormInput from '@/src/components/common/FormInput';
 import FormSelect from '@/src/components/common/FormSelect';
+import {HoldingsDataItem} from "@/src/types/holding";
 
 export default function TradeForm({
   getHoldingsDataAsync,

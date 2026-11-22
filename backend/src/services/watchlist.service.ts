@@ -103,4 +103,23 @@ export class WatchlistService {
       };
     }
   }
+
+  // method for retrieving prices for all watchlist stocks a user has watched
+  async getWatchlistPrices(userId: number) {
+    const watchlist = await this.getWatchlist(userId);
+
+    const prices = await Promise.all(
+      watchlist.data.map(async (item) => {
+        const priceData = await this.finnhubService.getCachedPrice({
+          stock_symbol: item.stock_symbol,
+        });
+
+        return [item.stock_symbol, priceData] as const;
+      }),
+    );
+
+    return {
+      data: Object.fromEntries(prices),
+    };
+  }
 }

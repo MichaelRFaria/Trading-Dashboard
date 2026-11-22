@@ -1,14 +1,13 @@
 import HoldingsList from '@/src/components/portfolio/HoldingsList';
 import StockCards from '@/src/components/portfolio/StockCards';
-import { HoldingsDataItem } from '@/src/types/trade';
-import { PriceData } from '@/src/types/stock';
+import { HoldingsDataItem, HoldingsPricesData } from '@/src/types/holding';
 
 export default function Portfolio({
   holdingsData,
   priceData,
 }: {
   holdingsData: HoldingsDataItem[];
-  priceData: PriceData;
+  priceData: HoldingsPricesData;
 }) {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-5 sm:p-8">

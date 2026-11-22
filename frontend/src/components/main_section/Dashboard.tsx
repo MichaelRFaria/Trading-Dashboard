@@ -1,9 +1,9 @@
 'use client';
 
 import Metrics from '@/src/components/portfolio/Metrics';
-import { HoldingsDataItem } from '@/src/types/trade';
-import { GainsResponse, PriceData } from '@/src/types/stock';
+import { GainsResponse } from '@/src/types/stock';
 import { AccountsListItem } from '@/src/types/account';
+import { HoldingsDataItem, HoldingsPricesData } from '@/src/types/holding';
 
 export default function Dashboard({
   holdingsData,
@@ -12,7 +12,7 @@ export default function Dashboard({
   accountsData,
 }: {
   holdingsData: HoldingsDataItem[];
-  priceData: PriceData;
+  priceData: HoldingsPricesData;
   gains: GainsResponse;
   accountsData: AccountsListItem[];
 }) {

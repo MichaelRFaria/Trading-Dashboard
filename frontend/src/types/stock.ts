@@ -46,11 +46,6 @@ export type FinnhubPriceLookupResponseSuccess = {
   previous_close: number;
 };
 
-export type PriceData = Record<
-  string,
-  FinnhubPriceLookupResponseSuccess | null
->;
-
 export type FinnhubPriceLookupResponseFailure = {
   message: string;
   error: string;

@@ -6,28 +6,24 @@ import History from '@/src/components/main_section/History';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { AuthenticatedUser } from '@/src/types/user';
-import { WatchlistDataItem } from '@/src/types/watchlist';
-import { HoldingsDataItem } from '@/src/types/trade';
+import { WatchlistDataItem, WatchlistPricesData } from '@/src/types/watchlist';
+import { GainsResponse } from '@/src/types/stock';
 import {
-  FinnhubPriceLookupRequest,
-  FinnhubPriceLookupResponse,
-  GainsResponse,
-  PriceData,
-} from '@/src/types/stock';
-import {
-  finnhubPriceQuote,
   getAccounts,
   getCurrentUser,
   getGains,
   getHistory,
   getHoldingsData,
+  getHoldingsPrices,
   getWatchlistData,
+  getWatchlistPrices,
 } from '@/src/helper/api';
 import { DashboardActiveSection } from '@/src/types/misc';
 import { HistoryDataItem, HistoryRequest } from '@/src/types/history';
 import { useNotification } from '@/src/components/common/NotificationProvider';
 import Settings from '@/src/components/main_section/Settings';
 import { AccountsListItem } from '@/src/types/account';
+import { HoldingsDataItem, HoldingsPricesData } from '@/src/types/holding';
 
 export default function DashboardPageBody({
   activeSection,
@@ -47,8 +43,11 @@ export default function DashboardPageBody({
   );
 
   const [watchlistData, setWatchlistData] = useState<WatchlistDataItem[]>([]);
+  const [watchlistPricesData, setWatchlistPricesData] =
+    useState<WatchlistPricesData>({});
   const [holdingsData, setHoldingsData] = useState<HoldingsDataItem[]>([]);
-  const [priceData, setPriceData] = useState<PriceData>({});
+  const [holdingsPricesData, setHoldingsPricesData] =
+    useState<HoldingsPricesData>({});
   const [historyData, setHistoryData] = useState<HistoryDataItem[]>([]);
   const [gains, setGains] = useState<GainsResponse>({
     lifetime_realised_gains: 0,
@@ -78,17 +77,30 @@ export default function DashboardPageBody({
     console.log('fetching');
     setIsLoading(true);
     try {
-      const [watchlist, holdings, history, gainsData, accounts] =
-        await Promise.all([
-          getWatchlistData(),
-          getHoldingsData(),
-          getHistory({}),
-          getGains(),
-          getAccounts(),
-        ]);
+      const [
+        watchlist,
+        watchlistPrices,
+        holdings,
+        holdingsPrices,
+        history,
+        gainsData,
+        accounts,
+      ] = await Promise.all([
+        getWatchlistData(),
+        getWatchlistPrices(),
+        getHoldingsData(),
+        getHoldingsPrices(),
+        getHistory({}),
+        getGains(),
+        getAccounts(),
+      ]);
 
       if (watchlist && 'data' in watchlist) setWatchlistData(watchlist.data);
+      if (watchlistPrices && 'data' in watchlistPrices)
+        setWatchlistPricesData(watchlistPrices.data);
       if (holdings && 'data' in holdings) setHoldingsData(holdings.data);
+      if (holdingsPrices && 'data' in holdingsPrices)
+        setHoldingsPricesData(holdingsPrices.data);
       if (history && 'data' in history) setHistoryData(history.data);
       if (gainsData) setGains(gainsData);
       if (accounts && 'data' in accounts) setAccountsData(accounts.data);
@@ -123,39 +135,6 @@ export default function DashboardPageBody({
     }
   }, [authenticatedUser, fetchDashboardData]);
 
-  useEffect(() => {
-    // if holdingsData is empty, then we cannot get the price of each holding
-    if (holdingsData.length === 0) return;
-
-    const getHoldingsPricesAsync = async () => {
-      console.log('getting price of holdings');
-      const prices = await Promise.all(
-        holdingsData.map(async (holding: HoldingsDataItem) => {
-          const request: FinnhubPriceLookupRequest = {
-            stock_symbol: holding.stock_symbol,
-          };
-
-          const response: FinnhubPriceLookupResponse | null =
-            await finnhubPriceQuote(request);
-
-          //console.log(response);
-
-          if (response) {
-            return [holding.stock_symbol, response];
-          } else {
-            return [holding.stock_symbol, null];
-          }
-        }),
-      );
-      //console.log(Object.fromEntries(prices));
-
-      setPriceData(Object.fromEntries(prices));
-      console.log(priceData);
-    };
-
-    getHoldingsPricesAsync();
-  }, [holdingsData]);
-
   if (isLoading) return <p>Loading...</p>;
 
   switch (activeSection) {
@@ -163,13 +142,15 @@ export default function DashboardPageBody({
       return (
         <Dashboard
           holdingsData={holdingsData}
-          priceData={priceData}
+          priceData={holdingsPricesData}
           gains={gains}
           accountsData={accountsData}
         />
       );
     case 'portfolio':
-      return <Portfolio holdingsData={holdingsData} priceData={priceData} />;
+      return (
+        <Portfolio holdingsData={holdingsData} priceData={holdingsPricesData} />
+      );
     case 'watchlist':
       return (
         <Watchlist
@@ -192,7 +173,7 @@ export default function DashboardPageBody({
       return (
         <Dashboard
           holdingsData={holdingsData}
-          priceData={priceData}
+          priceData={holdingsPricesData}
           gains={gains}
           accountsData={accountsData}
         />

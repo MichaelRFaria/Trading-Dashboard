@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class FinnhubSymbolLookupDto {
   @IsString()
@@ -6,11 +6,6 @@ export class FinnhubSymbolLookupDto {
 }
 
 export class FinnhubPriceLookupDto extends FinnhubSymbolLookupDto {}
-
-export class FinnhubPriceChangeDataItemDto extends FinnhubSymbolLookupDto {
-  @IsNumber()
-  price_change: number;
-}
 
 export class FinnhubExchangeLookupDto {
   @IsString()

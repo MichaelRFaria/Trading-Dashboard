@@ -15,4 +15,13 @@ export class HoldingController {
 
     return this.holdingService.getHoldings(Number(userId));
   }
+
+  // endpoint for retrieving prices for all holdings a user has
+  @UseGuards(AuthGuard)
+  @Get('prices')
+  async getHoldingsPrices(@Req() request: AuthenticatedRequest) {
+    const userId = request.user.sub;
+
+    return this.holdingService.getHoldingsPrices(Number(userId));
+  }
 }

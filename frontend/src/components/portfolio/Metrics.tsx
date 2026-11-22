@@ -1,8 +1,8 @@
-import { GainsResponse, HoldingValue, PriceData } from '@/src/types/stock';
+import { GainsResponse, HoldingValue } from '@/src/types/stock';
 import { parseNumberToDollars } from '@/src/helper/format';
 import MetricStat from '@/src/components/portfolio/MetricStat';
-import { HoldingsDataItem } from '@/src/types/trade';
 import { AccountsListItem } from '@/src/types/account';
+import { HoldingsDataItem, HoldingsPricesData } from '@/src/types/holding';
 
 export default function Metrics({
   holdingsData,
@@ -11,7 +11,7 @@ export default function Metrics({
   accountsData,
 }: {
   holdingsData: HoldingsDataItem[];
-  holdingsPriceData: PriceData;
+  holdingsPriceData: HoldingsPricesData;
   gains: GainsResponse;
   accountsData: AccountsListItem[];
 }) {
@@ -25,7 +25,8 @@ export default function Metrics({
 
   const totalPortfolioValue =
     holdingsData.reduce((sum: number, holding: HoldingsDataItem) => {
-      const price = holdingsPriceData[holding.stock_symbol]?.current ?? 0;
+      const priceData = holdingsPriceData[holding.stock_symbol];
+      const price = priceData && 'current' in priceData ? priceData.current : 0;
 
       return sum + holding.quantity * price;
     }, 0) +
@@ -35,7 +36,8 @@ export default function Metrics({
 
   const largestPosition = holdingsData.reduce<HoldingValue>(
     (largest: HoldingValue, holding: HoldingsDataItem) => {
-      const price = holdingsPriceData[holding.stock_symbol]?.current ?? 0;
+      const priceData = holdingsPriceData[holding.stock_symbol];
+      const price = priceData && 'current' in priceData ? priceData.current : 0;
 
       const holdingValue = holding.quantity * price;
 

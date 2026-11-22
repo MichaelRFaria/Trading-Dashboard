@@ -1,4 +1,4 @@
-import { HoldingsDataItem } from '@/src/types/trade';
+import {HoldingsDataItem} from "@/src/types/holding";
 
 export default function HoldingsList({
   holdingsData,

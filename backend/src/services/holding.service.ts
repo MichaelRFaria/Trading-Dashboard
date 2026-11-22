@@ -25,4 +25,23 @@ export class HoldingService {
       data: data,
     };
   }
+
+  // method for retrieving prices for all holdings a user owns
+  async getHoldingsPrices(userId: number) {
+    const holdings = await this.getHoldings(userId);
+
+    const prices = await Promise.all(
+      holdings.data.map(async (item) => {
+        const priceData = await this.finnhubService.getCachedPrice({
+          stock_symbol: item.stock_symbol,
+        });
+
+        return [item.stock_symbol, priceData] as const;
+      }),
+    );
+
+    return {
+      data: Object.fromEntries(prices),
+    };
+  }
 }

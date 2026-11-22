@@ -51,4 +51,13 @@ export class WatchlistController {
 
     return this.watchlistService.delete(Number(userId), deleteFromWatchlistDto);
   }
+
+  // endpoint for retrieving prices for all holdings a user has
+  @UseGuards(AuthGuard)
+  @Get('prices')
+  async getWatchlistPrices(@Req() request: AuthenticatedRequest) {
+    const userId = request.user.sub;
+
+    return this.watchlistService.getWatchlistPrices(Number(userId));
+  }
 }

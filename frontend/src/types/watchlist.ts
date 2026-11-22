@@ -1,3 +1,5 @@
+import { FinnhubPriceLookupResponse } from '@/src/types/stock';
+
 export type WatchlistRequest = {
   stock_symbol: string;
 };
@@ -17,3 +19,9 @@ export type WatchlistDataItem = {
   stock_symbol: string;
   user_id: number;
 };
+
+export type WatchlistPricesResponse = {
+  data: Record<string, FinnhubPriceLookupResponse>;
+};
+
+export type WatchlistPricesData = Record<string, FinnhubPriceLookupResponse>;

@@ -1,6 +1,7 @@
 import FinnhubLookupForm from '@/src/components/trade/FinnhubLookupForm';
 import TradeForm from '@/src/components/trade/TradeForm';
-import { HoldingsDataItem } from '@/src/types/trade';
+
+import {HoldingsDataItem} from "@/src/types/holding";
 
 export default function Trade({
   holdingsData,

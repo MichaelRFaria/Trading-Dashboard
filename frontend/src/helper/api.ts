@@ -13,7 +13,11 @@ import {
   RegisterRequest,
   RegisterResponse,
 } from '@/src/types/user';
-import { WatchlistRequest, WatchlistResponse } from '@/src/types/watchlist';
+import {
+  WatchlistPricesResponse,
+  WatchlistRequest,
+  WatchlistResponse,
+} from '@/src/types/watchlist';
 import {
   TradeBasicResponse,
   TradeRequest,
@@ -28,6 +32,7 @@ import {
   BalanceUpdateRequest,
   BalanceUpdateResponse,
 } from '@/src/types/account';
+import { HoldingsPricesResponse } from '@/src/types/holding';
 
 export async function getCurrentUser(): Promise<AuthenticatedUserResponse | null> {
   return await fetchUrl('/users/me', 'GET');
@@ -54,6 +59,10 @@ export async function getWatchlistData(): Promise<WatchlistResponse | null> {
   return await fetchUrl<WatchlistResponse>('/watchlist/watchlist', 'GET');
 }
 
+export async function getWatchlistPrices(): Promise<WatchlistPricesResponse | null> {
+  return await fetchUrl<WatchlistPricesResponse>('/watchlist/prices', 'GET');
+}
+
 export async function addToWatchlist(
   data: WatchlistRequest,
 ): Promise<WatchlistResponse | null> {
@@ -68,6 +77,10 @@ export async function deleteFromWatchlist(
 
 export async function getHoldingsData(): Promise<TradeResponse | null> {
   return await fetchUrl<TradeResponse>('/holdings/holdings', 'GET');
+}
+
+export async function getHoldingsPrices(): Promise<HoldingsPricesResponse | null> {
+  return await fetchUrl<HoldingsPricesResponse>('/holdings/prices', 'GET');
 }
 
 export async function buyHolding(
