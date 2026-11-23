@@ -90,11 +90,17 @@ export default function WatchlistForm({
   };
 
   return (
-    <>
-      <p className="text-bg underline">Add to Watchlist:</p>
-
+    <section className="rounded-2xl border border-white/10 bg-slate-900/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+      <div className="mb-5">
+        <h2 className="text-lg font-semibold text-slate-100">
+          Manage watchlist
+        </h2>
+        <p className="mt-1 text-sm text-slate-400">
+          Add a stock symbol or remove one from your list.
+        </p>
+      </div>
       <form
-        className="flex flex-col items-center gap-3"
+        className="flex flex-col gap-5"
         onSubmit={modifyWatchlistFormSubmission}
       >
         {actionType === 'add' ? (
@@ -130,8 +136,13 @@ export default function WatchlistForm({
           {watchlistData.length > 0 && <option value="delete">Delete</option>}
         </FormSelect>
 
-        <button type="submit">Execute</button>
+        <button
+          className="mt-1 rounded-lg bg-sky-500 px-4 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-sky-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+          type="submit"
+        >
+          Update watchlist
+        </button>
       </form>
-    </>
+    </section>
   );
 }

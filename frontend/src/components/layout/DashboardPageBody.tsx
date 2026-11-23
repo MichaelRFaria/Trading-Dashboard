@@ -181,6 +181,7 @@ export default function DashboardPageBody({
       return (
         <Watchlist
           watchlistData={watchlistData}
+          priceData={watchlistPricesData}
           getWatchlistDataAsync={fetchDashboardData}
         />
       );
