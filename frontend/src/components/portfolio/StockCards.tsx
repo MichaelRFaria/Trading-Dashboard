@@ -20,18 +20,12 @@ export default function StockCards({
         const symbol = holding.stock_symbol;
         const quantity = holding.quantity;
         const stockPrice = priceData[symbol];
-        const currentPrice =
-          stockPrice && 'current' in stockPrice ? stockPrice.current : 0;
-        const priceChange =
-          stockPrice && 'change' in stockPrice ? stockPrice.change : 0;
+        const currentPrice = stockPrice.current;
+        const priceChange = stockPrice.change;
 
         const totalValue = (quantity * currentPrice).toFixed(2);
 
-        const percentageChange = (
-          stockPrice && 'percent_change' in stockPrice
-            ? stockPrice.percent_change
-            : 0
-        ).toFixed(2);
+        const percentageChange = stockPrice.percent_change.toFixed(2);
 
         return (
           <StockCard

@@ -1,4 +1,7 @@
-import { FinnhubPriceLookupResponse } from '@/src/types/stock';
+import {
+  FinnhubPriceLookupResponse,
+  FinnhubPriceLookupResponseSuccess,
+} from '@/src/types/stock';
 
 export type HoldingsData = {
   data: HoldingsDataItem[];
@@ -14,4 +17,7 @@ export type HoldingsPricesResponse = {
   data: Record<string, FinnhubPriceLookupResponse>;
 };
 
-export type HoldingsPricesData = Record<string, FinnhubPriceLookupResponse>;
+export type HoldingsPricesData = Record<
+  string,
+  FinnhubPriceLookupResponseSuccess
+>;

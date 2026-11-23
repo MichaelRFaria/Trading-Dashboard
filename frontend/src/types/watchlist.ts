@@ -1,4 +1,7 @@
-import { FinnhubPriceLookupResponse } from '@/src/types/stock';
+import {
+  FinnhubPriceLookupResponse,
+  FinnhubPriceLookupResponseSuccess,
+} from '@/src/types/stock';
 
 export type WatchlistRequest = {
   stock_symbol: string;
@@ -24,4 +27,7 @@ export type WatchlistPricesResponse = {
   data: Record<string, FinnhubPriceLookupResponse>;
 };
 
-export type WatchlistPricesData = Record<string, FinnhubPriceLookupResponse>;
+export type WatchlistPricesData = Record<
+  string,
+  FinnhubPriceLookupResponseSuccess
+>;

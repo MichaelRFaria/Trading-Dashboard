@@ -25,8 +25,7 @@ export default function Metrics({
 
   const totalPortfolioValue =
     holdingsData.reduce((sum: number, holding: HoldingsDataItem) => {
-      const priceData = holdingsPriceData[holding.stock_symbol];
-      const price = priceData && 'current' in priceData ? priceData.current : 0;
+      const price = holdingsPriceData[holding.stock_symbol].current;
 
       return sum + holding.quantity * price;
     }, 0) +
@@ -36,8 +35,7 @@ export default function Metrics({
 
   const largestPosition = holdingsData.reduce<HoldingValue>(
     (largest: HoldingValue, holding: HoldingsDataItem) => {
-      const priceData = holdingsPriceData[holding.stock_symbol];
-      const price = priceData && 'current' in priceData ? priceData.current : 0;
+      const price = holdingsPriceData[holding.stock_symbol].current;
 
       const holdingValue = holding.quantity * price;
 

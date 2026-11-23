@@ -7,7 +7,11 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { AuthenticatedUser } from '@/src/types/user';
 import { WatchlistDataItem, WatchlistPricesData } from '@/src/types/watchlist';
-import { GainsResponse } from '@/src/types/stock';
+import {
+  FinnhubPriceLookupResponse,
+  FinnhubPriceLookupResponseSuccess,
+  GainsResponse,
+} from '@/src/types/stock';
 import {
   getAccounts,
   getCurrentUser,
@@ -24,6 +28,28 @@ import { useNotification } from '@/src/components/common/NotificationProvider';
 import Settings from '@/src/components/main_section/Settings';
 import { AccountsListItem } from '@/src/types/account';
 import { HoldingsDataItem, HoldingsPricesData } from '@/src/types/holding';
+
+// function to map finnhub price lookup failures to price values with 0
+function normalizePriceData(
+  data: Record<string, FinnhubPriceLookupResponse>,
+): Record<string, FinnhubPriceLookupResponseSuccess> {
+  return Object.fromEntries(
+    Object.entries(data).map(([symbol, price]) => [
+      symbol,
+      'current' in price
+        ? price
+        : {
+            current: 0,
+            change: 0,
+            percent_change: 0,
+            high: 0,
+            low: 0,
+            open: 0,
+            previous_close: 0,
+          },
+    ]),
+  );
+}
 
 export default function DashboardPageBody({
   activeSection,
@@ -97,10 +123,10 @@ export default function DashboardPageBody({
 
       if (watchlist && 'data' in watchlist) setWatchlistData(watchlist.data);
       if (watchlistPrices && 'data' in watchlistPrices)
-        setWatchlistPricesData(watchlistPrices.data);
+        setWatchlistPricesData(normalizePriceData(watchlistPrices.data));
       if (holdings && 'data' in holdings) setHoldingsData(holdings.data);
       if (holdingsPrices && 'data' in holdingsPrices)
-        setHoldingsPricesData(holdingsPrices.data);
+        setHoldingsPricesData(normalizePriceData(holdingsPrices.data));
       if (history && 'data' in history) setHistoryData(history.data);
       if (gainsData) setGains(gainsData);
       if (accounts && 'data' in accounts) setAccountsData(accounts.data);
