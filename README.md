@@ -1,18 +1,18 @@
 # Trading-Dashboard
 A full-stack trading dashboard for simulating stock trading, managing portfolios, and tracking investment performance.
 
-## Features
+### Features
 - User registration and JWT-based authentication
-- Stock search and market data using the Finnhub API
-- Account balance system
-- Personal stock watchlist
-- Simulated buy and sell orders
-- Portfolio and holdings management
-- Realised and unrealised gain/loss tracking
-- Portfolio performance metrics
-- Average cost-basis calculation based on trade history
-- Caching system to minimise API usage and prevent rate limiting
-- Protected backend API endpoints through custom [guard](https://docs.nestjs.com/guards)
+- Stock search and real-time market data integration via Finnhub
+- Account balance management and multiple accounts
+- Personal stock watchlists
+- Simulated stock trading (buy/sell orders)
+- Portfolio, holdings, and trade history management
+- Realised and unrealised profit/loss tracking (including daily performance)
+- Portfolio performance metrics and analytics
+- Weighted-average cost basis calculated from trade history
+- Caching to reduce external API requests and mitigate rate limiting
+- Protected API endpoints using custom [NestJS guards](https://docs.nestjs.com/guards)
 
 ## Gallery
 <p align="center">
@@ -72,7 +72,7 @@ A full-stack trading dashboard for simulating stock trading, managing portfolios
 - TypeScript
 - Prisma ORM
 - JWT Authentication
-- Jest (60+ endpoint and service tests implemented so far)
+- Jest
 
 ### Database
 - PostgreSQL
@@ -82,10 +82,11 @@ A full-stack trading dashboard for simulating stock trading, managing portfolios
 - Finnhub API
 
 ## Project Structure
-The application is split into a Next.js frontend and a NestJS backend.
+The application is split into a Next.js frontend and a NestJS backend, with a PostgreSQL database containerised using Docker.
 
 ```text
 trading-dashboard/
-├── frontend/    # Next.js frontend
-└── backend/     # NestJS API
+├── frontend/          # Next.js frontend
+├── backend/           # NestJS backend
+└── docker-compose.yml # Docker container with PostgreSQL database
 ```
