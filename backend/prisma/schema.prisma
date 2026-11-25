@@ -34,13 +34,21 @@ model Account {
 }
 
 model Watchlist {
-  id           Int    @id @default(autoincrement())
+  id           Int                  @id @default(autoincrement())
   stock_symbol String
+  price_target Decimal?             @db.Decimal(12, 2)
+  price_type   WatchlistTargetType?
+  notes        String?
   user_id      Int
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, stock_symbol])
+}
+
+enum WatchlistTargetType {
+  BUY_BELOW
+  SELL_ABOVE
 }
 
 model Holding {

@@ -5,6 +5,9 @@ import {
 
 export type WatchlistRequest = {
   stock_symbol: string;
+  price_type?: string;
+  price_target?: string;
+  notes?: string;
 };
 
 export type WatchlistResponse = WatchlistFailureResponse | WatchlistData;
@@ -20,6 +23,9 @@ export type WatchlistData = {
 export type WatchlistDataItem = {
   id: number;
   stock_symbol: string;
+  price_type?: string;
+  price_target?: string;
+  notes?: string;
   user_id: number;
 };
 

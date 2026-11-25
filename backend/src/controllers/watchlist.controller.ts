@@ -10,6 +10,7 @@ import {
 import {
   AddToWatchlistDto,
   DeleteFromWatchlistDto,
+  UpdateWatchlistDto,
 } from '../dto/watchlist.dto';
 import { WatchlistService } from '../services/watchlist.service';
 import { AuthGuard } from '../guards/auth.guard';
@@ -50,6 +51,18 @@ export class WatchlistController {
     const userId = request.user.sub;
 
     return this.watchlistService.delete(Number(userId), deleteFromWatchlistDto);
+  }
+
+  // endpoint for updating a stock in the user's watchlist
+  @UseGuards(AuthGuard)
+  @Post('update')
+  async update(
+    @Body() updateWatchlistDto: UpdateWatchlistDto,
+    @Req() request: AuthenticatedRequest,
+  ) {
+    const userId = request.user.sub;
+
+    return this.watchlistService.update(Number(userId), updateWatchlistDto);
   }
 
   // endpoint for retrieving prices for all holdings a user has

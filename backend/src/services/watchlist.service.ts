@@ -3,11 +3,19 @@ import { PrismaService } from './prisma.service';
 import {
   AddToWatchlistDto,
   DeleteFromWatchlistDto,
+  PriceTypeDto,
+  UpdateWatchlistDto,
 } from '../dto/watchlist.dto';
 import { FinnhubService } from './finnhub.service';
+import { WatchlistTargetType as PrismaWatchlistTargetType } from '@prisma/client';
 
 @Injectable()
 export class WatchlistService {
+  private priceTypeMap = {
+    [PriceTypeDto.BUY_BELOW]: PrismaWatchlistTargetType.BUY_BELOW,
+    [PriceTypeDto.SELL_ABOVE]: PrismaWatchlistTargetType.SELL_ABOVE,
+  };
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly finnhubService: FinnhubService,
@@ -29,6 +37,7 @@ export class WatchlistService {
   // method to add stock to the user's watchlist in the database
   async add(userId: number, dto: AddToWatchlistDto) {
     //console.log(typeof userId);
+    const { stock_symbol, price_type, price_target, notes } = dto;
 
     const existingEntry = await this.prisma.watchlist.findFirst({
       where: {
@@ -47,8 +56,17 @@ export class WatchlistService {
     try {
       await this.prisma.watchlist.create({
         data: {
-          stock_symbol: dto.stock_symbol,
+          stock_symbol: stock_symbol,
           user_id: userId,
+          price_type:
+            price_type === PriceTypeDto.OMIT || !price_type
+              ? null
+              : this.priceTypeMap[price_type],
+          price_target:
+            price_type === PriceTypeDto.OMIT || !price_type
+              ? null
+              : price_target,
+          notes,
         },
       });
 
@@ -94,6 +112,57 @@ export class WatchlistService {
       return {
         success: true,
         message: `${dto.stock_symbol} successfully deleted from watchlist`,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        success: false,
+        message: 'An error occurred',
+      };
+    }
+  }
+
+  async update(userId: number, dto: UpdateWatchlistDto) {
+    const existingEntry = await this.prisma.watchlist.findFirst({
+      where: {
+        stock_symbol: dto.stock_symbol,
+        user_id: userId,
+      },
+    });
+
+    if (!existingEntry) {
+      return {
+        success: false,
+        message: `${dto.stock_symbol} is not in your watchlist`,
+      };
+    }
+
+    try {
+      const { stock_symbol, price_type, price_target, notes } = dto;
+
+      await this.prisma.watchlist.update({
+        where: {
+          user_id_stock_symbol: {
+            user_id: userId,
+            stock_symbol,
+          },
+        },
+        data: {
+          price_type:
+            price_type === PriceTypeDto.OMIT || !price_type
+              ? null
+              : this.priceTypeMap[price_type],
+          price_target:
+            price_type === PriceTypeDto.OMIT || !price_type
+              ? null
+              : price_target,
+          notes,
+        },
+      });
+
+      return {
+        success: true,
+        message: `${dto.stock_symbol} successfully updated in watchlist`,
       };
     } catch (error) {
       console.log(error);

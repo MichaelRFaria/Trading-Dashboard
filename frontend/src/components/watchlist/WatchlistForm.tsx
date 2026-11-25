@@ -1,4 +1,8 @@
-import { addToWatchlist, deleteFromWatchlist } from '@/src/helper/api';
+import {
+  addToWatchlist,
+  deleteFromWatchlist,
+  updateWatchlist,
+} from '@/src/helper/api';
 import {
   WatchlistDataItem,
   WatchlistRequest,
@@ -19,6 +23,7 @@ export default function WatchlistForm({
   const { showNotification } = useNotification();
 
   const [actionType, setActionType] = useState('add');
+  const [priceTargetType, setPriceTargetType] = useState('buy_below');
   const [selectedStock, setSelectedStock] = useState('');
 
   useEffect(() => {
@@ -45,26 +50,35 @@ export default function WatchlistForm({
     //console.log("form submit")
     const formData = new FormData(event.target);
 
+    const entries = Object.fromEntries(formData.entries());
+
+    console.log(entries);
+
+    const { action, ...requestEntries } = entries; // action not needed in request
+
     const request: WatchlistRequest = {
+      ...requestEntries,
       stock_symbol: formData.get('stock_symbol') as string,
     };
 
-    const action = formData.get('action') as string;
     //console.log(action)
 
     let response: WatchlistResponse | null;
 
-    if (request.stock_symbol === '' || !request.stock_symbol || !action) {
+    if (request.stock_symbol === '' || !request.stock_symbol || !actionType) {
       showNotification('Invalid form inputs, please try again.', 3000, true);
       return;
     }
 
-    switch (action) {
+    switch (actionType) {
       case 'add':
         response = await addToWatchlist(request);
         break;
       case 'delete':
         response = await deleteFromWatchlist(request);
+        break;
+      case 'update':
+        response = await updateWatchlist(request);
         break;
       default:
         console.error(
@@ -96,7 +110,8 @@ export default function WatchlistForm({
           Manage watchlist
         </h2>
         <p className="mt-1 text-sm text-slate-400">
-          Add a stock symbol or remove one from your list.
+          Add a stock symbol, update its targets or notes, or remove it from
+          your list.
         </p>
       </div>
       <form
@@ -125,6 +140,39 @@ export default function WatchlistForm({
           </FormSelect>
         )}
 
+        {(actionType === 'add' || actionType === 'update') && (
+          <>
+            <FormSelect
+              label="Price type"
+              id="price_type"
+              name="price_type"
+              defaultValue="buy_below"
+              onChange={(e) => setPriceTargetType(e.target.value)}
+            >
+              <option value="buy_below">Buy below</option>
+              <option value="sell_above">Sell above</option>
+              <option value="no_price_target">No price target</option>
+            </FormSelect>
+            {priceTargetType !== 'no_price_target' && (
+              <FormInput
+                label="Price target"
+                id="price_target"
+                name="price_target"
+                type="number"
+                step="0.01"
+                min="0.01"
+              />
+            )}
+            <FormInput
+              label="Notes"
+              id="notes"
+              name="notes"
+              type="text"
+              placeholder="Add a note"
+            />
+          </>
+        )}
+
         <FormSelect
           label="Action"
           id="action"
@@ -133,7 +181,12 @@ export default function WatchlistForm({
           onChange={(e) => setActionType(e.target.value)}
         >
           <option value="add">Add</option>
-          {watchlistData.length > 0 && <option value="delete">Delete</option>}
+          {watchlistData.length > 0 && (
+            <>
+              <option value="update">Update</option>
+              <option value="delete">Delete</option>
+            </>
+          )}
         </FormSelect>
 
         <button

@@ -75,6 +75,11 @@ export async function deleteFromWatchlist(
   return await fetchUrl<WatchlistResponse>('/watchlist/delete', 'DELETE', data);
 }
 
+export async function updateWatchlist(
+  data: WatchlistRequest,
+): Promise<WatchlistResponse | null> {
+  return await fetchUrl<WatchlistResponse>('/watchlist/update', 'POST', data);
+}
 export async function getHoldingsData(): Promise<TradeResponse | null> {
   return await fetchUrl<TradeResponse>('/holdings/holdings', 'GET');
 }
