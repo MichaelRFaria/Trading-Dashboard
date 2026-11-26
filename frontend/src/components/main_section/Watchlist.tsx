@@ -24,7 +24,7 @@ export default function Watchlist({
           Keep track of stocks you may want to trade.
         </p>
       </div>
-      <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.7fr)]">
+      <div className="grid grid-cols-1 items-start gap-5">
         <WatchlistList watchlistData={watchlistData} priceData={priceData} />
         <WatchlistForm
           getWatchlistDataAsync={getWatchlistDataAsync}
