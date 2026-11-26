@@ -143,7 +143,7 @@ export default function WatchlistForm({
         {(actionType === 'add' || actionType === 'update') && (
           <>
             <FormSelect
-              label="Price type"
+              label="Price target type"
               id="price_type"
               name="price_type"
               defaultValue="buy_below"
@@ -151,9 +151,9 @@ export default function WatchlistForm({
             >
               <option value="buy_below">Buy below</option>
               <option value="sell_above">Sell above</option>
-              <option value="no_price_target">No price target</option>
+              <option value="omit">No price target</option>
             </FormSelect>
-            {priceTargetType !== 'no_price_target' && (
+            {priceTargetType !== 'omit' && (
               <FormInput
                 label="Price target"
                 id="price_target"
