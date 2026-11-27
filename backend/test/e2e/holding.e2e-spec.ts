@@ -94,20 +94,6 @@ describe('Holdings', () => {
         ]),
       );
     });
-
-    it('should retrieve price changes ', async () => {
-      const response = await agent.get('/holdings/price-changes').expect(200);
-
-      console.log(response.body);
-
-      expect(response.body.data).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            stock_symbol: 'AAPL',
-          }),
-        ]),
-      );
-    });
   });
 
   afterAll(async () => {

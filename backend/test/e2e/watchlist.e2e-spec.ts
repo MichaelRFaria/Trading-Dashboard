@@ -57,11 +57,74 @@ describe('Watchlist', () => {
       .post('/watchlist/add')
       .send({
         stock_symbol: 'AAPL',
+        price_type: 'buy_below',
+        price_target: 200,
+        notes: 'Watch for a pullback',
       })
       .expect(201)
       .expect({
         success: true,
         message: `AAPL successfully added to watchlist`,
+      });
+  });
+
+  it('should save the optional details when adding a watchlist item', async () => {
+    const item = await prisma.watchlist.findUniqueOrThrow({
+      where: {
+        user_id_stock_symbol: {
+          user_id: testUserId,
+          stock_symbol: 'AAPL',
+        },
+      },
+    });
+
+    expect(item.price_type).toBe('BUY_BELOW');
+    expect(item.price_target?.toString()).toBe('200');
+    expect(item.notes).toBe('Watch for a pullback');
+  });
+
+  it('should update a watchlist item', async () => {
+    await agent
+      .post('/watchlist/update')
+      .send({
+        stock_symbol: 'AAPL',
+        price_type: 'sell_above',
+        price_target: 250.5,
+        notes: 'Review after earnings',
+      })
+      .expect(201)
+      .expect({
+        success: true,
+        message: 'AAPL successfully updated in watchlist',
+      });
+
+    const item = await prisma.watchlist.findUniqueOrThrow({
+      where: {
+        user_id_stock_symbol: {
+          user_id: testUserId,
+          stock_symbol: 'AAPL',
+        },
+      },
+    });
+
+    expect(item.price_type).toBe('SELL_ABOVE');
+    expect(item.price_target?.toString()).toBe('250.5');
+    expect(item.notes).toBe('Review after earnings');
+  });
+
+  it('should report when updating a watchlist item that is not present', async () => {
+    return await agent
+      .post('/watchlist/update')
+      .send({
+        stock_symbol: 'MSFT',
+        price_type: 'buy_below',
+        price_target: 400,
+        notes: 'Not in watchlist',
+      })
+      .expect(201)
+      .expect({
+        success: false,
+        message: 'MSFT is not in your watchlist',
       });
   });
 
@@ -174,6 +237,10 @@ describe('Watchlist', () => {
 
   it('should reject the unauthenticated request trying to delete a watchlist item', async () => {
     await request(app.getHttpServer()).delete('/watchlist/delete').expect(401);
+  });
+
+  it('should reject the unauthenticated request trying to update a watchlist item', async () => {
+    await request(app.getHttpServer()).post('/watchlist/update').expect(401);
   });
 
   afterAll(async () => {
