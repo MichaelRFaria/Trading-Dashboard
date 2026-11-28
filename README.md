@@ -37,7 +37,8 @@ A full-stack trading dashboard for simulating stock trading, managing portfolios
 </p>
 <hr/>
 <p align="center">
-<img width="640" height="360" alt="watchlist" src="https://github.com/user-attachments/assets/13d4b6ed-0392-4c7d-b832-91e3eaef0a73" /><br>
+<img width="640" height="360" alt="watchlist" src="https://github.com/user-attachments/assets/f3610b0d-ef8e-4cdd-84ce-bd3d7e2040ba" />
+ <br>
  <em>Watchlist section</em>
 </p>
 <hr/>
